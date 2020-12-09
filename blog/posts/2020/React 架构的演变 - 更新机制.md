@@ -1,5 +1,6 @@
 ---
 title: React 架构的演变 - 更新机制
+author: shenfq
 date: 2020/10/12
 categories:
 - 前端

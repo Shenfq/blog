@@ -1,5 +1,6 @@
 ---
 title: Gulp入门指南
+author: shenfq
 date: 2017/05/24
 thumbnail: //file.shenfq.com/17-8-28/10815544.jpg
 categories:

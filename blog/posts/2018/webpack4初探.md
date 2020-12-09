@@ -1,5 +1,6 @@
 ---
 title: webpack4初探
+author: shenfq
 date: 2018/06/09
 thumbnail: //file.shenfq.com/18-8-16/87018253.jpg
 categories:

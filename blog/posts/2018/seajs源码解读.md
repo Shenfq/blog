@@ -1,5 +1,6 @@
 ---
 title: seajs源码解读
+author: shenfq
 date: 2018/08/15
 thumbnail: //file.shenfq.com/18-8-16/90186127.jpg
 categories:

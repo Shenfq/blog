@@ -1,5 +1,6 @@
 ---
 title: 深入理解 ESLint
+author: shenfq
 date: 2019/07/28
 categories:
 - 前端工程

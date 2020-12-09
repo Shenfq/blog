@@ -1,5 +1,6 @@
 ---
 title: 【翻译】CommonJS 是如何导致打包后体积增大的？
+author: shenfq
 date: 2020/11/18
 categories:
 - 前端工程

@@ -1,5 +1,6 @@
 ---
 title: 虚拟DOM到底是什么？
+author: shenfq
 date: 2019/06/18
 categories:
 - 前端

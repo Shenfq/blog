@@ -1,5 +1,6 @@
 ---
 title: Webpack5 跨应用代码共享-Module Federation
+author: shenfq
 date: 2020/09/14
 categories:
 - 前端工程

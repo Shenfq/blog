@@ -1,5 +1,6 @@
 ---
 title: JavaScript中this关键字
+author: shenfq
 date: 2017/10/12
 thumbnail: //file.shenfq.com/17-10-12/58658380.jpg
 categories:

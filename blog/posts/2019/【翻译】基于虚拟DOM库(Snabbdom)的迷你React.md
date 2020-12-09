@@ -1,5 +1,6 @@
 ---
 title: 【翻译】基于虚拟DOM库(Snabbdom)的迷你React
+author: shenfq
 date: 2019/05/01
 categories:
 - 前端

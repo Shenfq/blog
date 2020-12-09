@@ -1,5 +1,6 @@
 ---
 title: 你不知道的 TypeScript 高级类型
+author: shenfq
 date: 2020/08/28
 categories:
 - 前端

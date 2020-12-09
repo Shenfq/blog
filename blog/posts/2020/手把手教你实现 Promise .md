@@ -1,5 +1,6 @@
 ---
 title: 手把手教你实现 Promise 
+author: shenfq
 date: 2020/09/01
 categories:
 - Promise

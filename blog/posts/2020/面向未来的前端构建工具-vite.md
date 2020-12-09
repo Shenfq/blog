@@ -1,5 +1,6 @@
 ---
 title: 面向未来的前端构建工具-vite
+author: shenfq
 date: 2020/09/07
 categories:
 - 前端工程

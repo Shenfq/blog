@@ -1,5 +1,6 @@
 ---
 title: 从零开始实现 VS Code 基金插件
+author: shenfq
 date: 2020/08/24
 categories:
 - VSCode

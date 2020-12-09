@@ -1,5 +1,6 @@
 ---
 title: 【翻译】Vue.js 的注意事项与技巧
+author: shenfq
 date: 2019/03/31
 categories:
 - 前端

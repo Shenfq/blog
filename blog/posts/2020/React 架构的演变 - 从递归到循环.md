@@ -1,5 +1,6 @@
 ---
 title: React 架构的演变 - 从递归到循环
+author: shenfq
 date: 2020/09/29
 categories:
 - 前端

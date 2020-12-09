@@ -1,5 +1,6 @@
 ---
 title: 【翻译】在 React Hooks 中如何请求数据？
+author: shenfq
 date: 2019/03/25
 categories:
 - 前端

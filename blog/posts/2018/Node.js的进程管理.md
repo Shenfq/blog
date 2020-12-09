@@ -1,5 +1,6 @@
 ---
 title: Node.js的进程管理
+author: shenfq
 date: 2018/12/28
 categories:
 - Node.js

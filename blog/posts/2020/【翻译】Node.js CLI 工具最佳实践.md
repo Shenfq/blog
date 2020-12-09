@@ -1,5 +1,6 @@
 ---
 title: 【翻译】Node.js CLI 工具最佳实践
+author: shenfq
 date: 2020/02/22
 categories:
 - Node.js

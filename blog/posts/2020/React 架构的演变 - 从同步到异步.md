@@ -1,5 +1,6 @@
 ---
 title: React 架构的演变 - 从同步到异步
+author: shenfq
 date: 2020/09/23
 categories:
 - 前端
