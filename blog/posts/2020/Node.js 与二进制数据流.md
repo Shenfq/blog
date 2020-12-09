@@ -11,6 +11,8 @@ tags:
 - 二进制
 ---
 
+# Node.js 与二进制数据流
+
 ## 认识二进制数据
 
 ![二进制数据](https://file.shenfq.com/ipic/2020-04-16-040056.jpg)

@@ -13,6 +13,8 @@ tags:
 - 翻译
 ---
 
+# 【翻译】基于虚拟DOM库(Snabbdom)的迷你React
+
 
 > [原文链接](https://medium.com/@yelouafi/react-less-virtual-dom-with-snabbdom-functions-everywhere-53b672cb2fe3)
 

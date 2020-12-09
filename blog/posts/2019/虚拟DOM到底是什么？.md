@@ -8,6 +8,8 @@ tags:
 - 虚拟DOM
 ---
 
+# 虚拟DOM到底是什么？
+
 ## 是什么？
 
 虚拟 DOM （Virtual DOM ）这个概念相信大家都不陌生，从 React 到 Vue ，虚拟 DOM 为这两个框架都带来了跨平台的能力（React-Native 和 Weex）。因为很多人是在学习 React 的过程中接触到的虚拟 DOM ，所以为先入为主，认为虚拟 DOM 和 JSX 密不可分。其实不然，虚拟 DOM 和 JSX 固然契合，但 JSX 只是虚拟 DOM 的充分不必要条件，Vue 即使使用模版，也能把虚拟 DOM 玩得风生水起，同时也有很多人通过 babel 在 Vue 中使用 JSX。

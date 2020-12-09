@@ -12,6 +12,8 @@ tags:
 - JavaScript
 ---
 
+# 面向未来的前端构建工具-vite
+
 ## 前言
 
 如果近期你有关注 Vue 的动态，就能发现 Vue 作者最近一直在捣鼓的新工具 [vite](https://github.com/vitejs/vite)。vite 1.0 目前已经进入了 rc 版本，马上就要正式发布 1.0 的版本了。几个月前，尤雨溪就已经在微博介绍过了 vite ，是一个基于浏览器原生 ESM 的开发服务器。

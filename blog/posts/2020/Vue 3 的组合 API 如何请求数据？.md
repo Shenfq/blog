@@ -10,6 +10,8 @@ tags:
 - Vue.js
 ---
 
+# Vue 3 的组合 API 如何请求数据？
+
 ## 前言
 
 之前在学习 React Hooks 的过程中，看到一篇外网文章，通过 Hooks 来请求数据，并将这段逻辑抽象成一个新的 Hooks 给其他组件复用，我也在我的博客里翻译了一下：[《在 React Hooks 中如何请求数据？》](https://blog.shenfq.com/2019/%E3%80%90%E7%BF%BB%E8%AF%91%E3%80%91%E5%9C%A8-react-hooks-%E4%B8%AD%E5%A6%82%E4%BD%95%E8%AF%B7%E6%B1%82%E6%95%B0%E6%8D%AE%EF%BC%9F/)，感兴趣可以看看。虽然是去年的文章，在阅读之后一下子就掌握了 Hooks 的使用方式，而且数据请求是在业务代码中很常用的逻辑。

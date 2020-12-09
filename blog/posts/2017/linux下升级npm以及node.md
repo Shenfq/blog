@@ -12,6 +12,8 @@ tags:
 - 前端
 ---
 
+# linux下升级npm以及node
+
 > linux不比windows，鼠标点两下什么都好说，在windows下面升级node，只需要去官网下载最新的msi安装包，然后安装到之前的node路径下，一切ok。其实linux使用命令行也是很爽的，作为程序员，难道不应该更喜欢看到命令行吗，哈哈哈！
 
 

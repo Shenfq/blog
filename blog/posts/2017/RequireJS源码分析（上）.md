@@ -11,6 +11,8 @@ tags:
 - 前端工程化
 ---
 
+# RequireJS源码分析（上）
+
 
 `requirejs`作为`AMD`（Asynchronous Module Definition--异步的模块加载机制）规范的实现，还是有必要看看的。初识`requirejs`源码，必须先弄清楚`requirejs`的模块是如何定义的，并且要知道入口在哪个地方，如果清楚了调用方式，看源码的时候才会觉得顺畅。
 

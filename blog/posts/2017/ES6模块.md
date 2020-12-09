@@ -11,6 +11,8 @@ tags:
 - 前端
 ---
 
+# 【翻译】深入ES6模块
+
 回想2007年，那时候我刚加入Mozilla's JavaScript团队，那时候的一个典型的JavaScript程序只需要一行代码，听起来像个笑话。
 
 两年后，Google Maps发布。在这之前，JavaScript主要用来做表单的验证，你用来处理`<input onchange=>`这个程序当然只需要一行。

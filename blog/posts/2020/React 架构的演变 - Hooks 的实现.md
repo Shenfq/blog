@@ -10,6 +10,8 @@ tags:
 - React
 ---
 
+# React 架构的演变 - Hooks 的实现
+
 > 这是这个系列的最后一篇文章了，终于收尾了🐶 。
 
 React Hooks 可以说完全颠覆了之前 Class Component 的写法，进一步增强了状态复用的能力，让 Function Component 也具有了内部状态，对于我个人来说，更加喜欢 Hooks 的写法。当然如果你是一个使用 Class Component  的老手，初期上手时会觉得很苦恼，毕竟之前沉淀的很多 HOC、Render Props 组件基本没法用。而且之前的 Function Component 是无副作用的无状态组件，现在又能通过 Hooks 引入状态，看起来真的很让人疑惑。Function Component 的另一个优势就是可以完全告别 `this` ，在 Class Component 里面 `this` 真的是一个让人讨厌的东西😶 。

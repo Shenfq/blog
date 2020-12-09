@@ -11,6 +11,8 @@ tags:
 - 前端
 ---
 
+# babel到底该如何配置？
+
 #### 背景
 说起ES6，webpack，打包，模块化总是离不开babel，babel作为一个js的编译器已经被广泛使用。在babel的[官网](http://babeljs.io/)是这样介绍它的：
 

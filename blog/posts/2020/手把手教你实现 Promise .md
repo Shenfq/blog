@@ -10,6 +10,8 @@ tags:
 - JavaScript
 ---
 
+# 手把手教你实现 Promise 
+
 ## 前言
 
 很多 JavaScript 的初学者都曾感受过被回调地狱支配的恐惧，直至掌握了 Promise 语法才算解脱。虽然很多语言都早已内置了 Promise ，但是 JavaScript 中真正将其发扬光大的还是 jQuery 1.5 对 `$.ajax` 的重构，支持了 Promise，而且用法也和 jQuery 推崇的链式调用不谋而合。后来 ES6 出世，大家才开始进入全民 Promise 的时代，再后来 ES8 又引入了 async 语法，让 JavaScript 的异步写法更加优雅。
