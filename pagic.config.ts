@@ -1,7 +1,7 @@
 export default {
   theme: 'blog',
   title: '自然醒的博客',
-  description: '前端工程师@拼多多，爱折腾，擅长 JavaScript，欢迎我的关注公众号「更了不起的前端」',
+  description: '前端工程师@拼多多，爱折腾，擅长 JavaScript，欢迎关注我的公众号「更了不起的前端」',
   srcDir: 'blog',
   plugins: ['blog'],
   blog: {
