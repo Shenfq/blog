@@ -1,0 +1,172 @@
+<!doctype html><html class="" data-reactroot=""><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous"/>
+<meta data-react-helmet="true" charset="utf-8"/><meta data-react-helmet="true" http-equiv="x-ua-compatible" content="ie=edge"/><meta data-react-helmet="true" name="description" content="前端工程师@拼多多，爱折腾，擅长 JavaScript，欢迎关注我的公众号「更了不起的前端」"/><meta data-react-helmet="true" name="viewport" content="width=device-width, initial-scale=1"/>
+<title data-react-helmet="true">【翻译】CommonJS 是如何导致打包后体积增大的？ · 自然醒的博客</title>
+<link data-react-helmet="true" rel="stylesheet" href="/assets/index.css"/><link data-react-helmet="true" id="prismTheme" rel="stylesheet" href="/assets/prism.css"/>
+<script data-react-helmet="true" >
+    const shouldSetIsDark = document.cookie.includes('is_dark=1') ? true : document.cookie.includes('is_dark=0') ? false : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (shouldSetIsDark) {
+      document.documentElement.classList.add('is_dark');
+      document.getElementById('prismTheme').href = "/assets/prism_tomorrow.css";
+    }
+  </script>
+</head><body><a class="czs-menu-l show_on_mobile aside_button_open" href="#" style="background-image:url(&quot;/assets/czs-menu-l.svg&quot;)"></a><a class="show_on_mobile aside_button_text" href="/">自然醒的博客</a><aside class="hide_on_mobile"><a class="czs-menu-l show_on_mobile aside_button_close" href="#" style="background-image:url(&quot;/assets/czs-close-l.svg&quot;)"></a><h1><a href="/">自然醒的博客</a></h1><p class="description">前端工程师@拼多多，爱折腾，擅长 JavaScript，欢迎关注我的公众号「更了不起的前端」</p><ul class="social list_style_none"><li class="flex_center"><a class="czs-github-logo" href="https://github.com/Shenfq" target="_blank" style="background-image:url(&quot;/assets/czs-github-logo.svg&quot;)"></a></li><li class="flex_center"><a class="czs-message-l" href="mailto:shenfq95@foxmail.com" target="_blank" style="background-image:url(&quot;/assets/czs-message-l.svg&quot;)"></a></li><li style="flex-grow:1"></li><li class="toggle_dark flex_center"><span class="czs-sun" style="background-image:url(&quot;/assets/czs-sun.svg&quot;)"></span><span class="czs-sun-l" style="background-image:url(&quot;/assets/czs-sun-l.svg&quot;)"></span><span class="czs-moon" style="background-image:url(&quot;/assets/czs-moon.svg&quot;)"></span><span class="czs-moon-l" style="background-image:url(&quot;/assets/czs-moon-l.svg&quot;)"></span></li></ul><nav><ul class="menu list_style_none"><li><a class="flex_center" href="/"><span class="czs-home-l" style="background-image:url(&quot;/assets/czs-home-l.svg&quot;)"></span>首页</a></li><li><a class="flex_center" href="/categories/"><span class="czs-category-l" style="background-image:url(&quot;/assets/czs-category-l.svg&quot;)"></span>分类</a></li><li><a class="flex_center" href="/tags/"><span class="czs-tag-l" style="background-image:url(&quot;/assets/czs-tag-l.svg&quot;)"></span>标签</a></li><li><a class="flex_center" href="/about/"><span class="czs-about-l" style="background-image:url(&quot;/assets/czs-about-l.svg&quot;)"></span>关于</a></li><li><a class="flex_center" href="/archives/"><span class="czs-box-l" style="background-image:url(&quot;/assets/czs-box-l.svg&quot;)"></span>归档</a></li></ul></nav></aside><section class="main"><h1>【翻译】CommonJS 是如何导致打包后体积增大的？</h1><div class="main_post_meta"><time dateTime="2020/11/18">2020-11-19</time> · <!-- -->shenfq</div><article><blockquote>
+<p>原文：<a href="https://web.dev/commonjs-larger-bundles">How CommonJS is making your bundles larger</a></p>
+</blockquote>
+<p>今天的文章，将介绍什么是 CommonJS，以及它为什么会导致我们打包后的文件体积增大。</p>
+<blockquote>
+<p>本文概要：为了确保打包工具（webpack之类的）能够对你的项目代码进行优化，请避免在项目中使用 CommonJS 模块，并且整个项目都应该使用 ESM（ECMAScript Module） 的模块语法。</p>
+</blockquote>
+<h2 id="%E4%BB%80%E4%B9%88%E6%98%AF-commonjs">什么是 CommonJS？<a class="anchor" href="#%E4%BB%80%E4%B9%88%E6%98%AF-commonjs">§</a></h2>
+<p>CommonJS 是 2009 年发布的 JavaScript模块化的一项标准，最初它只打算在浏览器之外的场景使用，主要用于服务器端的应用程序。</p>
+<p>你可以使用 CommonJS 来定义模块，并从中导出部分模块。例如，下面的代码定义了一个模块，该模块导出了五个函数：<code>add</code>、 <code>subtract</code>、 <code>multiply</code>、 <code>divide</code>、<code>max</code>:</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// utils.js</span>
+<span class="token keyword">const</span> <span class="token punctuation">{</span> maxBy <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'lodash-es'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> fns <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token function-variable function">add</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> a <span class="token operator">+</span> b<span class="token punctuation">,</span>
+  <span class="token function-variable function">subtract</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> a <span class="token operator">-</span> b<span class="token punctuation">,</span>
+  <span class="token function-variable function">multiply</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> a <span class="token operator">*</span> b<span class="token punctuation">,</span>
+  <span class="token function-variable function">divide</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> a <span class="token operator">/</span> b<span class="token punctuation">,</span>
+  <span class="token function-variable function">max</span><span class="token operator">:</span> <span class="token parameter">arr</span> <span class="token arrow operator">=></span> <span class="token function">maxBy</span><span class="token punctuation">(</span>arr<span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token known-class-name class-name">Object</span><span class="token punctuation">.</span><span class="token method function property-access">keys</span><span class="token punctuation">(</span>fns<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">forEach</span><span class="token punctuation">(</span><span class="token parameter">fnName</span> <span class="token arrow operator">=></span> module<span class="token punctuation">.</span><span class="token property-access">exports</span><span class="token punctuation">[</span>fnName<span class="token punctuation">]</span> <span class="token operator">=</span> fns<span class="token punctuation">[</span>fnName<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>其他模块可以导入这个模块的部分函数。</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// index.js</span>
+<span class="token keyword">const</span> <span class="token punctuation">{</span> add <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span>‘<span class="token punctuation">.</span><span class="token operator">/</span>utils'<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>通过 node 运行 <code>index.js</code> ，会在控制台输出数字 <code>3</code>。</p>
+<p>在 2010 年，由于浏览器缺乏标准化的模块化能力，CommonJS 成了当时 JavaScript 客户端较为流行的模块化标准。</p>
+<h2 id="commonjs-%E5%A6%82%E4%BD%95%E5%BD%B1%E5%93%8D%E5%8C%85%E4%BD%93">CommonJS 如何影响包体？<a class="anchor" href="#commonjs-%E5%A6%82%E4%BD%95%E5%BD%B1%E5%93%8D%E5%8C%85%E4%BD%93">§</a></h2>
+<p>服务端的 JavaScript 程序对代码体积并不像浏览器中那么敏感，这就是为什么在设计 CommonJS 的时候，并没有考虑减少生产包大小的原因。同时，<a href="https://v8.dev/blog/cost-of-javascript-2019">研表究明</a> JavaScript 代码的体积依然是影响页面加载速度的一个重要因素。</p>
+<p>JavaScript 的打包工具（<code>webpack</code>、<code>terser</code>）会进行许多优化以减小最后生成的包体大小。他们在构建时，会分析你的代码，尽可能的删除不会使用的部分。例如，上面的代码中，最终生成的包应该只包含 <code>add</code> 函数，因为这是 <code>index.js</code> 唯一从 <code>utils.js</code> 中导入的部分。</p>
+<p>下面我们使用如下 <code>webpack</code> 配置对应用进行打包：</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> path <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'path'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+module<span class="token punctuation">.</span><span class="token property-access">exports</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+  entry<span class="token operator">:</span> <span class="token string">'index.js'</span><span class="token punctuation">,</span>
+  output<span class="token operator">:</span> <span class="token punctuation">{</span>
+    filename<span class="token operator">:</span> <span class="token string">'out.js'</span><span class="token punctuation">,</span>
+    path<span class="token operator">:</span> path<span class="token punctuation">.</span><span class="token method function property-access">resolve</span><span class="token punctuation">(</span>__dirname<span class="token punctuation">,</span> <span class="token string">'dist'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  mode<span class="token operator">:</span> <span class="token string">'production'</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>我们需要将 <code>webpack</code> 的 <code>mode</code> 指定为 <code>production</code>，并且将 <code>index.js</code> 做为入口。运行 <code>webpack</code> 后，会输出一个文件：<a href="https://github.com/mgechev/commonjs-example/blob/master/commonjs/dist/out.js">dist/out.js</a>，可以通过如下方式统计它的大小：</p>
+<pre class="language-bash"><code class="language-bash">$ <span class="token builtin class-name">cd</span> dist <span class="token operator">&amp;&amp;</span> <span class="token function">ls</span> -lah
+625K Apr <span class="token number">13</span> <span class="token number">13</span>:04 out.js
+</code></pre>
+<p>打包后的文件高达 625 KB。如果看下 <code>out.js</code> 文件，会发现 <code>utils.js</code> 导入 <a href="https://lodash.com/"><code>lodash</code></a> 的所有模块都打包到了输出的文件中，尽管我们在 <code>index.js</code> 并没有使用到 lodash 的任何方法，但是这给我们的包体带来了巨大的影响。</p>
+<p>现在我们将代码的模块化方案改为 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import">ESM</a>，<code>utils.js</code> 部分的代码如下：</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword module">export</span> <span class="token keyword">const</span> <span class="token function-variable function">add</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> a <span class="token operator">+</span> b<span class="token punctuation">;</span>
+<span class="token keyword module">export</span> <span class="token keyword">const</span> <span class="token function-variable function">subtract</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> a <span class="token operator">-</span> b<span class="token punctuation">;</span>
+<span class="token keyword module">export</span> <span class="token keyword">const</span> <span class="token function-variable function">multiply</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> a <span class="token operator">*</span> b<span class="token punctuation">;</span>
+<span class="token keyword module">export</span> <span class="token keyword">const</span> <span class="token function-variable function">divide</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> a <span class="token operator">/</span> b<span class="token punctuation">;</span>
+
+<span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> maxBy <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'lodash-es'</span><span class="token punctuation">;</span>
+
+<span class="token keyword module">export</span> <span class="token keyword">const</span> <span class="token function-variable function">max</span> <span class="token operator">=</span> <span class="token parameter">arr</span> <span class="token arrow operator">=></span> <span class="token function">maxBy</span><span class="token punctuation">(</span>arr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p><code>index.js</code> 也改为 ESM 的方式从 <code>utils.js</code> 导入模块：</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> add <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'./utils'</span><span class="token punctuation">;</span>
+
+<span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>使用相同的 <code>webpack</code> 配置，构建完毕之后，我们打开 <code>out.js</code> ，<strong>仅有 40 字节</strong>，输出如下：</p>
+<pre class="language-js"><code class="language-js"><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token arrow operator">=></span><span class="token punctuation">{</span><span class="token string">"use strict"</span><span class="token punctuation">;</span><span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">+</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>值得注意的是，最终的输出并没有包含 <code>utils.js</code> 的任何代码，而且 lodash 也消失了。而且 <code>terser</code>（<code>webpack</code> 使用的压缩工具）直接将 add 函数内联到了 <code>console.log</code> 内部。</p>
+<p>有的小朋友可能就会问了（<code>此处采用了李永乐语法</code>），为什么使用 CommonJS 会导致输出的文件大了 <code>16,000</code> 倍？当然，这只是用来展示 CommonJS 与 ESM 差异的案例，实际上并不会出现这么大的差异，但是使用 CommonJS 肯定会导致打包后的体积更大。</p>
+<p>一般情况下，CommonJS 模块的体积更加难优化，因为它比 ES 模块更加的动态化。为了确保构建工具以及压缩工具能成功优化代码，请避免使用 CommonJS 模块。</p>
+<p>当然，如果你只在 <code>utils.js</code> 采用了 ESM 的模块化方案，而 <code>index.js</code> 还是维持 CommonJS，则包体依旧会受到影响。</p>
+<h2 id="%E4%B8%BA%E4%BB%80%E4%B9%88-commonjs-%E4%BC%9A%E4%BD%BF%E5%8C%85%E4%BD%93%E6%9B%B4%E5%A4%A7">为什么 CommonJS 会使包体更大？<a class="anchor" href="#%E4%B8%BA%E4%BB%80%E4%B9%88-commonjs-%E4%BC%9A%E4%BD%BF%E5%8C%85%E4%BD%93%E6%9B%B4%E5%A4%A7">§</a></h2>
+<p>要回答这个问题，我们需要研究 <code>webpack</code> 的 <code>ModuleConcatenationPlugin</code> 的行为，并且看看它是如何进行静态分析的。该插件将所有的模块都放入一个闭包内，这会让你的代码在浏览器中更快的执行。我们来看看下面的代码：</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// utils.js</span>
+<span class="token keyword module">export</span> <span class="token keyword">const</span> <span class="token function-variable function">add</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> a <span class="token operator">+</span> b<span class="token punctuation">;</span>
+<span class="token keyword module">export</span> <span class="token keyword">const</span> <span class="token function-variable function">subtract</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> a <span class="token operator">-</span> b<span class="token punctuation">;</span>
+</code></pre>
+<pre class="language-js"><code class="language-js"><span class="token comment">// index.js</span>
+<span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> add <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> ‘<span class="token punctuation">.</span><span class="token operator">/</span>utils'<span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token function-variable function">subtract</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> a <span class="token operator">-</span> b<span class="token punctuation">;</span>
+
+<span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>我们有一个新的 ESM 模块（<code>utils.js</code>），将其导入 <code>index.js</code> 中，我们还重新定义一个 <code>subtract</code> 函数。接下来使用之前的 <code>webpack</code> 配置来构建项目，但是这次，我把禁用压缩配置。</p>
+<pre class="language-diff"><code class="language-diff">const path = require('path');
+
+module.exports = {
+<span class="token unchanged"><span class="token prefix unchanged"> </span> entry: 'index.js',
+<span class="token prefix unchanged"> </span> output: {
+<span class="token prefix unchanged"> </span>   filename: 'out.js',
+<span class="token prefix unchanged"> </span>   path: path.resolve(__dirname, 'dist'),
+<span class="token prefix unchanged"> </span> },
+</span><span class="token inserted-sign inserted"><span class="token prefix inserted">+</span> optimization: {
+<span class="token prefix inserted">+</span>   minimize: false
+<span class="token prefix inserted">+</span> },
+</span><span class="token unchanged"><span class="token prefix unchanged"> </span> mode: 'production',
+</span>};
+</code></pre>
+<p>输出的 <code>out.js</code> 如下：</p>
+<pre class="language-js"><code class="language-js"><span class="token doc-comment comment">/******/</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span> <span class="token comment">// webpackBootstrap</span>
+<span class="token doc-comment comment">/******/</span> 	<span class="token string">"use strict"</span><span class="token punctuation">;</span>
+
+<span class="token comment">// CONCATENATED MODULE: ./utils.js**</span>
+<span class="token keyword">const</span> <span class="token function-variable function">add</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> a <span class="token operator">+</span> b<span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token function-variable function">subtract</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> a <span class="token operator">-</span> b<span class="token punctuation">;</span>
+
+<span class="token comment">// CONCATENATED MODULE: ./index.js**</span>
+<span class="token keyword">const</span> <span class="token function-variable function">index_subtract</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> a <span class="token operator">-</span> b<span class="token punctuation">;</span>
+<span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token doc-comment comment">/******/</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>输出的代码中，所有的函数都在一个命名空间里，为了防止冲突，<code>webpack</code> 将 <code>index.js</code> 中的 <code>subtract</code> 函数重新命名为了 <code>index_subtract</code> 函数。</p>
+<p>如果开启压缩配置，它会进行如下操作：</p>
+<ol>
+<li>删除没有使用的 <code>subtract</code> 函数和 <code>index_subtract</code> 函数；</li>
+<li>删除所有的注释和空格；</li>
+<li><code>console.log</code> 中直接内联 <code>add</code> 函数；</li>
+</ol>
+<p>一些开发人员会把这种删除未使用代码的行为称为“<strong>tree-shaking</strong>（树摇）”。<code>webpack</code> 能够通过导出、导入符号静态的分析 <code>utils.js</code>（在构建的过程中），这使得 tree-shaking 有了可行性。当使用 ESM 时，这种行为是默认开启的，因为相比于 CommonJS，它更加易于静态分析。</p>
+<p>让我们看看另外的示例，这一次将 <code>utils.js</code> 改为 CommonJS 模块，而不是 ESM 模块。</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// utils.js</span>
+<span class="token keyword">const</span> <span class="token punctuation">{</span> maxBy <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'lodash-es'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> fns <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token function-variable function">add</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> a <span class="token operator">+</span> b<span class="token punctuation">,</span>
+  <span class="token function-variable function">subtract</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> a <span class="token operator">-</span> b<span class="token punctuation">,</span>
+  <span class="token function-variable function">multiply</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> a <span class="token operator">*</span> b<span class="token punctuation">,</span>
+  <span class="token function-variable function">divide</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> a <span class="token operator">/</span> b<span class="token punctuation">,</span>
+  <span class="token function-variable function">max</span><span class="token operator">:</span> <span class="token parameter">arr</span> <span class="token arrow operator">=></span> <span class="token function">maxBy</span><span class="token punctuation">(</span>arr<span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token known-class-name class-name">Object</span><span class="token punctuation">.</span><span class="token method function property-access">keys</span><span class="token punctuation">(</span>fns<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">forEach</span><span class="token punctuation">(</span><span class="token parameter">fnName</span> <span class="token arrow operator">=></span> module<span class="token punctuation">.</span><span class="token property-access">exports</span><span class="token punctuation">[</span>fnName<span class="token punctuation">]</span> <span class="token operator">=</span> fns<span class="token punctuation">[</span>fnName<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>这个小小的改动，明显影响了输出的代码。由于输出的文本太大，我们只展示其中的一小部分。</p>
+<pre class="language-js"><code class="language-js"><span class="token spread operator">...</span>
+<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+
+<span class="token string">"use strict"</span><span class="token punctuation">;</span>
+<span class="token comment">/* harmony import */</span> <span class="token keyword">var</span> _utils__WEBPACK_IMPORTED_MODULE_0__ <span class="token operator">=</span> <span class="token function">__webpack_require__</span><span class="token punctuation">(</span><span class="token number">288</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token function-variable function">subtract</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> a <span class="token operator">-</span> b<span class="token punctuation">;</span>
+<span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span>_utils__WEBPACK_IMPORTED_MODULE_0__<span class="token comment">/* .add */</span> <span class="token punctuation">.</span><span class="token constant">IH</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>可以看到，最终生成的代码包含一些 <code>webpack</code> 的 <code>runtime</code> 代码，这部分代码负责模块的导入导出的能力。这次并没有将 <code>utils.js</code> 和 <code>index.js</code> 所有的变量放到了同一命名空间下，动态引入的模块都是通过 <code>__webpack_require__</code> 进行导入。</p>
+<p>使用 CommonJS 的时候，我们可以通过任意的表达式构造导出名称，例如下面的代码也是能正常运行的：</p>
+<pre class="language-js"><code class="language-js">module<span class="token punctuation">.</span><span class="token property-access">exports</span><span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token known-class-name class-name">Math</span><span class="token punctuation">.</span><span class="token method function property-access">random</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span> … <span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>这导致构建工具在构建时，没有办法知道导出的变量名，因为这个名称只有在用户浏览器运行时才能够真正确定。压缩工具无法准确的知道 <code>index.js</code> 使用了模块的哪部分内容，因此无法正确的进行 tree-shaking。如果我们从 <code>node_modules</code> 导入了 CommonJS 模块，你的构建工具将无法正确的优化它。</p>
+<h2 id="%E5%AF%B9-commonjs-%E4%BD%BF%E7%94%A8-tree-shaking">对 CommonJS 使用 Tree-shaking<a class="anchor" href="#%E5%AF%B9-commonjs-%E4%BD%BF%E7%94%A8-tree-shaking">§</a></h2>
+<p>由于 CommonJS 的模块化方案是动态的，想要分析他们是特别困难的。与通过表达式导入模块的 CommonJS 相比，ESM 模块的导入始终使用的是静态的字符串文本。</p>
+<p>在某些情况下，如果你使用的库遵循 CommonJS 的相关的一些约定，你可以使用第三方的 <code>webpack</code> 插件：<a href="https://github.com/indutny/webpack-common-shake">webpack-common-shake</a>，在构建的过程中，删除未使用的模块。尽管该插件增加了 CommonJS 对 tree-shaking 的支持，但并没有涵盖所有的 CommonJS 依赖，这意味着你不能获得 ESM 相同的效果。</p>
+<p>此外，这并非是 <code>webpack</code> 默认行为，它会对你的构建耗时增加额外的成本。</p>
+<h2 id="%E6%80%BB%E7%BB%93">总结<a class="anchor" href="#%E6%80%BB%E7%BB%93">§</a></h2>
+<p>为了确保构建工具对你的代码尽可能的进行优化，请避免使用 CommonJS 模块，并在整个项目中使用 ESM 语法。</p>
+<p>下面是一些检验你的项目是否是最佳实践的方法：</p>
+<ul>
+<li>使用 Rollup.js 提供的 <a href="https://github.com/rollup/plugins/tree/master/packages/node-resolve">node-resolve</a> 插件，并开启 <code>modulesOnly</code> 选项，表示你的项目只会使用 ESM。</li>
+<li>使用 <a href="https://github.com/mgechev/is-esm"><code>is-esm</code></a> 来验证 npm 安装的模块是否使用 ESM。</li>
+<li>如果您使用的是Angular，默认情况下，如果你依赖了不能进行 tree-shaking 的模块，则会收到警告。</li>
+</ul></article></section><footer>Powered by <a href="https://github.com/xcatliu/pagic" target="_blank">Pagic</a></footer><script src="https://cdn.pagic.org/react@16.13.1/umd/react.production.min.js"></script><script src="https://cdn.pagic.org/react-dom@16.13.1/umd/react-dom.production.min.js"></script><script type="module" src="/index.js"></script></body></html>

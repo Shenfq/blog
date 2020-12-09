@@ -1,0 +1,306 @@
+<!doctype html><html class="" data-reactroot=""><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous"/>
+<meta data-react-helmet="true" charset="utf-8"/><meta data-react-helmet="true" http-equiv="x-ua-compatible" content="ie=edge"/><meta data-react-helmet="true" name="description" content="前端工程师@拼多多，爱折腾，擅长 JavaScript，欢迎关注我的公众号「更了不起的前端」"/><meta data-react-helmet="true" name="viewport" content="width=device-width, initial-scale=1"/>
+<title data-react-helmet="true">【翻译】Node.js CLI 工具最佳实践 · 自然醒的博客</title>
+<link data-react-helmet="true" rel="stylesheet" href="/assets/index.css"/><link data-react-helmet="true" id="prismTheme" rel="stylesheet" href="/assets/prism.css"/>
+<script data-react-helmet="true" >
+    const shouldSetIsDark = document.cookie.includes('is_dark=1') ? true : document.cookie.includes('is_dark=0') ? false : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (shouldSetIsDark) {
+      document.documentElement.classList.add('is_dark');
+      document.getElementById('prismTheme').href = "/assets/prism_tomorrow.css";
+    }
+  </script>
+</head><body><a class="czs-menu-l show_on_mobile aside_button_open" href="#" style="background-image:url(&quot;/assets/czs-menu-l.svg&quot;)"></a><a class="show_on_mobile aside_button_text" href="/">自然醒的博客</a><aside class="hide_on_mobile"><a class="czs-menu-l show_on_mobile aside_button_close" href="#" style="background-image:url(&quot;/assets/czs-close-l.svg&quot;)"></a><h1><a href="/">自然醒的博客</a></h1><p class="description">前端工程师@拼多多，爱折腾，擅长 JavaScript，欢迎关注我的公众号「更了不起的前端」</p><ul class="social list_style_none"><li class="flex_center"><a class="czs-github-logo" href="https://github.com/Shenfq" target="_blank" style="background-image:url(&quot;/assets/czs-github-logo.svg&quot;)"></a></li><li class="flex_center"><a class="czs-message-l" href="mailto:shenfq95@foxmail.com" target="_blank" style="background-image:url(&quot;/assets/czs-message-l.svg&quot;)"></a></li><li style="flex-grow:1"></li><li class="toggle_dark flex_center"><span class="czs-sun" style="background-image:url(&quot;/assets/czs-sun.svg&quot;)"></span><span class="czs-sun-l" style="background-image:url(&quot;/assets/czs-sun-l.svg&quot;)"></span><span class="czs-moon" style="background-image:url(&quot;/assets/czs-moon.svg&quot;)"></span><span class="czs-moon-l" style="background-image:url(&quot;/assets/czs-moon-l.svg&quot;)"></span></li></ul><nav><ul class="menu list_style_none"><li><a class="flex_center" href="/"><span class="czs-home-l" style="background-image:url(&quot;/assets/czs-home-l.svg&quot;)"></span>首页</a></li><li><a class="flex_center" href="/categories/"><span class="czs-category-l" style="background-image:url(&quot;/assets/czs-category-l.svg&quot;)"></span>分类</a></li><li><a class="flex_center" href="/tags/"><span class="czs-tag-l" style="background-image:url(&quot;/assets/czs-tag-l.svg&quot;)"></span>标签</a></li><li><a class="flex_center" href="/about/"><span class="czs-about-l" style="background-image:url(&quot;/assets/czs-about-l.svg&quot;)"></span>关于</a></li><li><a class="flex_center" href="/archives/"><span class="czs-box-l" style="background-image:url(&quot;/assets/czs-box-l.svg&quot;)"></span>归档</a></li></ul></nav></aside><section class="main"><h1>【翻译】Node.js CLI 工具最佳实践</h1><div class="main_post_meta"><time dateTime="2020/02/22">2020-02-23</time> · <!-- -->shenfq</div><article><blockquote>
+<p><a href="https://github.com/lirantal/nodejs-cli-apps-best-practices/blob/3afe1ab0a5b506ef8c32903c4bf253a4cdb4bddd/README.md#shell-interpreters-vary">原文链接</a></p>
+</blockquote>
+<p>这是一个关于如何构建成功的、可移植的、对用户友好的Node.js 命令行工具（CLI）最佳实践的集合。</p>
+<h2 id="%E4%B8%BA%E4%BB%80%E4%B9%88%E5%86%99%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0">为什么写这篇文章？<a class="anchor" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%86%99%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0">§</a></h2>
+<p>一个糟糕的 CLI 工具会让用户觉得难用，而构建一个成功的 CLI 需要密切关注很多细节，同时需要站在用户的角度，创造良好的用户体验。要做到这些特别不容易。</p>
+<p>在这个指南中，我列出了在各个重点领域的最佳实践，都是 CLI 工具交互最理想的用户体验。</p>
+<h2 id="%E7%89%B9%E6%80%A7">特性：<a class="anchor" href="#%E7%89%B9%E6%80%A7">§</a></h2>
+<ul>
+<li>✅ 构建成功的 Node.js CLI 工具的 21 种最佳实践</li>
+<li>❤️ 帮忙翻译成其他语言</li>
+<li>🙏 欢迎捐赠</li>
+<li>最近更新时间：2020-02-14</li>
+</ul>
+<h2 id="%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E6%88%91">为什么是我？<a class="anchor" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E6%88%91">§</a></h2>
+<p>我叫Liran Tal，我一直专注于构建命令行工具。</p>
+<p>我最近的一些工作就是构建Node.js CLI，包括以下开源项目：</p>
+<div class="table_wrapper"><table>
+<thead>
+<tr>
+<th><a href="https://github.com/lirantal/dockly"><strong>Dockly</strong></a></th>
+<th><a href="https://github.com/lirantal/npq"><strong>npq</strong></a></th>
+<th><a href="https://github.com/lirantal/lockfile-lint"><strong>lockfile-lint</strong></a></th>
+<th><a href="https://github.com/lirantal/is-website-vulnerable"><strong>is-website-vulnerable</strong></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>沉浸式终端界面，用于管理Docker容器和服务</td>
+<td>通过在安装过程中进行检查，以安全地使用npm / yarn 安装的软件包</td>
+<td>整理 npm 或 yarn 的 lock 文件以分析和检测安全问题</td>
+<td>在网站引用的 JS 库中查找公开的安全漏洞</td>
+</tr>
+</tbody>
+</table></div>
+<hr>
+<h2 id="1-%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%9A%84%E7%BB%8F%E9%AA%8C">1 命令行的经验<a class="anchor" href="#1-%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%9A%84%E7%BB%8F%E9%AA%8C">§</a></h2>
+<p>本节将会介绍创建美观且高可用的 Node.js 命令行工具相关的最佳实践。</p>
+<h3 id="11-%E5%B0%8A%E9%87%8D-posix">1.1 尊重 POSIX<a class="anchor" href="#11-%E5%B0%8A%E9%87%8D-posix">§</a></h3>
+<p>✅ <strong>正确：</strong> 使用兼容 <a href="https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html">POSIX-compliant</a> 命令行的语法，因为这是被广泛接受的命令行工具的标准。</p>
+<p>❌ <strong>错误：</strong> 当用户使用CLI，其命令行参数与他们过去的使用习惯不一致时，会感觉很难适应。</p>
+<p>➡️ <strong>细节：</strong></p>
+<p>Unix-like 操作系统普及了命令行工具，比如awk，sed。这样的工具已经有效地标准化了命令行选项「options」（又名标志「flags」），选项参数和其他操作的行为。</p>
+<p>一些案例：</p>
+<ul>
+<li>在帮助「help」中将选项参数「option-arguments」标记为方括号([])，以表示它们是可选的，或者使用尖括号(&lt;&gt;)，表示它们是必需的。</li>
+<li>参数可以使用单字符缩写，一般是 <code>-</code> 加上一个字母或数字。</li>
+<li>多个没有值的选型可进行组合，比如：<code>cli -abc</code> 等价于 <code>cli -a -b -c</code>。</li>
+</ul>
+<p>用户一般都会希望你的命令行工具与其他Unix工具具有类似的约定。</p>
+<h3 id="12-%E6%9E%84%E5%BB%BA%E5%8F%8B%E5%A5%BD%E7%9A%84-cli">1.2 构建友好的 CLI<a class="anchor" href="#12-%E6%9E%84%E5%BB%BA%E5%8F%8B%E5%A5%BD%E7%9A%84-cli">§</a></h3>
+<p>✅ <strong>正确：</strong> 尽可能多的输出一些信息以帮助用户成功使用 CLI。</p>
+<p>❌ <strong>错误：</strong> 由于 CLI 一直启动失败，又没有为用户提供足够的帮助，会让用户产生明显的挫败感。</p>
+<p>➡️ <strong>细节：</strong></p>
+<p>命令行工具的界面一定程度上应与 Web 用户界面类似，尽可能的保证程序能正常使用。</p>
+<p>构建一个对用户友好的 CLI 应该尽可能的为用户提供支持。作为实例，我们讨论下 <code>curl</code> 命令的交互，该命令期望将 URL 作为主要的数据输入，而用户却没有提供 URL，这时候命令行会提示用户通读 <code>curl --help</code> 的输出信息。但是，对用户友好的 CLI 工具会显示一个可交互式的提示，捕获用户的输入，从而正常运行。</p>
+<h3 id="13-%E6%9C%89%E7%8A%B6%E6%80%81%E7%9A%84%E6%95%B0%E6%8D%AE">1.3 有状态的数据<a class="anchor" href="#13-%E6%9C%89%E7%8A%B6%E6%80%81%E7%9A%84%E6%95%B0%E6%8D%AE">§</a></h3>
+<p>✅ <strong>正确：</strong> 在多次调用 CLI 的过程中，提供有状态的体验，记住这些数据，以提供无缝的交互体验。</p>
+<p>❌ <strong>错误：</strong> 用户多次调用 CLI 重复提供相同的信息，会让用户感到厌烦。</p>
+<p>➡️ <strong>细节：</strong></p>
+<p>你需要为 CLI 工具提供持续缓存，比如记住用户名、电子邮件、token 或者是 CLI 多次调用的一些首选项。可以使用以下工具来保留用户的这些配置。</p>
+<ul>
+<li>
+<p><a href="https://www.npmjs.com/package/configstore">configstore</a></p>
+</li>
+<li>
+<p><a href="https://www.npmjs.com/package/conf">conf</a></p>
+</li>
+</ul>
+<h3 id="14-%E6%8F%90%E4%BE%9B%E5%A4%9A%E5%BD%A9%E7%9A%84%E4%BD%93%E9%AA%8C">1.4 提供多彩的体验<a class="anchor" href="#14-%E6%8F%90%E4%BE%9B%E5%A4%9A%E5%BD%A9%E7%9A%84%E4%BD%93%E9%AA%8C">§</a></h3>
+<p>✅ <strong>正确：</strong> 在 CLI 工具中使用颜色来突出显示一些信息，并且提供降级方案，进行检测，自动退出以免输出乱码。</p>
+<p>❌ <strong>错误：</strong> 苍白的输出可能会让用户丢失重要的信息，尤其是文本较多的时候。</p>
+<p>➡️ <strong>细节：</strong></p>
+<p>大多数的命令行工具都支持彩色文本，通过特定的 ANSI 编码来启用。
+命令行工具输出彩色文本可带来更丰富的体验和更多的交互。但是，不受支持的终端可能会在屏幕上以乱码信息的形式输出。此外，CLI 也可能用于不支持彩色输出的连续集成中。</p>
+<ul>
+<li><a href="https://www.npmjs.com/package/chalk">chalk</a></li>
+<li><a href="https://www.npmjs.com/package/colors">colors</a></li>
+</ul>
+<h3 id="15-%E4%B8%B0%E5%AF%8C%E7%9A%84%E4%BA%A4%E4%BA%92">1.5 丰富的交互<a class="anchor" href="#15-%E4%B8%B0%E5%AF%8C%E7%9A%84%E4%BA%A4%E4%BA%92">§</a></h3>
+<p>✅ <strong>正确：</strong>  提供除了文本输入之外的其他交互形式，为用户提供更加丰富的体验。</p>
+<p>❌ <strong>错误：</strong> 当输入的信息是固定的选项（类似下拉菜单）时，文本输入的形式可能会给用户带来麻烦。</p>
+<p>➡️ <strong>细节：</strong></p>
+<p>可以以提示输入的方式引入更加丰富的交互方式，提示输入比自由的文本输入更高端。例如，下拉列表、单选按钮切换、隐藏密码输入。丰富交互的另一个方面就是动画以及进度条，在 CLI 执行异步工作时，都能为用户提供更好的体验。</p>
+<p>许多 CLI 提供默认的命令行参数，而无需用户进一步交互。不强迫用户提供一些非必要的参数。</p>
+<ul>
+<li><a href="https://www.npmjs.com/package/prompts">prompts</a></li>
+<li><a href="https://www.npmjs.com/package/enquirer">enquirer</a></li>
+<li><a href="https://www.npmjs.com/package/ink">ink</a></li>
+<li><a href="https://www.npmjs.com/package/chalk">ora</a></li>
+</ul>
+<h3 id="16-%E6%97%A0%E5%A4%84%E4%B8%8D%E5%9C%A8%E7%9A%84%E8%B6%85%E9%93%BE%E6%8E%A5">1.6 无处不在的超链接<a class="anchor" href="#16-%E6%97%A0%E5%A4%84%E4%B8%8D%E5%9C%A8%E7%9A%84%E8%B6%85%E9%93%BE%E6%8E%A5">§</a></h3>
+<p>✅ <strong>正确：</strong>  URL（<a href="https://www.github.com">https://www.github.com</a>）和源代码（<code>src/Util.js:2:75</code>）使用格式正确的文本输出，因为这两者都是现代终端可点击的链接。</p>
+<p>❌ <strong>错误：</strong> 避免使用<code>git.io/abc</code>之类的非交互式的链接，该链接需要用户手动复制和粘贴。</p>
+<p>➡️ <strong>细节：</strong></p>
+<p>如果你要分享的信息在 Url 链接中，或者是某个文件的特定行列，则需要向用户提供正确的格式的链接，用户一旦点击它们，就会打开浏览器或者在IDE跳到特定位置。</p>
+<h3 id="17-%E9%9B%B6%E9%85%8D%E7%BD%AE">1.7 零配置<a class="anchor" href="#17-%E9%9B%B6%E9%85%8D%E7%BD%AE">§</a></h3>
+<p>✅ <strong>正确：</strong> 通过自动检测所需的配置和命令行参数，达到即开即用的体验。</p>
+<p>❌ <strong>错误：</strong> 如果可以以可靠的方式自动检测命令行参数，并且调用的操作不需用户显式确认（例如确认删除），则不要强制用户交互。</p>
+<p>➡️ <strong>细节：</strong></p>
+<p>旨在在运行 CLI 工具时提供“即开即用”的体验。</p>
+<ul>
+<li>The <a href="https://jestjs.io/">Jest JavaScript Testing Framework</a></li>
+<li><a href="https://parceljs.org/">Parcel</a>, a web application bundler</li>
+</ul>
+<h2 id="2-%E5%8F%91%E5%B8%83">2 发布<a class="anchor" href="#2-%E5%8F%91%E5%B8%83">§</a></h2>
+<p>本节介绍了如何以最佳方式分发和打包 Node.js CLI 工具的最佳实践。</p>
+<h3 id="21-%E6%9C%80%E5%B0%8F%E5%8C%96%E7%9A%84%E4%BE%9D%E8%B5%96">2.1 最小化的依赖<a class="anchor" href="#21-%E6%9C%80%E5%B0%8F%E5%8C%96%E7%9A%84%E4%BE%9D%E8%B5%96">§</a></h3>
+<p>✅ <strong>正确：</strong> 最大程度地减少生产环境的依赖项，并且使用可替代的最小的依赖包，确保这是一个尽可能小的 Node.js 包。但是，也不能过于谨慎因此重复发明轮子而过度优化依赖。</p>
+<p>❌ <strong>错误：</strong> 应用中依赖的大小将决定 CLI 的安装时间，从而导致糟糕的用户体验。</p>
+<p>➡️ <strong>细节：</strong></p>
+<p>使用 <code>npx</code> 可以快速调用通过 <code>npm install</code> 安装的 Node.js CLI 模块，这可提供更好的用户体验。这有助于将整体的依赖关系和传递依赖关系保持在合理大小。</p>
+<p>npm 全局安装模块，安装过程会变得缓慢，这是一个糟糕的体验。通过 npx 总是获取当前项目安装的模块（当前文件夹的node_modules），因此使用 <code>npx</code> 来调用 CLI 可能会降低性能。</p>
+<h3 id="22-%E4%BD%BF%E7%94%A8%E6%96%87%E4%BB%B6%E9%94%81">2.2 使用文件锁<a class="anchor" href="#22-%E4%BD%BF%E7%94%A8%E6%96%87%E4%BB%B6%E9%94%81">§</a></h3>
+<p>✅ <strong>正确：</strong> 通过 npm 提供的 package-lock.json 来锁定安装包，以确保用户安装的时候使用的依赖版本是准确的。</p>
+<p>❌ <strong>错误：</strong> 不锁定依赖的版本，意味着 npm 将在安装过程中自己解决他们，从而导致安装依赖的版本范围扩大，这会引入无法控制的更改，可能会让 CLI 无法成功运行。</p>
+<p>➡️ <strong>细节：</strong></p>
+<p>通常，npm 包在发布时只定义其直接的依赖项及其版本范围，并且 npm 会在安装时解析所有间接依赖项的版本。随着时间的流逝，间接的依赖项版本会有所不同，因为依赖项随时会发布新版本。
+尽管维护人员已广泛使用<a href="https://semver.org/">版本控制语义</a>，但是 npm 会为安装的包引入许多间接的依赖关系，这些间接依赖提升了破坏您的应用程序的风险。
+使用 package-lock.json 会带给用户更好的安全感。将要安装的依赖项固定到特定版本，因此，即使这些依赖项发布了较新的版本，也不会安装它们。这将让您有责任保持对依赖项的关注，了解依赖项中任何安全相关的修复，并通过定期发布 CLI 工具进行安全更新。可以考虑使用<a href="https://snyk.io/">Snyk</a> 来自动修复整个依赖性树中的安全性问题。<em>注：我是Snyk的开发者开发者。</em>
+参考：</p>
+<ul>
+<li><a href="https://snyk.io/blog/making-sense-of-package-lock-files-in-the-npm-ecosystem/">Do you really know how a lockfile works for yarn and npm packages?</a></li>
+<li><a href="https://next.yarnpkg.com/advanced/qa/#should-lockfiles-be-committed-to-the-repository">Yarn docs: Should lockfiles be committed to the repository?</a></li>
+</ul>
+<h2 id="3-%E9%80%9A%E7%94%A8%E6%80%A7">3 通用性<a class="anchor" href="#3-%E9%80%9A%E7%94%A8%E6%80%A7">§</a></h2>
+<p>本节将介绍使 Node.js CLI 与其他命令行工具无缝集成有关的最佳实践，并遵循 CLI 正常运行的约定。</p>
+<p>本节将回答以下问题：</p>
+<ul>
+<li>我可以导出 CLI 的输出以便于分析吗？</li>
+<li>我可以将 CLI 的输出通过管道传递到另一个命令行工具的输入吗？</li>
+<li>是否可以将其他工具的结果通过管道传输到此 CLI？</li>
+</ul>
+<h3 id="31-%E6%8E%A5%E5%8F%97-stdin-%E4%BD%9C%E4%B8%BA%E8%BE%93%E5%85%A5">3.1 接受 STDIN 作为输入<a class="anchor" href="#31-%E6%8E%A5%E5%8F%97-stdin-%E4%BD%9C%E4%B8%BA%E8%BE%93%E5%85%A5">§</a></h3>
+<p>✅ <strong>正确：</strong> 对于数据驱动的命令行应用，用户可以轻松的通过管道将数据输入到 STDIN。</p>
+<p>❌ <strong>错误：</strong> 其他的命令行工具可能无法直接提供数据输入到你的 CLI 中，这会阻止某些代码的正常运行，例如：</p>
+<pre class="language-bash"><code class="language-bash">$ <span class="token function">curl</span> -s <span class="token string">"<a class="token url-link" href="https://api.example.com/data.json">https://api.example.com/data.json</a>"</span> <span class="token operator">|</span> your_cli
+</code></pre>
+<p>➡️ <strong>细节：</strong></p>
+<p>如果命令行工具需要处理某些数据，比如，指定 JSON 文件执行某种任务，一般使用 <code>--file file.json</code> 的命令行参数。</p>
+<h3 id="32-%E7%BB%93%E6%9E%84%E5%8C%96%E8%BE%93%E5%87%BA">3.2 结构化输出<a class="anchor" href="#32-%E7%BB%93%E6%9E%84%E5%8C%96%E8%BE%93%E5%87%BA">§</a></h3>
+<p>✅ <strong>正确：</strong> 通过某个参数来允许应用的结果进行结构化的输出，这样使得数据更容易处理和解析。</p>
+<p>❌ <strong>错误：</strong> 用户可能需要使用复杂的正则来解析和匹配 CLI 的输出结果。</p>
+<p>➡️ <strong>细节：</strong></p>
+<p>对于 CLI 的用户来说，解析数据并使用数据来执行其他任务（比如，提供给 web 仪表盘或电子邮件）通常很有用。
+能够轻松地从命令行输出中得到需要的数据，这将为 CLI 的用户提供更好的体验。</p>
+<h3 id="33-%E8%B7%A8%E5%B9%B3%E5%8F%B0">3.3 跨平台<a class="anchor" href="#33-%E8%B7%A8%E5%B9%B3%E5%8F%B0">§</a></h3>
+<p>✅ <strong>正确：</strong> 如果希望 CLI 能够跨平台工作，则必须注意命令行 shell 和子系统（如文件系统）的语义。</p>
+<p>❌ <strong>错误：</strong> 由于错误的路径分隔符等因素，CLI 将在一些操作系统上无法运行，即使代码中没有明显的功能差异。</p>
+<p>➡️ <strong>细节：</strong></p>
+<p>单纯从代码的角度来看，功能没有被剥离，并且应该在不同的操作系统中执行良好，但是一些遗漏的细节可能会使程序无法运行。让我们来研究几个必须遵守跨平台规范的案例。</p>
+<h4 id="%E4%BA%A7%E7%94%9F%E9%94%99%E8%AF%AF%E7%9A%84%E5%91%BD%E4%BB%A4">产生错误的命令<a class="anchor" href="#%E4%BA%A7%E7%94%9F%E9%94%99%E8%AF%AF%E7%9A%84%E5%91%BD%E4%BB%A4">§</a></h4>
+<p>有时候我们需要运行 Node.js 程序的进程，假设您有如下的脚本：</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// program.js</span>
+#<span class="token operator">!</span><span class="token operator">/</span>usr<span class="token operator">/</span>bin<span class="token operator">/</span>env bin
+
+<span class="token comment">// your app code</span>
+</code></pre>
+<p>然后使用如下方式启动。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> cliExecPath <span class="token operator">=</span> <span class="token string">'program.js'</span>
+<span class="token keyword">const</span> process <span class="token operator">=</span> childProcess<span class="token punctuation">.</span><span class="token method function property-access">spawn</span><span class="token punctuation">(</span>cliExecPath<span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre>
+<p>上面的代码能工作，但是下面这样更好。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> cliExecPath <span class="token operator">=</span> <span class="token string">'program.js'</span>
+<span class="token keyword">const</span> process <span class="token operator">=</span> childProcess<span class="token punctuation">.</span><span class="token method function property-access">spawn</span><span class="token punctuation">(</span><span class="token string">'node'</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>cliExecPath<span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre>
+<p>为什么这样更好呢？因为 <code>program.js</code> 代码以类 Unix 的  <a href="https://en.wikipedia.org/wiki/Shebang_(Unix)">Shebang</a> 符号开始，但是由于这不是跨平台的标准，Windows 不知道如何解析。</p>
+<p>在 <code>package.json</code> 中也是如此，如下方式定义 <code>npm script</code> 是不正确的：</p>
+<pre class="language-json"><code class="language-json"><span class="token property">"scripts"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token property">"postinstall"</span><span class="token operator">:</span> <span class="token string">"myInstall.js"</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>这是因为 Windows 无法理解 <code>myinstall.js</code> 中的 Shebang ，并且不知道如何使用 <code>node</code> 解释器运行它。</p>
+<p>相反，请使用如下方法：</p>
+<pre class="language-js"><code class="language-js"><span class="token string">"scripts"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token string">"postinstall"</span><span class="token operator">:</span> <span class="token string">"node myInstall.js"</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h4 id="%E4%B8%8D%E5%90%8C%E7%9A%84-shell-%E8%A7%A3%E9%87%8A%E5%99%A8">不同的 shell 解释器<a class="anchor" href="#%E4%B8%8D%E5%90%8C%E7%9A%84-shell-%E8%A7%A3%E9%87%8A%E5%99%A8">§</a></h4>
+<p>并不是所有的字符在不同的 shell 解释器都能得到相同的处理。</p>
+<p>例如， Windows 的命令提示符不会像 bash shell 那样将单引号当做双引号，因此它不知道单引号内的所有字符属于同一个字符串组，这会导致错误。</p>
+<p>下面的命令会导致在 Windows 环境下失效：</p>
+<pre class="language-json"><code class="language-json"><span class="token comment">// package.json</span>
+<span class="token property">"scripts"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token property">"format"</span><span class="token operator">:</span> <span class="token string">"prettier-standard '**/*.js'"</span><span class="token punctuation">,</span>
+  ...
+<span class="token punctuation">}</span>
+</code></pre>
+<p>应该按照如下方式：</p>
+<pre class="language-json"><code class="language-json"><span class="token comment">// package.json</span>
+<span class="token property">"scripts"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token property">"format"</span><span class="token operator">:</span> <span class="token string">"prettier-standard \"**/*.js\""</span><span class="token punctuation">,</span>
+  ...
+<span class="token punctuation">}</span>
+</code></pre>
+<h4 id="%E9%81%BF%E5%85%8D%E6%89%8B%E5%8A%A8%E8%BF%9E%E6%8E%A5%E8%B7%AF%E5%BE%84">避免手动连接路径<a class="anchor" href="#%E9%81%BF%E5%85%8D%E6%89%8B%E5%8A%A8%E8%BF%9E%E6%8E%A5%E8%B7%AF%E5%BE%84">§</a></h4>
+<p>不同平台会使用不同的路径连接符，当通过手动连接它们时，会导致程序不能在不同的平台之前相互操作。</p>
+<p>让我们看看一个不好的案例：</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> myPath <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>__dirname<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">/../bin/myBin.js</span><span class="token template-punctuation string">`</span></span>
+</code></pre>
+<p>它使用的是正斜杠，但是 Windows 上是使用反斜杠作为路径的分割符。所以我们不要通过手动的方式构建文件系统路径，而是使用 Node.js 的路径模块:</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> myPath <span class="token operator">=</span> path<span class="token punctuation">.</span><span class="token method function property-access">join</span><span class="token punctuation">(</span>__dirname<span class="token punctuation">,</span> <span class="token string">'..'</span><span class="token punctuation">,</span> <span class="token string">'bin'</span><span class="token punctuation">,</span> <span class="token string">'myBin.js'</span><span class="token punctuation">)</span>
+</code></pre>
+<h4 id="%E9%81%BF%E5%85%8D%E4%BD%BF%E7%94%A8%E5%88%86%E5%8F%B7%E9%93%BE%E6%8E%A5%E5%91%BD%E4%BB%A4">避免使用分号链接命令<a class="anchor" href="#%E9%81%BF%E5%85%8D%E4%BD%BF%E7%94%A8%E5%88%86%E5%8F%B7%E9%93%BE%E6%8E%A5%E5%91%BD%E4%BB%A4">§</a></h4>
+<p>我们在 Linux 上一般都使用分号来顺序链接要运行的命令，例如：<code>cd /tmp;ls</code>。但是，在 Windows 上执行相同的操作会失败。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> process <span class="token operator">=</span> childProcess<span class="token punctuation">.</span><span class="token method function property-access">exec</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>cliExecPath<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">; </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>cliExecPath2<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+</code></pre>
+<p>我们可以使用 <code>&amp;&amp;</code> 或者 <code>||</code>：</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> process <span class="token operator">=</span> childProcess<span class="token punctuation">.</span><span class="token method function property-access">exec</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>cliExecPath<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> || </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>cliExecPath2<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+</code></pre>
+<h3 id="34-%E5%85%81%E8%AE%B8%E7%8E%AF%E5%A2%83%E8%A6%86%E7%9B%96">3.4 允许环境覆盖<a class="anchor" href="#34-%E5%85%81%E8%AE%B8%E7%8E%AF%E5%A2%83%E8%A6%86%E7%9B%96">§</a></h3>
+<p>✅ <strong>正确：</strong> 允许从环境变量中读取配置，并且当它与命令行参数冲突时，允许环境变量被覆盖。</p>
+<p>❌ <strong>错误：</strong> 尽量不要使用自定义配置。</p>
+<p>➡️ <strong>细节：</strong></p>
+<p>使用环境变量调整配置，这是许多工具中用于修改 CLI 工具行为的常用方法。</p>
+<p>当命令行参数和环境变量都配置相同的设置时，应该给环境变量一个优先级来覆盖该设置。</p>
+<h2 id="4-%E6%98%93%E7%94%A8%E6%80%A7">4 易用性<a class="anchor" href="#4-%E6%98%93%E7%94%A8%E6%80%A7">§</a></h2>
+<p>本节将介绍，如何在用户缺乏开发者设计工具所需环境的情况下，更加容易地使用 Node.js CLI。</p>
+<h3 id="41-%E5%85%81%E8%AE%B8%E7%8E%AF%E5%A2%83%E8%A6%86%E7%9B%96">4.1 允许环境覆盖<a class="anchor" href="#41-%E5%85%81%E8%AE%B8%E7%8E%AF%E5%A2%83%E8%A6%86%E7%9B%96">§</a></h3>
+<p>✅ <strong>正确：</strong> 为 CLI 创建一个 docker 镜像，并将其发布到Docker Hub之类的公共仓库中，以便没有 Node.js 环境的用户可以使用它。</p>
+<p>❌ <strong>错误：</strong> 没有 Node.js 环境的用户将没有 npm 或 npx ，因此将无法运行您的 CLI 工具。</p>
+<p>➡️ <strong>细节：</strong></p>
+<p>从 npm 仓库中下载 Node.js CLI 工具通常将使用 Node.js 工具链（例如 npm 或 npx）来完成。这在JavaScript 和 Node.js 开发者中很容易完成。</p>
+<p>但是，如果您将 CLI 程序提供给大众使用，而不管他们是否熟悉 JavaScript 或该工具是否可用，那么将限制 CLI 程序仅以 npm 仓库形式的安装分发。如果您的 CLI 工具打算在CI环境中使用，则可能还需要安装那些与Node.js 相关的工具链依赖项。</p>
+<p>打包和分发可执行文件的方式有很多，将预先绑定了 CLI 工具的Docker容器进行容器化，这是一种容易使用方法并且不需要太多依赖关系（除了需要 Docker 环境之外）。</p>
+<h3 id="42-%E4%BC%98%E9%9B%85%E9%99%8D%E7%BA%A7">4.2 优雅降级<a class="anchor" href="#42-%E4%BC%98%E9%9B%85%E9%99%8D%E7%BA%A7">§</a></h3>
+<p>✅ <strong>正确：</strong> 在用户不受支持的环境中提供没有彩色和丰富交互的输出，比如跳过某些交互直接提供 JSON 格式的输出。</p>
+<p>❌ <strong>错误：</strong> 对于不受支持的终端用户，使用终端交互可能会显著降低最终用户体验，并阻止他们使用您的 CLI 工具。</p>
+<p>➡️ <strong>细节：</strong></p>
+<p>对于那些拥有丰富交互形式的终端的用户来说，彩色输出、ascii图表、终端动画会带来很好的用户体验，但是对于没有这些特性的终端用户来说，它可能会显示一下乱码或者完全无法操作。</p>
+<p>要使终端不受支持的用户正确使用您的 CLI 工具，您有如下选择:</p>
+<ul>
+<li>
+<p>自动检测终端能力，并在运行时评估是否对 CLI 的交互性进行降级；</p>
+</li>
+<li>
+<p>为用户提供一个选项来显式地进行降级，例如通过提供一个 <code>--json</code> 命令行参数来强制输出原始数据。</p>
+</li>
+</ul>
+<h3 id="43-nodejs-%E7%89%88%E6%9C%AC%E5%85%BC%E5%AE%B9">4.3 Node.js 版本兼容<a class="anchor" href="#43-nodejs-%E7%89%88%E6%9C%AC%E5%85%BC%E5%AE%B9">§</a></h3>
+<p>✅ <strong>正确：</strong> 支持目前还在维护的 <a href="https://nodejs.org/en/about/releases">Node.js 版本</a> 。</p>
+<p>❌ <strong>错误：</strong> 试图与不受支持的Node.js版本保持兼容的代码库将很难维护，并且会失去使用语言新特性的有点。</p>
+<p>➡️ <strong>细节：</strong></p>
+<p>有时可能需要专门针对缺少新的 ECAMScript 特性的旧 Node.js 版本兼容。例如，如果您正在构建一个主要面向DevOps 的Node.js CLI，那么他们可能没有一个理想的 Node.js 环境或者是最新的 runtime。比如，Debian Stretch (oldstable) 附带就是 <a href="https://packages.debian.org/search?suite=default&amp;section=all&amp;arch=any&amp;searchon=names&amp;keywords=nodejs">Node.js 8.11.1</a>.。</p>
+<p>如果你的需要兼容旧版本的 Node. js 如 Node. js 8、6、4，最好是使用 Babel 之类的编译器来确保生成的代码与V8 JavaScript 引擎的版本兼容，并与这些版本附带的Node.js runtime 兼容。</p>
+<p>绝对不要因此简化你的代码，来使用一些旧的 ECMAScript 语言规范，因为这会产生代码维护相关的问题。</p>
+<h3 id="44-%E8%87%AA%E5%8A%A8%E6%A3%80%E6%B5%8B-nodejs-runtime">4.4 自动检测 Node.js runtime<a class="anchor" href="#44-%E8%87%AA%E5%8A%A8%E6%A3%80%E6%B5%8B-nodejs-runtime">§</a></h3>
+<p>✅ <strong>正确：</strong> 在 Shebang 声明中使用与安装位置无关的引用，该引用可根据运行时环境自动定位 Node.js run</p>
+<p>time。</p>
+<p>❌ <strong>错误：</strong> 硬编码 Node.js runtime 位置，如 <code>#!/usr/local/bin/node</code> ，仅特定于您自己的环境，这可能使 CLI 工具在其他 Node.js 安装目录不同的环境中无法工作。</p>
+<p>➡️ <strong>细节：</strong></p>
+<p>首先在 <code>cli.js</code> 文件的顶部添加 <code>#!/usr/local/bin/node</code>，然后通过 <code>node cli.js</code> 来启动 Node.js CLI，这是一个容易的开始。但是，这是一种有缺陷的方法，因为其他用户的环境无法保证 <code>node</code> 可执行文件的位置。</p>
+<p>我们可以将 <code>#!/usr/bin/env node</code> 作为最佳实践，但是这仍然假设 Node.js runtime 是被 bin/node 引用，而不是 bin/nodejs 或其他。</p>
+<h2 id="5-%E6%B5%8B%E8%AF%95">5 测试<a class="anchor" href="#5-%E6%B5%8B%E8%AF%95">§</a></h2>
+<h3 id="51-%E4%B8%8D%E8%A6%81%E4%BF%A1%E4%BB%BB%E8%AF%AD%E8%A8%80%E7%8E%AF%E5%A2%83">5.1 不要信任语言环境<a class="anchor" href="#51-%E4%B8%8D%E8%A6%81%E4%BF%A1%E4%BB%BB%E8%AF%AD%E8%A8%80%E7%8E%AF%E5%A2%83">§</a></h3>
+<p>✅ <strong>正确：</strong> 不要假定输出文本与您声明的字符串等效，因为测试可能在与您的语言环境不同，比如在非英语环境的系统上运行。</p>
+<p>❌ <strong>错误：</strong> 当开发人员在非英语语言环境的系统上进行测试时，开发人员将遇到测试失败。</p>
+<p>➡️ <strong>细节：</strong></p>
+<p>当您运行 CLI 并解析输出来测试 CLI 时，您可能倾向于使用  grep  命令，以确保某些字符存在于输出中，例如在不带参数的情况下运行 CLI 时：</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> output <span class="token operator">=</span> <span class="token function">execSync</span><span class="token punctuation">(</span>cli<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">expect</span><span class="token punctuation">(</span>output<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token property-access">to</span><span class="token punctuation">.</span><span class="token method function property-access">contain</span><span class="token punctuation">(</span><span class="token string">"Examples:"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>如果在非英语的语言环境中运行测试，并且 CLI 参数解析库支持自动检测语言环境并采用该语言环境，则输出从 <code>Examples</code> 转换成了 “语言环境” 的语言，测试将失败。</p>
+<h2 id="6-%E9%94%99%E8%AF%AF">6 错误<a class="anchor" href="#6-%E9%94%99%E8%AF%AF">§</a></h2>
+<h3 id="61-%E9%94%99%E8%AF%AF%E4%BF%A1%E6%81%AF">6.1 错误信息<a class="anchor" href="#61-%E9%94%99%E8%AF%AF%E4%BF%A1%E6%81%AF">§</a></h3>
+<p>✅ <strong>正确：</strong> 在展示错误信息时，提供可以在项目文档中查找的可跟踪错误的代码，从而简化错误消息的排除。</p>
+<p>❌ <strong>错误：</strong> 一般的错误消息往往模棱两可，用户很难搜索解决方案。</p>
+<p>➡️ <strong>细节：</strong></p>
+<p>返回错误消息时，请确保它们包含特定的错误代码，以便以后查阅。与HTTP状态代码非常相似，因此 CLI 工具需要命名或编码错误。</p>
+<p>例如：</p>
+<pre class="language-bash"><code class="language-bash">$ my-cli-tool --doSomething
+
+Error <span class="token punctuation">(</span>E4002<span class="token punctuation">)</span>: please provide an API token via environment variables
+</code></pre>
+<h3 id="62-%E5%8F%AF%E8%A1%8C%E7%9A%84%E9%94%99%E8%AF%AF">6.2 可行的错误<a class="anchor" href="#62-%E5%8F%AF%E8%A1%8C%E7%9A%84%E9%94%99%E8%AF%AF">§</a></h3>
+<p>✅ <strong>正确：</strong> 错误消息应告诉用户解决方案是什么，而不是仅仅提示这里存在错误。</p>
+<p>❌ <strong>错误：</strong> 面对错误消息，如果没有任何解决错误的提示，则用户可能无法成功使用 CLI。</p>
+<p>➡️ <strong>细节：</strong></p>
+<p>例如：</p>
+<pre class="language-bash"><code class="language-bash">$ my-cli-tool --doSomething
+
+Error <span class="token punctuation">(</span>E4002<span class="token punctuation">)</span>: please provide an API token via environment variables
+</code></pre>
+<h3 id="63-%E6%8F%90%E4%BE%9B%E8%B0%83%E8%AF%95%E6%A8%A1%E5%BC%8F">6.3 提供调试模式<a class="anchor" href="#63-%E6%8F%90%E4%BE%9B%E8%B0%83%E8%AF%95%E6%A8%A1%E5%BC%8F">§</a></h3>
+<p>✅ <strong>正确：</strong> 如果高级用户需要诊断问题，则给他们提供更详细的信息</p>
+<p>❌ <strong>错误：</strong> 不要关闭调试功能。因为只是从用户那里收集反馈，并让他们查明错误原因将特别困难。</p>
+<p>➡️ <strong>细节：</strong></p>
+<p>使用环境变量或命令行参数来设置调试模式并打开详细输出信息。在代码中有意义的地方，植入调试消息，以帮助用户和维护者理解程序，输入和输出以及其他使解决问题变得容易的信息。</p>
+<p>参考开源软件包：</p>
+<ul>
+<li><a href="https://www.npmjs.com/package/debug">debug</a></li>
+</ul>
+<hr>
+<h2 id="%E4%BD%9C%E8%80%85">作者<a class="anchor" href="#%E4%BD%9C%E8%80%85">§</a></h2>
+<p><strong>Node.js CLI Apps Best Practices</strong> © <a href="https://github.com/lirantal">Liran Tal</a>, Released under <a href="https://github.com/lirantal/nodejs-cli-apps-best-practices/blob/master/LICENSE">CC BY-SA 4.0</a> License.</p></article></section><footer>Powered by <a href="https://github.com/xcatliu/pagic" target="_blank">Pagic</a></footer><script src="https://cdn.pagic.org/react@16.13.1/umd/react.production.min.js"></script><script src="https://cdn.pagic.org/react-dom@16.13.1/umd/react-dom.production.min.js"></script><script type="module" src="/index.js"></script></body></html>

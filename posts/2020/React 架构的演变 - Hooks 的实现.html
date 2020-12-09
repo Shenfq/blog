@@ -1,0 +1,257 @@
+<!doctype html><html class="" data-reactroot=""><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous"/>
+<meta data-react-helmet="true" charset="utf-8"/><meta data-react-helmet="true" http-equiv="x-ua-compatible" content="ie=edge"/><meta data-react-helmet="true" name="description" content="前端工程师@拼多多，爱折腾，擅长 JavaScript，欢迎关注我的公众号「更了不起的前端」"/><meta data-react-helmet="true" name="viewport" content="width=device-width, initial-scale=1"/>
+<title data-react-helmet="true">React 架构的演变 - Hooks 的实现 · 自然醒的博客</title>
+<link data-react-helmet="true" rel="stylesheet" href="/assets/index.css"/><link data-react-helmet="true" id="prismTheme" rel="stylesheet" href="/assets/prism.css"/>
+<script data-react-helmet="true" >
+    const shouldSetIsDark = document.cookie.includes('is_dark=1') ? true : document.cookie.includes('is_dark=0') ? false : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (shouldSetIsDark) {
+      document.documentElement.classList.add('is_dark');
+      document.getElementById('prismTheme').href = "/assets/prism_tomorrow.css";
+    }
+  </script>
+</head><body><a class="czs-menu-l show_on_mobile aside_button_open" href="#" style="background-image:url(&quot;/assets/czs-menu-l.svg&quot;)"></a><a class="show_on_mobile aside_button_text" href="/">自然醒的博客</a><aside class="hide_on_mobile"><a class="czs-menu-l show_on_mobile aside_button_close" href="#" style="background-image:url(&quot;/assets/czs-close-l.svg&quot;)"></a><h1><a href="/">自然醒的博客</a></h1><p class="description">前端工程师@拼多多，爱折腾，擅长 JavaScript，欢迎关注我的公众号「更了不起的前端」</p><ul class="social list_style_none"><li class="flex_center"><a class="czs-github-logo" href="https://github.com/Shenfq" target="_blank" style="background-image:url(&quot;/assets/czs-github-logo.svg&quot;)"></a></li><li class="flex_center"><a class="czs-message-l" href="mailto:shenfq95@foxmail.com" target="_blank" style="background-image:url(&quot;/assets/czs-message-l.svg&quot;)"></a></li><li style="flex-grow:1"></li><li class="toggle_dark flex_center"><span class="czs-sun" style="background-image:url(&quot;/assets/czs-sun.svg&quot;)"></span><span class="czs-sun-l" style="background-image:url(&quot;/assets/czs-sun-l.svg&quot;)"></span><span class="czs-moon" style="background-image:url(&quot;/assets/czs-moon.svg&quot;)"></span><span class="czs-moon-l" style="background-image:url(&quot;/assets/czs-moon-l.svg&quot;)"></span></li></ul><nav><ul class="menu list_style_none"><li><a class="flex_center" href="/"><span class="czs-home-l" style="background-image:url(&quot;/assets/czs-home-l.svg&quot;)"></span>首页</a></li><li><a class="flex_center" href="/categories/"><span class="czs-category-l" style="background-image:url(&quot;/assets/czs-category-l.svg&quot;)"></span>分类</a></li><li><a class="flex_center" href="/tags/"><span class="czs-tag-l" style="background-image:url(&quot;/assets/czs-tag-l.svg&quot;)"></span>标签</a></li><li><a class="flex_center" href="/about/"><span class="czs-about-l" style="background-image:url(&quot;/assets/czs-about-l.svg&quot;)"></span>关于</a></li><li><a class="flex_center" href="/archives/"><span class="czs-box-l" style="background-image:url(&quot;/assets/czs-box-l.svg&quot;)"></span>归档</a></li></ul></nav></aside><section class="main"><h1>React 架构的演变 - Hooks 的实现</h1><div class="main_post_meta"><time dateTime="2020/10/27">2020-10-28</time> · <!-- -->shenfq</div><article><blockquote>
+<p>这是这个系列的最后一篇文章了，终于收尾了🐶 。</p>
+</blockquote>
+<p>React Hooks 可以说完全颠覆了之前 Class Component 的写法，进一步增强了状态复用的能力，让 Function Component 也具有了内部状态，对于我个人来说，更加喜欢 Hooks 的写法。当然如果你是一个使用 Class Component  的老手，初期上手时会觉得很苦恼，毕竟之前沉淀的很多 HOC、Render Props 组件基本没法用。而且之前的 Function Component 是无副作用的无状态组件，现在又能通过 Hooks 引入状态，看起来真的很让人疑惑。Function Component 的另一个优势就是可以完全告别 <code>this</code> ，在 Class Component 里面 <code>this</code> 真的是一个让人讨厌的东西😶 。</p>
+<h2 id="hook-%E5%A6%82%E4%BD%95%E4%B8%8E%E7%BB%84%E4%BB%B6%E5%85%B3%E8%81%94">Hook 如何与组件关联<a class="anchor" href="#hook-%E5%A6%82%E4%BD%95%E4%B8%8E%E7%BB%84%E4%BB%B6%E5%85%B3%E8%81%94">§</a></h2>
+<p>在之前的文章中多次提到，Fiber 架构下的 <code>updateQueue</code>、<code>effectList</code> 都是链表的数据结构，然后挂载的 Fiber 节点上。而一个函数组件内所有的 Hooks 也是通过链表的形式存储的，最后挂载到  <code>fiber.memoizedState</code> 上。</p>
+<pre class="language-jsx"><code class="language-jsx"><span class="token keyword">function</span> <span class="token function"><span class="token maybe-class-name">App</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> <span class="token punctuation">[</span>num<span class="token punctuation">,</span> updateNum<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+
+  <span class="token keyword control-flow">return</span> <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+    <span class="token attr-name">onClick</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">{</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token function">updateNum</span><span class="token punctuation">(</span><span class="token parameter">num</span> <span class="token arrow operator">=></span> num <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">}</span></span>
+  <span class="token punctuation">></span></span><span class="token punctuation">{</span> num <span class="token punctuation">}</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword module">export</span> <span class="token keyword module">default</span> <span class="token maybe-class-name">App</span>
+</code></pre>
+<p>我们先简单看下，调用 useState 时，构造链表的过程：</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">var</span> workInProgressHook <span class="token operator">=</span> <span class="token keyword null nil">null</span>
+<span class="token keyword">var</span> <span class="token maybe-class-name">HooksDispatcherOnMount</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token function-variable function">useState</span><span class="token operator">:</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">initialState</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword control-flow">return</span> <span class="token function">mountState</span><span class="token punctuation">(</span>initialState<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token keyword">function</span> <span class="token function">mountState</span><span class="token punctuation">(</span><span class="token parameter">initialState</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 新的 Hook 节点</span>
+  <span class="token keyword">var</span> hook <span class="token operator">=</span> <span class="token function">mountWorkInProgressHook</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token comment">// 缓存初始值</span>
+  hook<span class="token punctuation">.</span><span class="token property-access">memoizedState</span> <span class="token operator">=</span> initialState
+  <span class="token comment">// 构造更新队列，类似于 fiber.updateQueue</span>
+  <span class="token keyword">var</span> queue <span class="token operator">=</span> hook<span class="token punctuation">.</span><span class="token property-access">queue</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+    pending<span class="token operator">:</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span>
+    dispatch<span class="token operator">:</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span>
+    lastRenderedState<span class="token operator">:</span> initialState
+  <span class="token punctuation">}</span>
+  <span class="token comment">// 用于派发更新</span>
+  <span class="token keyword">var</span> dispatch <span class="token operator">=</span> queue<span class="token punctuation">.</span><span class="token property-access">dispatch</span> <span class="token operator">=</span> dispatchAction<span class="token punctuation">.</span><span class="token method function property-access">bind</span><span class="token punctuation">(</span>
+    <span class="token keyword null nil">null</span><span class="token punctuation">,</span> workInProgress<span class="token punctuation">,</span> queue
+  <span class="token punctuation">)</span>
+  <span class="token comment">// [num, updateNum] = useState(0)</span>
+  <span class="token keyword control-flow">return</span> <span class="token punctuation">[</span>hook<span class="token punctuation">.</span><span class="token property-access">memoizedState</span><span class="token punctuation">,</span> dispatch<span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">mountWorkInProgressHook</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> hook <span class="token operator">=</span> <span class="token punctuation">{</span>
+    memoizedState<span class="token operator">:</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span>
+    baseState<span class="token operator">:</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span>
+    baseQueue<span class="token operator">:</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span>
+    queue<span class="token operator">:</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span>
+    next<span class="token operator">:</span> <span class="token keyword null nil">null</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>workInProgressHook <span class="token operator">===</span> <span class="token keyword null nil">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 构造链表头节点</span>
+    workInProgress<span class="token punctuation">.</span><span class="token property-access">memoizedState</span> <span class="token operator">=</span> workInProgressHook <span class="token operator">=</span> hook
+  <span class="token punctuation">}</span> <span class="token keyword control-flow">else</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 如果链表已经存在，在挂载到 next</span>
+    workInProgressHook <span class="token operator">=</span> workInProgressHook<span class="token punctuation">.</span><span class="token property-access">next</span> <span class="token operator">=</span> hook
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword control-flow">return</span> workInProgressHook
+<span class="token punctuation">}</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/20201026173627.png" alt="Hook"></p>
+<p>如果此时有两个 Hook，第二个 Hook 就会挂载到第一个 Hook 的 next 属性上。</p>
+<pre class="language-jsx"><code class="language-jsx"><span class="token keyword">function</span> <span class="token function"><span class="token maybe-class-name">App</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> <span class="token punctuation">[</span>num<span class="token punctuation">,</span> updateNum<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+  <span class="token keyword">const</span> <span class="token punctuation">[</span>str<span class="token punctuation">,</span> updateStr<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span><span class="token string">'value: '</span><span class="token punctuation">)</span>
+
+  <span class="token keyword control-flow">return</span> <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+    <span class="token attr-name">onClick</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">{</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token function">updateNum</span><span class="token punctuation">(</span><span class="token parameter">num</span> <span class="token arrow operator">=></span> num <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">}</span></span>
+  <span class="token punctuation">></span></span><span class="token punctuation">{</span> str <span class="token punctuation">}</span><span class="token plain-text"> </span><span class="token punctuation">{</span> num <span class="token punctuation">}</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword module">export</span> <span class="token keyword module">default</span> <span class="token maybe-class-name">App</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/20201026173832.png" alt="Hook"></p>
+<h2 id="hook-%E7%9A%84%E6%9B%B4%E6%96%B0%E9%98%9F%E5%88%97">Hook 的更新队列<a class="anchor" href="#hook-%E7%9A%84%E6%9B%B4%E6%96%B0%E9%98%9F%E5%88%97">§</a></h2>
+<p>Hook 通过 <code>.next</code> 彼此相连，而每个 Hook 对象下，还有个 queue 字段，该字段和 Fiber 节点上的 <code>updateQueue</code> 一样，是一个更新队列在，上篇文章 <a href="https://blog.shenfq.com/2020/react-%E6%9E%B6%E6%9E%84%E7%9A%84%E6%BC%94%E5%8F%98-%E6%9B%B4%E6%96%B0%E6%9C%BA%E5%88%B6/">《React 架构的演变-更新机制》</a>中有讲到，React Fiber 架构中，更新队列通过链表结构进行存储。</p>
+<pre class="language-jsx"><code class="language-jsx"><span class="token keyword">class</span> <span class="token class-name">App</span> <span class="token keyword">extends</span> <span class="token class-name">React<span class="token punctuation">.</span>Component</span> <span class="token punctuation">{</span>
+  state <span class="token operator">=</span> <span class="token punctuation">{</span> val<span class="token operator">:</span> <span class="token number">0</span> <span class="token punctuation">}</span>
+  <span class="token function">click</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword control-flow">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">3</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token method function property-access">setState</span><span class="token punctuation">(</span><span class="token punctuation">{</span> val<span class="token operator">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">state</span><span class="token punctuation">.</span><span class="token property-access">val</span> <span class="token operator">+</span> <span class="token number">1</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">render</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword control-flow">return</span> <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">onClick</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">{</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token method function property-access">click</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">}</span></span><span class="token punctuation">></span></span><span class="token plain-text">val: </span><span class="token punctuation">{</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">state</span><span class="token punctuation">.</span><span class="token property-access">val</span> <span class="token punctuation">}</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>点击 div 之后，产生的 3 次 setState 通过链表的形式挂载到 <code>fiber.updateQueue</code> 上，待到 MessageChannel 收到通知后，真正执行更新操作时，取出更新队列，将计算结果更新到 <code>fiber.memoizedState </code>。</p>
+<p><img src="https://file.shenfq.com/pic/20201009234826.png" alt="setState"></p>
+<p>而 <code>hook.queue</code> 的逻辑和 <code>fiber.updateQueue</code> 的逻辑也是完全一致的。</p>
+<pre class="language-jsx"><code class="language-jsx"><span class="token keyword">function</span> <span class="token function"><span class="token maybe-class-name">App</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> <span class="token punctuation">[</span>num<span class="token punctuation">,</span> updateNum<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+
+  <span class="token keyword control-flow">return</span> <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span>
+    <span class="token attr-name">onClick</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">{</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+      <span class="token comment">// 连续更新 3 次</span>
+      <span class="token function">updateNum</span><span class="token punctuation">(</span><span class="token parameter">num</span> <span class="token arrow operator">=></span> num <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
+      <span class="token function">updateNum</span><span class="token punctuation">(</span><span class="token parameter">num</span> <span class="token arrow operator">=></span> num <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
+      <span class="token function">updateNum</span><span class="token punctuation">(</span><span class="token parameter">num</span> <span class="token arrow operator">=></span> num <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">}</span></span>
+  <span class="token punctuation">></span></span><span class="token plain-text">
+    </span><span class="token punctuation">{</span> num <span class="token punctuation">}</span><span class="token plain-text">
+  </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword module">export</span> <span class="token keyword module">default</span> <span class="token maybe-class-name">App</span><span class="token punctuation">;</span>
+</code></pre>
+<pre class="language-js"><code class="language-js"><span class="token keyword">var</span> dispatch <span class="token operator">=</span> queue<span class="token punctuation">.</span><span class="token property-access">dispatch</span> <span class="token operator">=</span> dispatchAction<span class="token punctuation">.</span><span class="token method function property-access">bind</span><span class="token punctuation">(</span>
+  <span class="token keyword null nil">null</span><span class="token punctuation">,</span> workInProgress<span class="token punctuation">,</span> queue
+<span class="token punctuation">)</span>
+<span class="token comment">// [num, updateNum] = useState(0)</span>
+<span class="token keyword control-flow">return</span> <span class="token punctuation">[</span>hook<span class="token punctuation">.</span><span class="token property-access">memoizedState</span><span class="token punctuation">,</span> dispatch<span class="token punctuation">]</span>
+</code></pre>
+<p>调用 useState 的时候，返回的数组第二个参数为 <code>dispatch</code>，而 <code>dispatch</code> 由 <code>dispatchAction</code> bind 后得到。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">dispatchAction</span><span class="token punctuation">(</span><span class="token parameter">fiber<span class="token punctuation">,</span> queue<span class="token punctuation">,</span> action</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> update <span class="token operator">=</span> <span class="token punctuation">{</span>
+    next<span class="token operator">:</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span>
+    action<span class="token operator">:</span> action<span class="token punctuation">,</span>
+    <span class="token comment">// 省略调度相关的参数...</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">var</span> pending <span class="token operator">=</span> queue<span class="token punctuation">.</span><span class="token property-access">pending</span>
+  <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>pending <span class="token operator">===</span> <span class="token keyword null nil">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    update<span class="token punctuation">.</span><span class="token property-access">next</span> <span class="token operator">=</span> update
+  <span class="token punctuation">}</span> <span class="token keyword control-flow">else</span> <span class="token punctuation">{</span>
+    update<span class="token punctuation">.</span><span class="token property-access">next</span> <span class="token operator">=</span> pending<span class="token punctuation">.</span><span class="token property-access">next</span>
+    pending<span class="token punctuation">.</span><span class="token property-access">next</span> <span class="token operator">=</span> update
+  <span class="token punctuation">}</span>
+  queue<span class="token punctuation">.</span><span class="token property-access">pending</span> <span class="token operator">=</span> update
+
+  <span class="token comment">// 执行更新</span>
+  <span class="token function">scheduleUpdateOnFiber</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>可以看到这里构造链表的方式与 <code>fiber.updateQueue</code> 如出一辙。之前我们通过 <code>updateNum</code> 对 <code>num</code> 连续更新了 3 次，最后形成的更新队列如下：</p>
+<p><img src="https://file.shenfq.com/pic/20201026223145.png" alt="更新队列"></p>
+<h2 id="%E5%87%BD%E6%95%B0%E7%BB%84%E4%BB%B6%E7%9A%84%E6%9B%B4%E6%96%B0">函数组件的更新<a class="anchor" href="#%E5%87%BD%E6%95%B0%E7%BB%84%E4%BB%B6%E7%9A%84%E6%9B%B4%E6%96%B0">§</a></h2>
+<p>前面的文章分享过，Fiber 架构下的更新流程分为递（beginWork）、归（completeWork）两个步骤，在 beginWork 中，会依据组件类型进行 render 操作构造子组件。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">beginWork</span><span class="token punctuation">(</span><span class="token parameter">current<span class="token punctuation">,</span> workInProgress</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword control-flow">switch</span> <span class="token punctuation">(</span>workInProgress<span class="token punctuation">.</span><span class="token property-access">tag</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 其他类型组件代码省略...</span>
+    <span class="token keyword">case</span> <span class="token maybe-class-name">FunctionComponent</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 这里的 type 就是函数组件的函数</span>
+      <span class="token comment">// 例如，前面的 App 组件，type 就是 function App() {}</span>
+      <span class="token keyword">var</span> <span class="token maybe-class-name">Component</span> <span class="token operator">=</span> workInProgress<span class="token punctuation">.</span><span class="token property-access">type</span>
+      <span class="token keyword">var</span> resolvedProps <span class="token operator">=</span> workInProgress<span class="token punctuation">.</span><span class="token property-access">pendingProps</span>
+      <span class="token comment">// 组件更新</span>
+      <span class="token keyword control-flow">return</span> <span class="token function">updateFunctionComponent</span><span class="token punctuation">(</span>
+        current<span class="token punctuation">,</span> workInProgress<span class="token punctuation">,</span> <span class="token maybe-class-name">Component</span><span class="token punctuation">,</span> resolvedProps
+      <span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">updateFunctionComponent</span><span class="token punctuation">(</span>
+	<span class="token parameter">current<span class="token punctuation">,</span> workInProgress<span class="token punctuation">,</span> <span class="token maybe-class-name">Component</span><span class="token punctuation">,</span> nextProps</span>
+<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 构造子组件</span>
+  <span class="token keyword">var</span> nextChildren <span class="token operator">=</span> <span class="token function">renderWithHooks</span><span class="token punctuation">(</span>
+    current<span class="token punctuation">,</span> workInProgress<span class="token punctuation">,</span> <span class="token maybe-class-name">Component</span><span class="token punctuation">,</span> nextProps
+  <span class="token punctuation">)</span>
+  <span class="token function">reconcileChildren</span><span class="token punctuation">(</span>current<span class="token punctuation">,</span> workInProgress<span class="token punctuation">,</span> nextChildren<span class="token punctuation">)</span>
+  <span class="token keyword control-flow">return</span> workInProgress<span class="token punctuation">.</span><span class="token property-access">child</span>
+<span class="token punctuation">}</span>
+
+</code></pre>
+<p>看名字就能看出来，<code>renderWithHooks</code> 方法就是构造带 Hooks 的子组件。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">renderWithHooks</span><span class="token punctuation">(</span>
+	<span class="token parameter">current<span class="token punctuation">,</span> workInProgress<span class="token punctuation">,</span> <span class="token maybe-class-name">Component</span><span class="token punctuation">,</span> props</span>
+<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>current <span class="token operator">!==</span> <span class="token keyword null nil">null</span> <span class="token operator">&amp;&amp;</span> current<span class="token punctuation">.</span><span class="token property-access">memoizedState</span> <span class="token operator">!==</span> <span class="token keyword null nil">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token maybe-class-name">ReactCurrentDispatcher</span><span class="token punctuation">.</span><span class="token property-access">current</span> <span class="token operator">=</span> <span class="token maybe-class-name">HooksDispatcherOnUpdate</span>
+  <span class="token punctuation">}</span> <span class="token keyword control-flow">else</span> <span class="token punctuation">{</span>
+    <span class="token maybe-class-name">ReactCurrentDispatcher</span><span class="token punctuation">.</span><span class="token property-access">current</span> <span class="token operator">=</span> <span class="token maybe-class-name">HooksDispatcherOnMount</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">var</span> children <span class="token operator">=</span> <span class="token function"><span class="token maybe-class-name">Component</span></span><span class="token punctuation">(</span>props<span class="token punctuation">)</span>
+  <span class="token keyword control-flow">return</span> children
+<span class="token punctuation">}</span>
+</code></pre>
+<p>从上面的代码可以看出，函数组件更新或者首次渲染时，本质就是将函数取出执行了一遍。不同的地方在于给 <code>ReactCurrentDispatcher </code> 进行了不同的赋值，而 <code>ReactCurrentDispatcher</code> 的值最终会影响 <code>useState</code> 调用不同的方法。</p>
+<p>根据之前文章讲过的双缓存机制，current 存在的时候表示是更新操作，不存在的时候表示首次渲染。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">useState</span><span class="token punctuation">(</span><span class="token parameter">initialState</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 首次渲染时指向 HooksDispatcherOnMount</span>
+  <span class="token comment">// 更新操作时指向 HooksDispatcherOnUpdate</span>
+  <span class="token keyword">var</span> dispatcher <span class="token operator">=</span> <span class="token maybe-class-name">ReactCurrentDispatcher</span><span class="token punctuation">.</span><span class="token property-access">current</span>
+  <span class="token keyword control-flow">return</span> dispatcher<span class="token punctuation">.</span><span class="token method function property-access">useState</span><span class="token punctuation">(</span>initialState<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><code>HooksDispatcherOnMount.useState</code> 的代码前面已经介绍过，这里不再着重介绍。</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// HooksDispatcherOnMount 的代码前面已经介绍过</span>
+<span class="token keyword">var</span> <span class="token maybe-class-name">HooksDispatcherOnMount</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token function-variable function">useState</span><span class="token operator">:</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">initialState</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword control-flow">return</span> <span class="token function">mountState</span><span class="token punctuation">(</span>initialState<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>我们重点看看 <code>HooksDispatcherOnMount.useState</code> 的逻辑。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">var</span> <span class="token maybe-class-name">HooksDispatcherOnUpdateInDEV</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token function-variable function">useState</span><span class="token operator">:</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">initialState</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword control-flow">return</span> <span class="token function">updateState</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">updateState</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 取出当前 hook</span>
+  workInProgressHook <span class="token operator">=</span> nextWorkInProgressHook
+  nextWorkInProgressHook <span class="token operator">=</span> workInProgressHook<span class="token punctuation">.</span><span class="token property-access">next</span>
+
+  <span class="token keyword">var</span> hook <span class="token operator">=</span> nextWorkInProgressHook
+  <span class="token keyword">var</span> queue <span class="token operator">=</span> hook<span class="token punctuation">.</span><span class="token property-access">queue</span>
+  <span class="token keyword">var</span> pendingQueue <span class="token operator">=</span> queue<span class="token punctuation">.</span><span class="token property-access">pending</span>
+
+  <span class="token comment">// 处理更新</span>
+  <span class="token keyword">var</span> first <span class="token operator">=</span> pendingQueue<span class="token punctuation">.</span><span class="token property-access">next</span>
+  <span class="token keyword">var</span> state <span class="token operator">=</span> hook<span class="token punctuation">.</span><span class="token property-access">memoizedState</span>
+  <span class="token keyword">var</span> update <span class="token operator">=</span> first
+
+  <span class="token keyword control-flow">do</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> action <span class="token operator">=</span> update<span class="token punctuation">.</span><span class="token property-access">action</span>
+    state <span class="token operator">=</span> <span class="token keyword">typeof</span> action <span class="token operator">===</span> <span class="token string">'function'</span> <span class="token operator">?</span> <span class="token function">action</span><span class="token punctuation">(</span>state<span class="token punctuation">)</span> <span class="token operator">:</span> action
+
+    update <span class="token operator">=</span> update<span class="token punctuation">.</span><span class="token property-access">next</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword control-flow">while</span> <span class="token punctuation">(</span>update <span class="token operator">!==</span> <span class="token keyword null nil">null</span> <span class="token operator">&amp;&amp;</span> update <span class="token operator">!==</span> first<span class="token punctuation">)</span>
+
+
+  hook<span class="token punctuation">.</span><span class="token property-access">memoizedState</span> <span class="token operator">=</span> state
+
+  <span class="token keyword">var</span> dispatch <span class="token operator">=</span> queue<span class="token punctuation">.</span><span class="token property-access">dispatch</span>
+  <span class="token keyword control-flow">return</span> <span class="token punctuation">[</span>hook<span class="token punctuation">.</span><span class="token property-access">memoizedState</span><span class="token punctuation">,</span> dispatch<span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>如果有看之前的 setState 的代码，这里的逻辑其实是一样的。将更新对象的 action 取出，如果是函数就执行，如果不是函数就直接对 state 进行替换操作。</p>
+<h2 id="%E6%80%BB%E7%BB%93">总结<a class="anchor" href="#%E6%80%BB%E7%BB%93">§</a></h2>
+<p>React 系列的文章终于写完了，这一篇文章应该是最简单的一篇，如果想抛开 React 源码，单独看 Hooks 实现可以看这篇文章：<a href="https://github.com/brickspert/blog/issues/26">《React Hooks 原理》</a>。Fiber 架构为了能够实现循环的方式更新，将所有涉及到数据的地方结构都改成了链表，这样的优势就是可以随时中断，为异步模式让路，Fiber 树就像一颗圣诞树，上面挂满了各种彩灯（<code>alternate</code>、<code>EffectList</code>、<code>updateQueue</code>、<code>Hooks</code>）。</p>
+<p>推荐大家可以将这个系列从头到尾看一遍，相信会特别有收获的。</p>
+<ul>
+<li><a href="https://blog.shenfq.com/2020/react-%E6%9E%B6%E6%9E%84%E7%9A%84%E6%BC%94%E5%8F%98-%E4%BB%8E%E5%90%8C%E6%AD%A5%E5%88%B0%E5%BC%82%E6%AD%A5/">React 架构的演变 - 从同步到异步</a></li>
+<li><a href="https://blog.shenfq.com/2020/react-%E6%9E%B6%E6%9E%84%E7%9A%84%E6%BC%94%E5%8F%98-%E4%BB%8E%E9%80%92%E5%BD%92%E5%88%B0%E5%BE%AA%E7%8E%AF/">React 架构的演变 - 从递归到循环</a></li>
+<li><a href="https://blog.shenfq.com/2020/react-%E6%9E%B6%E6%9E%84%E7%9A%84%E6%BC%94%E5%8F%98-%E6%9B%B4%E6%96%B0%E6%9C%BA%E5%88%B6/">React 架构的演变 - 更新机制</a></li>
+</ul></article></section><footer>Powered by <a href="https://github.com/xcatliu/pagic" target="_blank">Pagic</a></footer><script src="https://cdn.pagic.org/react@16.13.1/umd/react.production.min.js"></script><script src="https://cdn.pagic.org/react-dom@16.13.1/umd/react-dom.production.min.js"></script><script type="module" src="/index.js"></script></body></html>
