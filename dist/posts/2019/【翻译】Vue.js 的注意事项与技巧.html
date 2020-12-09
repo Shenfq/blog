@@ -1,0 +1,188 @@
+<!doctype html><html class="" data-reactroot=""><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous"/>
+<meta data-react-helmet="true" charset="utf-8"/><meta data-react-helmet="true" http-equiv="x-ua-compatible" content="ie=edge"/><meta data-react-helmet="true" name="description" content="前端工程师@拼多多，爱折腾，擅长 JavaScript，欢迎我的关注公众号「更了不起的前端」"/><meta data-react-helmet="true" name="viewport" content="width=device-width, initial-scale=1"/>
+<title data-react-helmet="true">【翻译】Vue.js 的注意事项与技巧 · 自然醒的博客</title>
+<link data-react-helmet="true" rel="stylesheet" href="/assets/index.css"/><link data-react-helmet="true" id="prismTheme" rel="stylesheet" href="/assets/prism.css"/>
+<script data-react-helmet="true" >
+    const shouldSetIsDark = document.cookie.includes('is_dark=1') ? true : document.cookie.includes('is_dark=0') ? false : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (shouldSetIsDark) {
+      document.documentElement.classList.add('is_dark');
+      document.getElementById('prismTheme').href = "/assets/prism_tomorrow.css";
+    }
+  </script>
+</head><body><a class="czs-menu-l show_on_mobile aside_button_open" href="#" style="background-image:url(&quot;/assets/czs-menu-l.svg&quot;)"></a><a class="show_on_mobile aside_button_text" href="/">自然醒的博客</a><aside class="hide_on_mobile"><a class="czs-menu-l show_on_mobile aside_button_close" href="#" style="background-image:url(&quot;/assets/czs-close-l.svg&quot;)"></a><h1><a href="/">自然醒的博客</a></h1><p class="description">前端工程师@拼多多，爱折腾，擅长 JavaScript，欢迎我的关注公众号「更了不起的前端」</p><ul class="social list_style_none"><li class="flex_center"><a class="czs-github-logo" href="https://github.com/Shenfq" target="_blank" style="background-image:url(&quot;/assets/czs-github-logo.svg&quot;)"></a></li><li class="flex_center"><a class="czs-message-l" href="mailto:shenfq95@foxmail.com" target="_blank" style="background-image:url(&quot;/assets/czs-message-l.svg&quot;)"></a></li><li style="flex-grow:1"></li><li class="toggle_dark flex_center"><span class="czs-sun" style="background-image:url(&quot;/assets/czs-sun.svg&quot;)"></span><span class="czs-sun-l" style="background-image:url(&quot;/assets/czs-sun-l.svg&quot;)"></span><span class="czs-moon" style="background-image:url(&quot;/assets/czs-moon.svg&quot;)"></span><span class="czs-moon-l" style="background-image:url(&quot;/assets/czs-moon-l.svg&quot;)"></span></li></ul><nav><ul class="menu list_style_none"><li><a class="flex_center" href="/"><span class="czs-home-l" style="background-image:url(&quot;/assets/czs-home-l.svg&quot;)"></span>首页</a></li><li><a class="flex_center" href="/categories/"><span class="czs-category-l" style="background-image:url(&quot;/assets/czs-category-l.svg&quot;)"></span>分类</a></li><li><a class="flex_center" href="/tags/"><span class="czs-tag-l" style="background-image:url(&quot;/assets/czs-tag-l.svg&quot;)"></span>标签</a></li><li><a class="flex_center" href="/about/"><span class="czs-about-l" style="background-image:url(&quot;/assets/czs-about-l.svg&quot;)"></span>关于</a></li><li><a class="flex_center" href="/archives/"><span class="czs-box-l" style="background-image:url(&quot;/assets/czs-box-l.svg&quot;)"></span>归档</a></li></ul></nav></aside><section class="main"><div class="main_post_meta"><time dateTime="2019/03/31">2019-03-32</time> · <!-- -->unknown</div><article><p>原文链接：<a href="https://blog.webf.zone/vue-js-considerations-and-tricks-fa7e0e4bb7bb">Vue.js — Considerations and Tricks</a></p>
+<p><img src="https://file.shenfq.com/FjFxhMxwH4RWxzhXmnKlhcxjQ2Ap.png" alt=""></p>
+<p>Vue.js 是一个很棒的框架。然而，当你开始构建一个大型 JavaScript 项目的时候，你将对 Vue.js 感到一些困惑。这些困惑并不是来自框架本身，相反 Vue.js 团队会经常调整一些重要设计策略。</p>
+<p>相对于 React 和 Angular，Vue.js 面向一些不同水平的开发者。它更加的友好，不管是对初学者还是经验丰富的老手。它并不隐藏一些 DOM 操作，相反它与 DOM 配合的很好。</p>
+<p>这篇文章更像是一个目录，列举了我在 Vue.js 的初学路上遇到一些问题和技巧。理解这些关键性的设计技巧，有助于我们构建大型的 Web 应用。</p>
+<p>写这篇文章的时候是 2018 年 5 月 18 日，下面这些技巧依然是有效的。但是框架升级，或者浏览器底层或者 JS API 发生改变时，他们可能会变得不是那么有用。</p>
+<blockquote>
+<p>译者注：尽管 Vue.js 3 即将到来，但是下面的技巧大部分是有用的，因为 3 的版本并不会改变一些上层 API ，最大的特性可能是底层数据 Observer 改有 proxy 实现，以及源码使用 typescript 构建。</p>
+</blockquote>
+<hr>
+<h2 id="1%E4%B8%BA%E4%BB%80%E4%B9%88-vuejs-%E4%B8%8D%E4%BD%BF%E7%94%A8-es-classes-%E7%9A%84%E6%96%B9%E5%BC%8F%E7%BC%96%E5%86%99%E7%BB%84%E4%BB%B6">1、为什么 Vue.js 不使用 ES Classes 的方式编写组件<a class="anchor" href="#1%E4%B8%BA%E4%BB%80%E4%B9%88-vuejs-%E4%B8%8D%E4%BD%BF%E7%94%A8-es-classes-%E7%9A%84%E6%96%B9%E5%BC%8F%E7%BC%96%E5%86%99%E7%BB%84%E4%BB%B6">§</a></h2>
+<p>如果你使用过类似于 Angular 的框架或者某些后端 OOP 语言后，那么你的第一个问题可能是：为什么不使用 Class 形式的组件？</p>
+<p>Vue.js 的作者在 GitHub issues 中很好的回答了这个问题：
+<a href="https://github.com/vuejs/vue/issues/2371">Use standard JS classes instead of custom syntax?</a></p>
+<p>为什么不使用 Class 这里有三个很重要的原因：</p>
+<ol>
+<li>ES Classes 不能够满足当前 Vue.js 的需求，ES Classes 标准还没有完全规范化，并且总是朝着错误的方向发展。如果 Classes 的私有属性和装饰器（当前已进入 Stage 3）稳定后，可能会有一定帮助。</li>
+<li>ES Classes 只适合于那些熟悉面向对象语言的人，它对哪些不使用复杂构建工具和编译器的人不够友好。</li>
+<li>优秀的 UI 组件层次结构一般都是组件的横向组合，它并不是基于继承的层次结构。而 Classes 形式显然更擅长的是后者。</li>
+</ol>
+<blockquote>
+<p>译者注：But，Vue.js 3.0 将支持基于 Class 的组件写法，真香。</p>
+</blockquote>
+<h2 id="2%E5%A6%82%E4%BD%95%E6%9E%84%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E6%8A%BD%E8%B1%A1%E7%BB%84%E4%BB%B6">2、如何构建自己的抽象组件？<a class="anchor" href="#2%E5%A6%82%E4%BD%95%E6%9E%84%E5%BB%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E6%8A%BD%E8%B1%A1%E7%BB%84%E4%BB%B6">§</a></h2>
+<p>如果你想构建自己的抽象组件（比如 transition、keep-alive），这是一个比构建大型 web 应用更加疯狂地想法，这里有一些关于这个问题的讨论，但是并没有什么进展。</p>
+<p><a href="https://github.com/vuejs/vuejs.org/issues/720">Any plan for docs of abstract components?</a></p>
+<blockquote>
+<p>译者注：在 Vue.js 内部组件（transition、keep-alive）中，使用了一个 abstract 属性，用于声明抽象组件，这个属性作者并不打算开放给大家使用，所以文档也没有提及。但是如果你要使用也是可以的，那么你必须深入源码探索该属性有何作用。</p>
+</blockquote>
+<p>但是不要害怕，如果你可以很好地理解 slots ，你就可以构建自己的抽象组件了。这里有一篇很好的博客介绍了要如何做到这一点。</p>
+<p><a href="https://alligator.io/vuejs/vue-abstract-components/">Writing Abstract Components with Vue.js</a></p>
+<blockquote>
+<p>译者注：下面是《在 Vue.js 中构建抽象组件》的简单翻译</p>
+</blockquote>
+<pre><code>抽象组件与普通组件一样，只是它不会在界面上显示任何 DOM 元素。它们只是为现有组件添加额外的行为。
+就像很多你已经熟悉的 Vue.js 的内置组件，比如：`&lt;transition&gt;`、`&lt;keep-alive&gt;`、`&lt;slot&gt;`。
+
+现在展示一个案例，如何跟踪一个 DOM 已经进入了可视区域 ，让我们使用 IntersectionObserver API 来实现一个解决这个问题的抽象组件。
+（完整代码在这里：[vue-intersect](https://github.com/heavyy/vue-intersect)）
+</code></pre>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// IntersectionObserver.vue</span>
+<span class="token keyword module">export</span> <span class="token keyword module">default</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 在 Vue 中启用抽象组件</span>
+  <span class="token comment">// 此属性不在官方文档中， 可能随时发生更改，但是我们的组件必须使用它</span>
+  abstract<span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token comment">// 重新实现一个 render 函数</span>
+  <span class="token function">render</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 我们不需要任何包裹的元素，只需要返回子组件即可</span>
+    <span class="token keyword control-flow">try</span> <span class="token punctuation">{</span>
+      <span class="token keyword control-flow">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">$slots</span><span class="token punctuation">.</span><span class="token keyword module">default</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword control-flow">catch</span> <span class="token punctuation">(</span>e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword control-flow">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token string">'IntersectionObserver.vue can only render one, and exactly one child component.'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword control-flow">return</span> <span class="token keyword null nil">null</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token function">mounted</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 创建一个 IntersectionObserver 实例</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">observer</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">IntersectionObserver</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">entries</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token method function property-access">$emit</span><span class="token punctuation">(</span>entries<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token property-access">isIntersecting</span> <span class="token operator">?</span> <span class="token string">'intersect-enter'</span> <span class="token operator">:</span> <span class="token string">'intersect-leave'</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>entries<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// 需要等待下一个事件队列，保证子元素已经渲染</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token method function property-access">$nextTick</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">observer</span><span class="token punctuation">.</span><span class="token method function property-access">observe</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">$slots</span><span class="token punctuation">.</span><span class="token keyword module">default</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token property-access">elm</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token function">destroyed</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 确保组件移除时，IntersectionObserver 实例也会停止监听</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">observer</span><span class="token punctuation">.</span><span class="token method function property-access">disconnect</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<pre><code>让我们看看如何使用它？
+</code></pre>
+<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>intersection-observer</span> <span class="token attr-name">@intersect-enter</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>handleEnter<span class="token punctuation">"</span></span> <span class="token attr-name">@intersect-leave</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>handleLeave<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-honest-to-goodness-component</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-honest-to-goodness-component</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>intersection-observer</span><span class="token punctuation">></span></span>
+</code></pre>
+<p>但是在这样做之前，请你三思。我们一般依赖 mixins 和一些纯函数来解决一些特殊场景的问题，你可以将 mixins 直接看做一个抽象组件。</p>
+<p><a href="https://stackoverflow.com/questions/35964116/how-do-i-extend-another-vuejs-component-in-a-single-file-component-es6-vue-loa/35964246#35964246">How do I extend another VueJS component in a single-file component? (ES6 vue-loader)</a></p>
+<h2 id="3%E6%88%91%E4%B8%8D%E5%A4%AA%E5%96%9C%E6%AC%A2-vuejs-%E7%9A%84%E5%8D%95%E6%96%87%E4%BB%B6%E7%BB%84%E4%BB%B6%E6%88%91%E6%9B%B4%E5%B8%8C%E6%9C%9B-htmlcss-%E5%92%8C-javascript-%E5%88%86%E7%A6%BB">3、我不太喜欢 Vue.js 的单文件组件，我更希望 HTML、CSS 和 JavaScript 分离。<a class="anchor" href="#3%E6%88%91%E4%B8%8D%E5%A4%AA%E5%96%9C%E6%AC%A2-vuejs-%E7%9A%84%E5%8D%95%E6%96%87%E4%BB%B6%E7%BB%84%E4%BB%B6%E6%88%91%E6%9B%B4%E5%B8%8C%E6%9C%9B-htmlcss-%E5%92%8C-javascript-%E5%88%86%E7%A6%BB">§</a></h2>
+<p>没有人阻止你这样做，如果你是个注重分离的哲学家，喜欢把不同的东西放在不同文件，或者讨厌编辑器对 <code>.vue</code> 文件的不稳定行为，那么你这么做也是可以的。你要做的很简单：</p>
+<pre class="language-html"><code class="language-html"><span class="token comment">&lt;!--<a class="token url-link" href="https://vuejs.org/v2/guide/single-file-components.html">https://vuejs.org/v2/guide/single-file-components.html</a> --></span>
+<span class="token comment">&lt;!-- my-component.vue --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>./my-component.html<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>./my-component.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>./my-component.css<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token style"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">></span></span>
+</code></pre>
+<p>这么做，就会出现下一个问题：<strong>我的组件总是需要 4 个文件（vue + html + css + js）吗？我能不能摆脱 <code>.vue</code> 文件？</strong> 答案是肯定的，你可以使用 <a href="https://github.com/ktsn/vue-template-loader"><code>vue-template-loader</code></a>。</p>
+<p>我的同事还为此写了一篇很棒的教程：</p>
+<p><a href="https://alligator.io/vuejs/vue-template-loader/">Using vue-template-loader with Vue.js to Compile HTML Templates</a></p>
+<h2 id="4-%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BB%84%E4%BB%B6">4、 函数式组件<a class="anchor" href="#4-%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BB%84%E4%BB%B6">§</a></h2>
+<p>感谢 React.js 让函数式组件很流行，这是因为他们无状态、易于测试。然而它们也存在一些问题。</p>
+<blockquote>
+<p>译者注：不了解 Vue.js 函数式组件的可以先在官方文档查看：<a href="https://cn.vuejs.org/v2/guide/render-function.html#%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BB%84%E4%BB%B6">官方文档</a></p>
+</blockquote>
+<h3 id="41-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%88%91%E4%B8%8D%E8%83%BD%E5%AF%B9%E5%8A%9F%E8%83%BD%E7%BB%84%E4%BB%B6%E4%BD%BF%E7%94%A8%E5%9F%BA%E4%BA%8E-class-%E7%9A%84-component-%E8%A3%85%E9%A5%B0%E5%99%A8">4.1 为什么我不能对功能组件使用基于 Class 的 @Component 装饰器？<a class="anchor" href="#41-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%88%91%E4%B8%8D%E8%83%BD%E5%AF%B9%E5%8A%9F%E8%83%BD%E7%BB%84%E4%BB%B6%E4%BD%BF%E7%94%A8%E5%9F%BA%E4%BA%8E-class-%E7%9A%84-component-%E8%A3%85%E9%A5%B0%E5%99%A8">§</a></h3>
+<p>再次回到 Classes，它只是一种用于保存本地状态的数据结构。如果函数式组件是无状态的，那么使用 @Component 装饰器就是无意义的。</p>
+<p>这里有关于这个的讨论：</p>
+<p><a href="https://github.com/vuejs/vue-class-component/issues/120">How to create functional component in @Component?</a></p>
+<h3 id="42-%E5%A4%96%E9%83%A8%E7%B1%BB%E5%92%8C%E6%A0%B7%E5%BC%8F%E4%B8%8D%E5%BA%94%E7%94%A8%E4%BA%8E%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BB%84%E4%BB%B6">4.2 外部类和样式不应用于函数式组件<a class="anchor" href="#42-%E5%A4%96%E9%83%A8%E7%B1%BB%E5%92%8C%E6%A0%B7%E5%BC%8F%E4%B8%8D%E5%BA%94%E7%94%A8%E4%BA%8E%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BB%84%E4%BB%B6">§</a></h3>
+<p>函数式组件不能像普通组件那样，绑定具体的类和样式，必须在 render 函数中手动应用这些绑定。</p>
+<p><a href="https://github.com/vuejs/vue-loader/issues/1014">DOM class attribute not rendered properly with functional components</a></p>
+<p><a href="https://github.com/vuejs/vue/issues/7554">class attribute ignored on functional components</a></p>
+<h3 id="43-%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BB%84%E4%BB%B6%E6%80%BB%E6%98%AF%E4%BC%9A%E9%87%8D%E5%A4%8D%E6%B8%B2%E6%9F%93">4.3 函数式组件总是会重复渲染？<a class="anchor" href="#43-%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BB%84%E4%BB%B6%E6%80%BB%E6%98%AF%E4%BC%9A%E9%87%8D%E5%A4%8D%E6%B8%B2%E6%9F%93">§</a></h3>
+<blockquote>
+<p>TLDR：在函数式组件中使用有状态组件时务必要小心</p>
+</blockquote>
+<p><a href="https://github.com/vuejs/vue/issues/4037">Functional components are re-rendered when props are unchanged.</a></p>
+<p>函数式组件相当于直接调用组件的 Render 函数，这意味着你应该：</p>
+<blockquote>
+<p>避免在 render 函数中直接使用有状态组件，因为这会在每次调用 render 函数时创建不同的组件实例。</p>
+</blockquote>
+<p><strong>如果函数式组件是叶子组件，会更好地利用它们。</strong> 需要注意的是，同样的行为也适用于 React.js。</p>
+<h3 id="44-%E5%A6%82%E4%BD%95%E5%9C%A8vuejs-%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BB%84%E4%BB%B6%E4%B8%AD%E8%A7%A6%E5%8F%91%E4%B8%80%E4%B8%AA%E4%BA%8B%E4%BB%B6">4.4 如何在Vue.js 函数式组件中触发一个事件？<a class="anchor" href="#44-%E5%A6%82%E4%BD%95%E5%9C%A8vuejs-%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BB%84%E4%BB%B6%E4%B8%AD%E8%A7%A6%E5%8F%91%E4%B8%80%E4%B8%AA%E4%BA%8B%E4%BB%B6">§</a></h3>
+<p>在从函数式组件中触发一个事件并不简单。不幸的是，文档中也没有提到这一点。函数式组件中不可用 <code>$emit</code> 方法。stack overflow 上有人讨论过这个问题:</p>
+<p><a href="https://stackoverflow.com/questions/50288996/how-to-emit-an-event-from-vue-js-functional-component">How to emit an event from Vue.js Functional component?</a></p>
+<h2 id="5vuejs-%E7%9A%84%E9%80%8F%E6%98%8E%E5%8C%85%E8%A3%B9%E7%BB%84%E4%BB%B6">5、Vue.js 的透明包裹组件<a class="anchor" href="#5vuejs-%E7%9A%84%E9%80%8F%E6%98%8E%E5%8C%85%E8%A3%B9%E7%BB%84%E4%BB%B6">§</a></h2>
+<p>组件包裹一些DOM元素，并且公开了这些DOM元素的事件，而不是根DOM的节点实例。</p>
+<p>例如：</p>
+<pre class="language-html"><code class="language-html"><span class="token comment">&lt;!-- Wrapper component for input --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrapper-comp<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>label</span><span class="token punctuation">></span></span>My Label<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>label</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">@focus</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$emit(<span class="token punctuation">'</span>focus<span class="token punctuation">'</span>)<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">></span></span>
+</code></pre>
+<p>这里我们真正感兴趣的是 <code>input</code> 节点，而不是 <code>div</code> 根节点，因为它主要是为了样式和修饰而添加的。用户可能对这个组件的几个输入事件感兴趣，比如 <code>blur</code>、<code>focus</code>、<code>click</code>、<code>hover</code>等等。这意味着我们必须重新绑定每个事件。我们的组件如下所示。</p>
+<pre class="language-html"><code class="language-html"><span class="token comment">&lt;!-- Wrapper component for input --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrapper-comp<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>label</span><span class="token punctuation">></span></span>My Label<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>label</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span>
+            <span class="token attr-name">@focus</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$emit(<span class="token punctuation">'</span>focus<span class="token punctuation">'</span>)<span class="token punctuation">"</span></span>
+            <span class="token attr-name">@click</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$emit(<span class="token punctuation">'</span>click<span class="token punctuation">'</span>)<span class="token punctuation">"</span></span>
+            <span class="token attr-name">@blur</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$emit(<span class="token punctuation">'</span>blur<span class="token punctuation">'</span>)<span class="token punctuation">"</span></span>
+            <span class="token attr-name">@hover</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$emit(<span class="token punctuation">'</span>hover<span class="token punctuation">'</span>)<span class="token punctuation">"</span></span>
+        <span class="token punctuation">/></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">></span></span>
+</code></pre>
+<p>实际上这是完全没必要的。简单的解决方案是使用 Vue 实例上的属性 <code>vm.$listeners</code> 将事件重新绑定到所需DOM 元素上：</p>
+<pre class="language-html"><code class="language-html"><span class="token comment">&lt;!-- Notice the use of $listeners --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrapper-comp<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>label</span><span class="token punctuation">></span></span>My Label<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>label</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">v-on</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$listeners<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">></span></span>
+<span class="token comment">&lt;!-- Uses: @focus event will bind to internal input element --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>custom-input</span> <span class="token attr-name">@focus</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>onFocus<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>custom-input</span><span class="token punctuation">></span></span>
+</code></pre>
+<h2 id="6%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%A0%E4%B8%8D%E8%83%BD%E5%9C%A8-slot-%E4%B8%8A%E7%BB%91%E5%AE%9A%E5%92%8C%E8%A7%A6%E5%8F%91%E4%BA%8B%E4%BB%B6">6、为什么你不能在 slot 上绑定和触发事件<a class="anchor" href="#6%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%A0%E4%B8%8D%E8%83%BD%E5%9C%A8-slot-%E4%B8%8A%E7%BB%91%E5%AE%9A%E5%92%8C%E8%A7%A6%E5%8F%91%E4%BA%8B%E4%BB%B6">§</a></h2>
+<p>我经常看到有些开发人员，在 slot 上进行事件的监听和分发，这是不可能的。</p>
+<p>组件的 slot 由调用它的父组件提供，这意味着所有事件都应该与父组件相关联。尝试去倾听这些变化意味着你的父子组件是紧密耦合的，不过有另一种方法可以做到这一点，Evan You解释得很好:</p>
+<p><a href="https://github.com/vuejs/vue/issues/4332#issuecomment-263444492">Is it possible to emit event from component inside slot  #4332</a></p>
+<p><a href="https://github.com/vuejs/vue/issues/4781">Suggestion: v-on on slots</a></p>
+<h2 id="7slot-%E4%B8%AD%E7%9A%84-slot%E8%AE%BF%E9%97%AE%E5%AD%99%E8%BE%88slot">7、slot 中的 slot（访问孙辈slot）<a class="anchor" href="#7slot-%E4%B8%AD%E7%9A%84-slot%E8%AE%BF%E9%97%AE%E5%AD%99%E8%BE%88slot">§</a></h2>
+<p>在某些时候，可能会遇到这种情况。假设有一个组件，比如 A ，它接受一些 slot 。遵循组合的原则，使用组件 A 构建另一个组件 B 。然后你把 B 用在 C 中。</p>
+<blockquote>
+<p>那么现在问题来了： 如何将 slot 从 C 组件传递到 A 组件?</p>
+</blockquote>
+<p>要回答这个问题，首先取决你使用何种方式构建组件？ 如果你是用 render 函数，那就很简单。你只需要在组件 B 的 render 函数中进行如下操作：</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Render function for component B</span>
+<span class="token keyword">function</span> <span class="token function">render</span><span class="token punctuation">(</span><span class="token parameter">h</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword control-flow">return</span> <span class="token function">h</span><span class="token punctuation">(</span><span class="token string">'component-a'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+        <span class="token comment">// Passing slots as they are to component A</span>
+        scopedSlot<span class="token operator">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">$scopedSlots</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>但是，如果你使用的是基于模板的方式，那么就有些糟糕了。幸运的是，在这个问题上有了进展：</p>
+<p><a href="https://github.com/vuejs/vue/pull/7765">feat(core): support passing down scopedSlots with v-bind</a></p>
+<hr>
+<p>希望这篇文章让你对 Vue.js 的设计思路有了更深入的了解，并为你提供了一些在高级场景中的技巧。</p></article></section><footer>Powered by <a href="https://github.com/xcatliu/pagic" target="_blank">Pagic</a></footer><script src="https://cdn.pagic.org/react@16.13.1/umd/react.production.min.js"></script><script src="https://cdn.pagic.org/react-dom@16.13.1/umd/react-dom.production.min.js"></script><script type="module" src="/index.js"></script></body></html>

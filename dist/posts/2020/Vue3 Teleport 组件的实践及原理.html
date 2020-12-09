@@ -1,0 +1,287 @@
+<!doctype html><html class="" data-reactroot=""><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous"/>
+<meta data-react-helmet="true" charset="utf-8"/><meta data-react-helmet="true" http-equiv="x-ua-compatible" content="ie=edge"/><meta data-react-helmet="true" name="description" content="前端工程师@拼多多，爱折腾，擅长 JavaScript，欢迎我的关注公众号「更了不起的前端」"/><meta data-react-helmet="true" name="viewport" content="width=device-width, initial-scale=1"/>
+<title data-react-helmet="true">Vue3 Teleport 组件的实践及原理 · 自然醒的博客</title>
+<link data-react-helmet="true" rel="stylesheet" href="/assets/index.css"/><link data-react-helmet="true" id="prismTheme" rel="stylesheet" href="/assets/prism.css"/>
+<script data-react-helmet="true" >
+    const shouldSetIsDark = document.cookie.includes('is_dark=1') ? true : document.cookie.includes('is_dark=0') ? false : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (shouldSetIsDark) {
+      document.documentElement.classList.add('is_dark');
+      document.getElementById('prismTheme').href = "/assets/prism_tomorrow.css";
+    }
+  </script>
+</head><body><a class="czs-menu-l show_on_mobile aside_button_open" href="#" style="background-image:url(&quot;/assets/czs-menu-l.svg&quot;)"></a><a class="show_on_mobile aside_button_text" href="/">自然醒的博客</a><aside class="hide_on_mobile"><a class="czs-menu-l show_on_mobile aside_button_close" href="#" style="background-image:url(&quot;/assets/czs-close-l.svg&quot;)"></a><h1><a href="/">自然醒的博客</a></h1><p class="description">前端工程师@拼多多，爱折腾，擅长 JavaScript，欢迎我的关注公众号「更了不起的前端」</p><ul class="social list_style_none"><li class="flex_center"><a class="czs-github-logo" href="https://github.com/Shenfq" target="_blank" style="background-image:url(&quot;/assets/czs-github-logo.svg&quot;)"></a></li><li class="flex_center"><a class="czs-message-l" href="mailto:shenfq95@foxmail.com" target="_blank" style="background-image:url(&quot;/assets/czs-message-l.svg&quot;)"></a></li><li style="flex-grow:1"></li><li class="toggle_dark flex_center"><span class="czs-sun" style="background-image:url(&quot;/assets/czs-sun.svg&quot;)"></span><span class="czs-sun-l" style="background-image:url(&quot;/assets/czs-sun-l.svg&quot;)"></span><span class="czs-moon" style="background-image:url(&quot;/assets/czs-moon.svg&quot;)"></span><span class="czs-moon-l" style="background-image:url(&quot;/assets/czs-moon-l.svg&quot;)"></span></li></ul><nav><ul class="menu list_style_none"><li><a class="flex_center" href="/"><span class="czs-home-l" style="background-image:url(&quot;/assets/czs-home-l.svg&quot;)"></span>首页</a></li><li><a class="flex_center" href="/categories/"><span class="czs-category-l" style="background-image:url(&quot;/assets/czs-category-l.svg&quot;)"></span>分类</a></li><li><a class="flex_center" href="/tags/"><span class="czs-tag-l" style="background-image:url(&quot;/assets/czs-tag-l.svg&quot;)"></span>标签</a></li><li><a class="flex_center" href="/about/"><span class="czs-about-l" style="background-image:url(&quot;/assets/czs-about-l.svg&quot;)"></span>关于</a></li><li><a class="flex_center" href="/archives/"><span class="czs-box-l" style="background-image:url(&quot;/assets/czs-box-l.svg&quot;)"></span>归档</a></li></ul></nav></aside><section class="main"><div class="main_post_meta"><time dateTime="2020/12/1">2020-12-02</time> · <!-- -->unknown</div><article><p>Vue3 的组合式 API 以及基于 Proxy 响应式原理已经有很多文章介绍过了，除了这些比较亮眼的更新，Vue3 还新增了一个内置组件：<a href="https://vue3js.cn/docs/zh/guide/teleport.html">Teleport</a>。这个组件的作用主要用来将模板内的 DOM 元素移动到其他位置。</p>
+<h2 id="%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF">使用场景<a class="anchor" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF">§</a></h2>
+<p>业务开发的过程中，我们经常会封装一些常用的组件，例如 Modal 组件。相信大家在使用 Modal 组件的过程中，经常会遇到一个问题，那就是 Modal 的定位问题。</p>
+<p>话不多说，我们先写一个简单的 Modal 组件。</p>
+<pre class="language-html"><code class="language-html"><span class="token comment">&lt;!-- Modal.vue --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span> <span class="token attr-name">lang</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>scss<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token style"><span class="token language-css">
+<span class="token selector"><span class="token class">.modal</span></span> <span class="token punctuation">{</span>
+  <span class="token selector">&amp;__mask</span> <span class="token punctuation">{</span>
+    <span class="token property">position</span><span class="token punctuation">:</span> fixed<span class="token punctuation">;</span>
+    <span class="token property">top</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token property">left</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token property">width</span><span class="token punctuation">:</span> <span class="token number">100</span><span class="token unit">vw</span><span class="token punctuation">;</span>
+    <span class="token property">height</span><span class="token punctuation">:</span> <span class="token number">100</span><span class="token unit">vh</span><span class="token punctuation">;</span>
+    <span class="token property">background</span><span class="token punctuation">:</span> <span class="token color"><span class="token function">rgba</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0.5</span><span class="token punctuation">)</span></span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token selector">&amp;__main</span> <span class="token punctuation">{</span>
+    <span class="token property">margin</span><span class="token punctuation">:</span> <span class="token number">0</span> auto<span class="token punctuation">;</span>
+    <span class="token property">margin-bottom</span><span class="token punctuation">:</span> <span class="token number">5</span><span class="token unit">%</span><span class="token punctuation">;</span>
+    <span class="token property">margin-top</span><span class="token punctuation">:</span> <span class="token number">20</span><span class="token unit">%</span><span class="token punctuation">;</span>
+    <span class="token property">width</span><span class="token punctuation">:</span> <span class="token number">500</span><span class="token unit">px</span><span class="token punctuation">;</span>
+    <span class="token property">background</span><span class="token punctuation">:</span> <span class="token hexcode color">#fff</span><span class="token punctuation">;</span>
+    <span class="token property">border-radius</span><span class="token punctuation">:</span> <span class="token number">8</span><span class="token unit">px</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token comment">/* 省略部分样式 */</span>
+<span class="token punctuation">}</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>modal__mask<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>modal__main<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>modal__header<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h3</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>modal__title<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>弹窗标题<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h3</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>modal__close<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>x<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>modal__content<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+        弹窗文本内容
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>modal__footer<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span><span class="token punctuation">></span></span>取消<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span><span class="token punctuation">></span></span>确认<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span><span class="token script"><span class="token language-javascript">
+<span class="token keyword module">export</span> <span class="token keyword module">default</span> <span class="token punctuation">{</span>
+  <span class="token function">setup</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword control-flow">return</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+</code></pre>
+<p>然后我们在页面中引入 Modal 组件。</p>
+<pre class="language-html"><code class="language-html"><span class="token comment">&lt;!-- App.vue --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span> <span class="token attr-name">lang</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>scss<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token style"><span class="token language-css">
+<span class="token selector"><span class="token class">.container</span></span> <span class="token punctuation">{</span>
+  <span class="token property">height</span><span class="token punctuation">:</span> <span class="token number">80</span><span class="token unit">vh</span><span class="token punctuation">;</span>
+  <span class="token property">margin</span><span class="token punctuation">:</span> <span class="token number">50</span><span class="token unit">px</span><span class="token punctuation">;</span>
+  <span class="token property">overflow</span><span class="token punctuation">:</span> hidden<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>container<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Modal</span> <span class="token punctuation">/></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span><span class="token script"><span class="token language-javascript">
+<span class="token keyword module">export</span> <span class="token keyword module">default</span> <span class="token punctuation">{</span>
+  components<span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token maybe-class-name">Modal</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token function">setup</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword control-flow">return</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/20201128210914.png" alt="Modal"></p>
+<p>如上图所示， <code>div.container</code> 下弹窗组件正常展示。使用 <code>fixed</code> 进行布局的元素，在一般情况下会相对于屏幕视窗来进行定位，但是如果父元素的 <code>transform</code>, <code>perspective</code> 或 <code>filter</code> 属性不为 <code>none</code> 时，<code>fixed</code> 元素就会相对于父元素来进行定位。</p>
+<p>我们只需要把 <code>.container</code> 类的 <code>transform</code> 稍作修改，弹窗组件的定位就会错乱。</p>
+<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span> <span class="token attr-name">lang</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>scss<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token style"><span class="token language-css">
+<span class="token selector"><span class="token class">.container</span></span> <span class="token punctuation">{</span>
+  <span class="token property">height</span><span class="token punctuation">:</span> <span class="token number">80</span><span class="token unit">vh</span><span class="token punctuation">;</span>
+  <span class="token property">margin</span><span class="token punctuation">:</span> <span class="token number">50</span><span class="token unit">px</span><span class="token punctuation">;</span>
+  <span class="token property">overflow</span><span class="token punctuation">:</span> hidden<span class="token punctuation">;</span>
+  <span class="token property">transform</span><span class="token punctuation">:</span> <span class="token function">translateZ</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">></span></span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/20201128210848.png" alt="Modal"></p>
+<p>这个时候，使用 <code>Teleport</code> 组件就能解决这个问题了。</p>
+<blockquote>
+<p>Teleport 提供了一种干净的方法，允许我们控制在 DOM 中哪个父节点下呈现 HTML，而不必求助于全局状态或将其拆分为两个组件。 -- Vue 官方文档</p>
+</blockquote>
+<p>我们只需要将弹窗内容放入 <code>Teleport</code> 内，并设置 <code>to</code> 属性为 <code>body</code>，表示弹窗组件每次渲染都会做为 <code>body</code> 的子级，这样之前的问题就能得到解决。</p>
+<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>teleport</span> <span class="token attr-name">to</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>body<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>modal__mask<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>modal__main<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+        ...
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>teleport</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">></span></span>
+</code></pre>
+<p>可以在 <a href="https://codesandbox.io/embed/vue-modal-h5g8y">https://codesandbox.io/embed/vue-modal-h5g8y</a> 查看代码。</p>
+<p><img src="https://file.shenfq.com/pic/20201128223959.png" alt="使用 Teleport 的 Modal"></p>
+<h2 id="%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90">源码解析<a class="anchor" href="#%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90">§</a></h2>
+<p>我们可以先写一个简单的模板，然后看看 <code>Teleport</code> 组件经过模板编译后，生成的代码。</p>
+<pre class="language-js"><code class="language-js"><span class="token maybe-class-name">Vue</span><span class="token punctuation">.</span><span class="token method function property-access">createApp</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  template<span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+    &lt;Teleport to="body">
+      &lt;div> teleport to body &lt;/div>  
+    &lt;/Teleport>
+  </span><span class="token template-punctuation string">`</span></span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/20201130221659.png" alt="模板编译后的代码"></p>
+<p>简化后代码：</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">render</span><span class="token punctuation">(</span><span class="token parameter">_ctx<span class="token punctuation">,</span> _cache</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">with</span> <span class="token punctuation">(</span>_ctx<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> <span class="token punctuation">{</span> createVNode<span class="token punctuation">,</span> openBlock<span class="token punctuation">,</span> createBlock<span class="token punctuation">,</span> <span class="token maybe-class-name">Teleport</span> <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token maybe-class-name">Vue</span>
+    <span class="token keyword control-flow">return</span> <span class="token punctuation">(</span><span class="token function">openBlock</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">createBlock</span><span class="token punctuation">(</span><span class="token maybe-class-name">Teleport</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> to<span class="token operator">:</span> <span class="token string">"body"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>
+      <span class="token function">createVNode</span><span class="token punctuation">(</span><span class="token string">"div"</span><span class="token punctuation">,</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span> <span class="token string">" teleport to body "</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token comment">/* HOISTED */</span><span class="token punctuation">)</span>
+    <span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>可以看到 <code>Teleport</code> 组件通过 <code>createBlock</code> 进行创建。</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// packages/runtime-core/src/renderer.ts</span>
+<span class="token keyword module">export</span> <span class="token keyword">function</span> <span class="token function">createBlock</span><span class="token punctuation">(</span>
+	<span class="token parameter">type<span class="token punctuation">,</span> props<span class="token punctuation">,</span> children<span class="token punctuation">,</span> patchFlag</span>
+<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> vnode <span class="token operator">=</span> <span class="token function">createVNode</span><span class="token punctuation">(</span>
+    type<span class="token punctuation">,</span>
+    props<span class="token punctuation">,</span>
+    children<span class="token punctuation">,</span>
+    patchFlag
+  <span class="token punctuation">)</span>
+  <span class="token comment">// ... 省略部分逻辑</span>
+  <span class="token keyword control-flow">return</span> vnode
+<span class="token punctuation">}</span>
+
+<span class="token keyword module">export</span> <span class="token keyword">function</span> <span class="token function">createVNode</span><span class="token punctuation">(</span>
+  <span class="token parameter">type<span class="token punctuation">,</span> props<span class="token punctuation">,</span> children<span class="token punctuation">,</span> patchFlag</span>
+<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// class &amp; style normalization.</span>
+  <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>props<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// ...</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// encode the vnode type information into a bitmap</span>
+  <span class="token keyword">const</span> shapeFlag <span class="token operator">=</span> <span class="token function">isString</span><span class="token punctuation">(</span>type<span class="token punctuation">)</span>
+    <span class="token operator">?</span> <span class="token maybe-class-name">ShapeFlags</span><span class="token punctuation">.</span><span class="token constant">ELEMENT</span>
+    <span class="token operator">:</span> __FEATURE_SUSPENSE__ <span class="token operator">&amp;&amp;</span> <span class="token function">isSuspense</span><span class="token punctuation">(</span>type<span class="token punctuation">)</span>
+      <span class="token operator">?</span> <span class="token maybe-class-name">ShapeFlags</span><span class="token punctuation">.</span><span class="token constant">SUSPENSE</span>
+      <span class="token operator">:</span> <span class="token function">isTeleport</span><span class="token punctuation">(</span>type<span class="token punctuation">)</span>
+        <span class="token operator">?</span> <span class="token maybe-class-name">ShapeFlags</span><span class="token punctuation">.</span><span class="token constant">TELEPORT</span>
+        <span class="token operator">:</span> <span class="token function">isObject</span><span class="token punctuation">(</span>type<span class="token punctuation">)</span>
+          <span class="token operator">?</span> <span class="token maybe-class-name">ShapeFlags</span><span class="token punctuation">.</span><span class="token constant">STATEFUL_COMPONENT</span>
+          <span class="token operator">:</span> <span class="token function">isFunction</span><span class="token punctuation">(</span>type<span class="token punctuation">)</span>
+            <span class="token operator">?</span> <span class="token maybe-class-name">ShapeFlags</span><span class="token punctuation">.</span><span class="token constant">FUNCTIONAL_COMPONENT</span>
+            <span class="token operator">:</span> <span class="token number">0</span>
+
+  <span class="token keyword">const</span> vnode<span class="token operator">:</span> <span class="token maybe-class-name">VNode</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+    type<span class="token punctuation">,</span>
+    props<span class="token punctuation">,</span>
+    shapeFlag<span class="token punctuation">,</span>
+    patchFlag<span class="token punctuation">,</span>
+    key<span class="token operator">:</span> props <span class="token operator">&amp;&amp;</span> <span class="token function">normalizeKey</span><span class="token punctuation">(</span>props<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    ref<span class="token operator">:</span> props <span class="token operator">&amp;&amp;</span> <span class="token function">normalizeRef</span><span class="token punctuation">(</span>props<span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword control-flow">return</span> vnode
+<span class="token punctuation">}</span>
+
+<span class="token comment">// packages/runtime-core/src/components/Teleport.ts</span>
+<span class="token keyword module">export</span> <span class="token keyword">const</span> <span class="token function-variable function">isTeleport</span> <span class="token operator">=</span> <span class="token parameter">type</span> <span class="token arrow operator">=></span> type<span class="token punctuation">.</span><span class="token property-access">__isTeleport</span>
+<span class="token keyword module">export</span> <span class="token keyword">const</span> <span class="token maybe-class-name">Teleport</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+  __isTeleport<span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token function">process</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>传入 <code>createBlock</code> 的第一个参数为 <code>Teleport</code>，最后得到的 vnode 中会有一个 <code>shapeFlag</code> 属性，该属性用来表示 vnode 的类型。<code>isTeleport(type)</code> 得到的结果为 <code>true</code>，所以 <code>shapeFlag</code> 属性最后的值为 <code>ShapeFlags.TELEPORT</code>（<code>1 &lt;&lt; 6</code>）。</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// packages/shared/src/shapeFlags.ts</span>
+<span class="token keyword module">export</span> <span class="token keyword">const</span> <span class="token keyword">enum</span> <span class="token maybe-class-name">ShapeFlags</span> <span class="token punctuation">{</span>
+  <span class="token constant">ELEMENT</span> <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span>
+  <span class="token constant">FUNCTIONAL_COMPONENT</span> <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token number">1</span><span class="token punctuation">,</span>
+  <span class="token constant">STATEFUL_COMPONENT</span> <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token number">2</span><span class="token punctuation">,</span>
+  <span class="token constant">TEXT_CHILDREN</span> <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token number">3</span><span class="token punctuation">,</span>
+  <span class="token constant">ARRAY_CHILDREN</span> <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token number">4</span><span class="token punctuation">,</span>
+  <span class="token constant">SLOTS_CHILDREN</span> <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token number">5</span><span class="token punctuation">,</span>
+  <span class="token constant">TELEPORT</span> <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token number">6</span><span class="token punctuation">,</span>
+  <span class="token constant">SUSPENSE</span> <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token number">7</span><span class="token punctuation">,</span>
+  <span class="token constant">COMPONENT_SHOULD_KEEP_ALIVE</span> <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token number">8</span><span class="token punctuation">,</span>
+  <span class="token constant">COMPONENT_KEPT_ALIVE</span> <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">&lt;&lt;</span> <span class="token number">9</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>在组件的 render 节点，会依据 <code>type</code> 和 <code>shapeFlag</code> 走不同的逻辑。</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// packages/runtime-core/src/renderer.ts</span>
+<span class="token keyword">const</span> <span class="token function-variable function">render</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">vnode<span class="token punctuation">,</span> container</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>vnode <span class="token operator">==</span> <span class="token keyword null nil">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 当前组件为空，则将组件销毁</span>
+    <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>container<span class="token punctuation">.</span><span class="token property-access">_vnode</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">unmount</span><span class="token punctuation">(</span>container<span class="token punctuation">.</span><span class="token property-access">_vnode</span><span class="token punctuation">,</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span> <span class="token keyword control-flow">else</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 新建或者更新组件</span>
+    <span class="token comment">// container._vnode 是之前已创建组件的缓存</span>
+    <span class="token function">patch</span><span class="token punctuation">(</span>container<span class="token punctuation">.</span><span class="token property-access">_vnode</span> <span class="token operator">||</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span> vnode<span class="token punctuation">,</span> container<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+  container<span class="token punctuation">.</span><span class="token property-access">_vnode</span> <span class="token operator">=</span> vnode
+<span class="token punctuation">}</span>
+
+<span class="token comment">// patch 是表示补丁，用于 vnode 的创建、更新、销毁</span>
+<span class="token keyword">const</span> <span class="token function-variable function">patch</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">n1<span class="token punctuation">,</span> n2<span class="token punctuation">,</span> container</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+  <span class="token comment">// 如果新旧节点的类型不一致，则将旧节点销毁</span>
+  <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>n1 <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span><span class="token function">isSameVNodeType</span><span class="token punctuation">(</span>n1<span class="token punctuation">,</span> n2<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">unmount</span><span class="token punctuation">(</span>n1<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">const</span> <span class="token punctuation">{</span> type<span class="token punctuation">,</span> ref<span class="token punctuation">,</span> shapeFlag <span class="token punctuation">}</span> <span class="token operator">=</span> n2
+  <span class="token keyword control-flow">switch</span> <span class="token punctuation">(</span>type<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">case</span> <span class="token maybe-class-name">Text</span><span class="token operator">:</span>
+      <span class="token comment">// 处理文本</span>
+      <span class="token keyword control-flow">break</span>
+    <span class="token keyword">case</span> <span class="token maybe-class-name">Comment</span><span class="token operator">:</span>
+      <span class="token comment">// 处理注释</span>
+      <span class="token keyword control-flow">break</span>
+    <span class="token comment">// case ...</span>
+    <span class="token keyword module">default</span><span class="token operator">:</span>
+      <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>shapeFlag <span class="token operator">&amp;</span> <span class="token maybe-class-name">ShapeFlags</span><span class="token punctuation">.</span><span class="token constant">ELEMENT</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 处理 DOM 元素</span>
+      <span class="token punctuation">}</span> <span class="token keyword control-flow">else</span> <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>shapeFlag <span class="token operator">&amp;</span> <span class="token maybe-class-name">ShapeFlags</span><span class="token punctuation">.</span><span class="token constant">COMPONENT</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 处理自定义组件</span>
+      <span class="token punctuation">}</span> <span class="token keyword control-flow">else</span> <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>shapeFlag <span class="token operator">&amp;</span> <span class="token maybe-class-name">ShapeFlags</span><span class="token punctuation">.</span><span class="token constant">TELEPORT</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 处理 Teleport 组件</span>
+        <span class="token comment">// 调用 Teleport.process 方法</span>
+        type<span class="token punctuation">.</span><span class="token method function property-access">process</span><span class="token punctuation">(</span>n1<span class="token punctuation">,</span> n2<span class="token punctuation">,</span> container<span class="token spread operator">...</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span> <span class="token comment">// else if ...</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>可以看到，在处理 <code>Teleport</code> 时，最后会调用 <code>Teleport.process</code> 方法，Vue3 中很多地方都是通过 process 的方式来处理 vnode 相关逻辑的，下面我们重点看看 <code>Teleport.process</code> 方法做了些什么。</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// packages/runtime-core/src/components/Teleport.ts</span>
+<span class="token keyword">const</span> <span class="token function-variable function">isTeleportDisabled</span> <span class="token operator">=</span> <span class="token parameter">props</span> <span class="token arrow operator">=></span> props<span class="token punctuation">.</span><span class="token property-access">disabled</span>
+<span class="token keyword module">export</span> <span class="token keyword">const</span> <span class="token maybe-class-name">Teleport</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+  __isTeleport<span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token function">process</span><span class="token punctuation">(</span><span class="token parameter">n1<span class="token punctuation">,</span> n2<span class="token punctuation">,</span> container</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> disabled <span class="token operator">=</span> <span class="token function">isTeleportDisabled</span><span class="token punctuation">(</span>n2<span class="token punctuation">.</span><span class="token property-access">props</span><span class="token punctuation">)</span>
+    <span class="token keyword">const</span> <span class="token punctuation">{</span> shapeFlag<span class="token punctuation">,</span> children <span class="token punctuation">}</span> <span class="token operator">=</span> n2
+    <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>n1 <span class="token operator">==</span> <span class="token keyword null nil">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> target <span class="token operator">=</span> <span class="token punctuation">(</span>n2<span class="token punctuation">.</span><span class="token property-access">target</span> <span class="token operator">=</span> <span class="token function">querySelector</span><span class="token punctuation">(</span>n2<span class="token punctuation">.</span><span class="token property-access">prop</span><span class="token punctuation">.</span><span class="token property-access">to</span><span class="token punctuation">)</span><span class="token punctuation">)</span>      
+      <span class="token keyword">const</span> <span class="token function-variable function">mount</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">container</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+        <span class="token comment">// compiler and vnode children normalization.</span>
+        <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>shapeFlag <span class="token operator">&amp;</span> <span class="token maybe-class-name">ShapeFlags</span><span class="token punctuation">.</span><span class="token constant">ARRAY_CHILDREN</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token function">mountChildren</span><span class="token punctuation">(</span>children<span class="token punctuation">,</span> container<span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+      <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>disabled<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 开关关闭，挂载到原来的位置</span>
+        <span class="token function">mount</span><span class="token punctuation">(</span>container<span class="token punctuation">)</span>
+      <span class="token punctuation">}</span> <span class="token keyword control-flow">else</span> <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>target<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 将子节点，挂载到属性 `to` 对应的节点上</span>
+        <span class="token function">mount</span><span class="token punctuation">(</span>target<span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword control-flow">else</span> <span class="token punctuation">{</span>
+      <span class="token comment">// n1不存在，更新节点即可</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>其实原理很简单，就是将 <code>Teleport</code> 的 <code>children</code> 挂载到属性 <code>to</code> 对应的 DOM 元素中。为了方便理解，这里只是展示了源码的九牛一毛，省略了很多其他的操作。</p>
+<h2 id="%E6%80%BB%E7%BB%93">总结<a class="anchor" href="#%E6%80%BB%E7%BB%93">§</a></h2>
+<p>希望在阅读文章的过程中，大家能够掌握 <code>Teleport</code> 组件的用法，并使用到业务场景中。尽管原理十分简单，但是我们有了 <code>Teleport</code> 组件，就能轻松解决弹窗元素定位不准确的问题。</p></article></section><footer>Powered by <a href="https://github.com/xcatliu/pagic" target="_blank">Pagic</a></footer><script src="https://cdn.pagic.org/react@16.13.1/umd/react.production.min.js"></script><script src="https://cdn.pagic.org/react-dom@16.13.1/umd/react-dom.production.min.js"></script><script type="module" src="/index.js"></script></body></html>

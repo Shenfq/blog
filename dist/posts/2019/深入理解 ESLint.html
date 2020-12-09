@@ -1,0 +1,532 @@
+<!doctype html><html class="" data-reactroot=""><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous"/>
+<meta data-react-helmet="true" charset="utf-8"/><meta data-react-helmet="true" http-equiv="x-ua-compatible" content="ie=edge"/><meta data-react-helmet="true" name="description" content="前端工程师@拼多多，爱折腾，擅长 JavaScript，欢迎我的关注公众号「更了不起的前端」"/><meta data-react-helmet="true" name="viewport" content="width=device-width, initial-scale=1"/>
+<title data-react-helmet="true">深入理解 ESLint · 自然醒的博客</title>
+<link data-react-helmet="true" rel="stylesheet" href="/assets/index.css"/><link data-react-helmet="true" id="prismTheme" rel="stylesheet" href="/assets/prism.css"/>
+<script data-react-helmet="true" >
+    const shouldSetIsDark = document.cookie.includes('is_dark=1') ? true : document.cookie.includes('is_dark=0') ? false : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (shouldSetIsDark) {
+      document.documentElement.classList.add('is_dark');
+      document.getElementById('prismTheme').href = "/assets/prism_tomorrow.css";
+    }
+  </script>
+</head><body><a class="czs-menu-l show_on_mobile aside_button_open" href="#" style="background-image:url(&quot;/assets/czs-menu-l.svg&quot;)"></a><a class="show_on_mobile aside_button_text" href="/">自然醒的博客</a><aside class="hide_on_mobile"><a class="czs-menu-l show_on_mobile aside_button_close" href="#" style="background-image:url(&quot;/assets/czs-close-l.svg&quot;)"></a><h1><a href="/">自然醒的博客</a></h1><p class="description">前端工程师@拼多多，爱折腾，擅长 JavaScript，欢迎我的关注公众号「更了不起的前端」</p><ul class="social list_style_none"><li class="flex_center"><a class="czs-github-logo" href="https://github.com/Shenfq" target="_blank" style="background-image:url(&quot;/assets/czs-github-logo.svg&quot;)"></a></li><li class="flex_center"><a class="czs-message-l" href="mailto:shenfq95@foxmail.com" target="_blank" style="background-image:url(&quot;/assets/czs-message-l.svg&quot;)"></a></li><li style="flex-grow:1"></li><li class="toggle_dark flex_center"><span class="czs-sun" style="background-image:url(&quot;/assets/czs-sun.svg&quot;)"></span><span class="czs-sun-l" style="background-image:url(&quot;/assets/czs-sun-l.svg&quot;)"></span><span class="czs-moon" style="background-image:url(&quot;/assets/czs-moon.svg&quot;)"></span><span class="czs-moon-l" style="background-image:url(&quot;/assets/czs-moon-l.svg&quot;)"></span></li></ul><nav><ul class="menu list_style_none"><li><a class="flex_center" href="/"><span class="czs-home-l" style="background-image:url(&quot;/assets/czs-home-l.svg&quot;)"></span>首页</a></li><li><a class="flex_center" href="/categories/"><span class="czs-category-l" style="background-image:url(&quot;/assets/czs-category-l.svg&quot;)"></span>分类</a></li><li><a class="flex_center" href="/tags/"><span class="czs-tag-l" style="background-image:url(&quot;/assets/czs-tag-l.svg&quot;)"></span>标签</a></li><li><a class="flex_center" href="/about/"><span class="czs-about-l" style="background-image:url(&quot;/assets/czs-about-l.svg&quot;)"></span>关于</a></li><li><a class="flex_center" href="/archives/"><span class="czs-box-l" style="background-image:url(&quot;/assets/czs-box-l.svg&quot;)"></span>归档</a></li></ul></nav></aside><section class="main"><div class="main_post_meta"><time dateTime="2019/07/28">2019-07-29</time> · <!-- -->unknown</div><article><h2 id="%E5%89%8D%E8%A8%80">前言<a class="anchor" href="#%E5%89%8D%E8%A8%80">§</a></h2>
+<p>小沈是一个刚刚开始工作的前端实习生，第一次进行团队开发，难免有些紧张。在导师的安排下，拿到了项目的 git 权限，开始进行 clone。</p>
+<pre class="language-autoit"><code class="language-autoit">$ git clone git<span class="token variable">@github</span><span class="token punctuation">.</span>com<span class="token punctuation">:</span>company<span class="token operator">/</span>project<span class="token punctuation">.</span>git
+</code></pre>
+<p>小沈开始细细品味着同事们的代码，终于在他的不懈努力下，发现了老王 2 年前写的一个 bug，跟导师报备之后，小沈开始着手修改。年轻人嘛，容易冲动，不仅修复了老王的 bug，还把这部分代码进行了重构，使用了前两天刚刚从书里学会的策略模式，去掉了一些不必要 if else 逻辑。小沈潇洒的摸了摸自己稀疏的头发，得意的准备提交代码，想着第一天刚来就秀了下自己的超强的编码能力。接下来可怕的事情发生了，代码死活不能通过 lint 工具的检测，急得他面红耳赤，赶紧跑去问导师，导师告诉他，只要按照控制台的 warning 修改代码就好。小沈反驳道，这个 lint 工具非让我去掉分号，我在学校的时候，老师就教我分号是必不可少的，没有分号的代码是不完美的。导师无奈的笑了笑，打开了小沈的实习评分表，在团队合作一项中勾选『较差』。</p>
+<p>不服气的小沈，写了一篇博客发布到了 CSDN 上，还收获了不少阅读量。</p>
+<p><img src="https://file.shenfq.com/20190727153755.png" alt="image"></p>
+<h4 id="%E9%97%AE%E5%B7%A5%E4%BD%9C%E7%AC%AC%E4%B8%80%E5%A4%A9%E5%B0%8F%E6%B2%88%E7%8A%AF%E4%BA%86%E5%93%AA%E4%BA%9B%E9%94%99%E8%AF%AF">问：工作第一天小沈犯了哪些错误？<a class="anchor" href="#%E9%97%AE%E5%B7%A5%E4%BD%9C%E7%AC%AC%E4%B8%80%E5%A4%A9%E5%B0%8F%E6%B2%88%E7%8A%AF%E4%BA%86%E5%93%AA%E4%BA%9B%E9%94%99%E8%AF%AF">§</a></h4>
+<ol>
+<li>对不了解的业务代码进行重构，这是业务开发的大忌；</li>
+<li>没有遵守团队规范，团队开发带有太强的个人情绪；</li>
+<li>上面都是我编的，听说现在写文章开头都要编个故事。</li>
+</ol>
+<h2 id="lint-%E5%B7%A5%E5%85%B7%E7%AE%80%E5%8F%B2">lint 工具简史<a class="anchor" href="#lint-%E5%B7%A5%E5%85%B7%E7%AE%80%E5%8F%B2">§</a></h2>
+<blockquote>
+<p>在计算机科学中，lint是一种工具的名称，它用来标记代码中，某些可疑的、不具结构性（可能造成bug）的语句。它是一种静态程序分析工具，最早适用于C语言，在UNIX平台上开发出来。后来它成为通用术语，可用于描述在任何一种编程语言中，用来标记代码中有疑义语句的工具。    -- by wikipedia</p>
+</blockquote>
+<p>在 JavaScript 20 多年的发展历程中，也出现过许许多多的 lint 工具，下面就来介绍下主流的三款 lint 工具。</p>
+<ol>
+<li>JSLint</li>
+<li>JSHint</li>
+<li>ESLint</li>
+</ol>
+<p><img src="https://file.shenfq.com/2019-7-27-15-40-6.comywsres26205WEBRESOURCE0bbfb328d288ee97233c5811224582f8" alt="image"></p>
+<h3 id="jslint"><a href="http://www.jslint.com/">JSLint</a><a class="anchor" href="#jslint">§</a></h3>
+<p><img src="https://file.shenfq.com/20190727153752.png" alt="JSLint logo"></p>
+<p>JSLint 可以说是最早出现的 JavaScript 的 lint 工具，由 Douglas Crockford (《JavaScript 语言精粹》作者) 开发。从《JavaScript 语言精粹》的笔风就能看出，Douglas 是个眼里容不得瑕疵的人，所以 JSLint 也继承了这个特色，JSLint 的所有规则都是由 Douglas 自己定义的，可以说这是一个极具 Douglas 个人风格的 lint 工具，如果你要使用它，就必须接受它所有规则。值得称赞的是，JSLint 依然在更新，而且也提供了 node 版本：<a href="https://www.npmjs.com/package/jslint">node-jslint</a>。</p>
+<h3 id="jshint"><a href="https://jshint.com/">JSHint</a><a class="anchor" href="#jshint">§</a></h3>
+<p><img src="https://file.shenfq.com/20190727153753.png" alt="JSHint logo"></p>
+<p>由于 JSLint 让很多人无法忍受它的规则，感觉受到了压迫，所以 Anton Kovalyov (现在在 Medium 工作) 基于 JSLint 开发了 JSHint。JSHint 在 JSLint 的基础上提供了丰富的配置项，给了开发者极大的自由，JSHint 一开始就保持着开源软件的风格，由社区进行驱动，发展十分迅速。早起 jQuery 也是使用 JSHint 进行代码检查的，不过现在已经转移到 ESLint 了。</p>
+<h3 id="eslint"><a href="https://cn.eslint.org/">ESLint</a><a class="anchor" href="#eslint">§</a></h3>
+<p><img src="https://file.shenfq.com/20190727153754.png" alt="ESLint logo"></p>
+<p>ESLint 由 Nicholas C. Zakas (《JavaScript 高级程序设计》作者) 于2013年6月创建，它的出现因为 Zakas 想使用 JSHint 添加一条自定义的规则，但是发现 JSHint 不支持，于是自己开发了一个。</p>
+<p>ESLint 号称下一代的 JS Linter 工具，它的灵感来源于 PHP Linter，将源代码解析成 AST，然后检测 AST 来判断代码是否符合规则。ESLint 使用 esprima 将源代码解析吃成 AST，然后你就可以使用任意规则来检测 AST 是否符合预期，这也是 ESLint 高可扩展性的原因。</p>
+<p><a href="https://github.com/eslint/eslint/blob/v0.0.2/lib/jscheck.js#L70">早期源码</a>：</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">var</span> ast <span class="token operator">=</span> esprima<span class="token punctuation">.</span><span class="token method function property-access">parse</span><span class="token punctuation">(</span>text<span class="token punctuation">,</span> <span class="token punctuation">{</span> loc<span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span> range<span class="token operator">:</span> <span class="token boolean">true</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    walk <span class="token operator">=</span> <span class="token function">astw</span><span class="token punctuation">(</span>ast<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">walk</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">node</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    api<span class="token punctuation">.</span><span class="token method function property-access">emit</span><span class="token punctuation">(</span>node<span class="token punctuation">.</span><span class="token property-access">type</span><span class="token punctuation">,</span> node<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword control-flow">return</span> messages<span class="token punctuation">;</span>
+</code></pre>
+<p>但是，那个时候 ESLint 并没有大火，因为需要将源代码转成 AST，运行速度上输给了 JSHint ，并且 JSHint 当时已经有完善的生态（编辑器的支持）。真正让 ESLint 大火是因为 ES6 的出现。</p>
+<p>ES6 发布后，因为新增了很多语法，JSHint 短期内无法提供支持，而 ESLint 只需要有合适的解析器就能够进行 lint 检查。这时 babel 为 ESLint 提供了支持，开发了 babel-eslint，让ESLint 成为最快支持 ES6 语法的 lint 工具。</p>
+<p><img src="https://file.shenfq.com/20190727153757.png" alt="谷歌趋势"></p>
+<p>在 2016 年，ESLint整合了与它同时诞生的另一个 lint 工具：JSCS，因为它与 ESLint 具有异曲同工之妙，都是通过生成 AST 的方式进行规则检测。</p>
+<p><img src="https://file.shenfq.com/20190727153756.png" alt="ESLint整合JSCS"></p>
+<p>自此，ESLint 在 JS Linter 领域一统江湖，成为前端界的主流工具。</p>
+<h2 id="lint-%E5%B7%A5%E5%85%B7%E7%9A%84%E6%84%8F%E4%B9%89">Lint 工具的意义<a class="anchor" href="#lint-%E5%B7%A5%E5%85%B7%E7%9A%84%E6%84%8F%E4%B9%89">§</a></h2>
+<p>下面一起来思考一个问题：Lint 工具对工程师来说到底是代码质量的保证还是一种束缚？</p>
+<p>然后，我们再看看 ESLint 官网的简介：</p>
+<blockquote>
+<p>代码检查是一种静态的分析，常用于寻找有问题的模式或者代码，并且不依赖于具体的编码风格。对大多数编程语言来说都会有代码检查，一般来说编译程序会内置检查工具。</p>
+</blockquote>
+<blockquote>
+<p>JavaScript 是一个动态的弱类型语言，在开发中比较容易出错。因为没有编译程序，为了寻找 JavaScript 代码错误通常需要在执行过程中不断调试。像 ESLint 这样的可以让程序员在编码的过程中发现问题而不是在执行的过程中。</p>
+</blockquote>
+<p>因为 JavaScript 这门神奇的语言，在带给我们灵活性的同时，也埋下了一些坑。比如 <code>==</code> 涉及到的弱类型转换，着实让人很苦恼，还有 <code>this</code> 的指向，也是一个让人迷惑的东西。而 Lint 工具就很好的解决了这个问题，干脆禁止你使用 <code>==</code> ，这种做法虽然限制了语言的灵活性，但是带来的收益也是可观的。</p>
+<p>还有就是作为一门动态语言，因为缺少编译过程，有些本可以在编译过程中发现的错误，只能等到运行才发现，这给我们调试工作增加了一些负担，而 Lint 工具相当于为语言增加了编译过程，在代码运行前进行静态分析找到出错的地方。</p>
+<p>所以汇总一下，Lint工具的优势：</p>
+<h4 id="1-%E9%81%BF%E5%85%8D%E4%BD%8E%E7%BA%A7bug%E6%89%BE%E5%87%BA%E5%8F%AF%E8%83%BD%E5%8F%91%E7%94%9F%E7%9A%84%E8%AF%AD%E6%B3%95%E9%94%99%E8%AF%AF">1. 避免低级bug，找出可能发生的语法错误<a class="anchor" href="#1-%E9%81%BF%E5%85%8D%E4%BD%8E%E7%BA%A7bug%E6%89%BE%E5%87%BA%E5%8F%AF%E8%83%BD%E5%8F%91%E7%94%9F%E7%9A%84%E8%AF%AD%E6%B3%95%E9%94%99%E8%AF%AF">§</a></h4>
+<blockquote>
+<p>使用未声明变量、修改 const 变量……</p>
+</blockquote>
+<h4 id="2-%E6%8F%90%E7%A4%BA%E5%88%A0%E9%99%A4%E5%A4%9A%E4%BD%99%E7%9A%84%E4%BB%A3%E7%A0%81">2. 提示删除多余的代码<a class="anchor" href="#2-%E6%8F%90%E7%A4%BA%E5%88%A0%E9%99%A4%E5%A4%9A%E4%BD%99%E7%9A%84%E4%BB%A3%E7%A0%81">§</a></h4>
+<blockquote>
+<p>声明而未使用的变量、重复的 case ……</p>
+</blockquote>
+<h4 id="3-%E7%A1%AE%E4%BF%9D%E4%BB%A3%E7%A0%81%E9%81%B5%E5%BE%AA%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5">3. 确保代码遵循最佳实践<a class="anchor" href="#3-%E7%A1%AE%E4%BF%9D%E4%BB%A3%E7%A0%81%E9%81%B5%E5%BE%AA%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5">§</a></h4>
+<blockquote>
+<p>可参考 <a href="https://github.com/airbnb/javascript">airbnb style</a>、<a href="https://github.com/standard/standard">javascript standard</a></p>
+</blockquote>
+<h4 id="4-%E7%BB%9F%E4%B8%80%E5%9B%A2%E9%98%9F%E7%9A%84%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC">4. 统一团队的代码风格<a class="anchor" href="#4-%E7%BB%9F%E4%B8%80%E5%9B%A2%E9%98%9F%E7%9A%84%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC">§</a></h4>
+<blockquote>
+<p>加不加分号？使用 tab 还是空格？</p>
+</blockquote>
+<h2 id="%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F">使用方式<a class="anchor" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F">§</a></h2>
+<p>说了那么多，还是来看下有点实际意义的，ESLint 到底是如何使用的。</p>
+<h3 id="%E5%88%9D%E5%A7%8B%E5%8C%96">初始化<a class="anchor" href="#%E5%88%9D%E5%A7%8B%E5%8C%96">§</a></h3>
+<p>如果想在现有项目中引入 ESLint，可以直接运行下面的命令：</p>
+<pre class="language-bash"><code class="language-bash"><span class="token comment"># 全局安装 ESLint</span>
+$ <span class="token function">npm</span> <span class="token function">install</span> -g eslint
+
+<span class="token comment"># 进入项目</span>
+$ <span class="token builtin class-name">cd</span> ~/Code/ESLint-demo
+
+<span class="token comment"># 初始化 package.json</span>
+$ <span class="token function">npm</span> init -f
+
+<span class="token comment"># 初始化 ESLint 配置</span>
+$ eslint --init
+</code></pre>
+<p><img src="https://file.shenfq.com/20190727153759.png" alt="image"></p>
+<p>在使用 <code>eslint --init</code> 后，会出现很多用户配置项，具体可以参考：<a href="https://github.com/eslint/eslint/blob/v6.0.1/lib/init/config-initializer.js#L432">eslint cli 部分的源码</a>。</p>
+<p>经过一系列一问一答的环节后，你会发现在你文件夹的根目录生成了一个 <code>.eslintrc.js</code> 文件。</p>
+<p><img src="https://file.shenfq.com/20190727153800.png" alt="image"></p>
+<h3 id="%E9%85%8D%E7%BD%AE%E6%96%B9%E5%BC%8F">配置方式<a class="anchor" href="#%E9%85%8D%E7%BD%AE%E6%96%B9%E5%BC%8F">§</a></h3>
+<p>ESLint 一共有两种配置方式：</p>
+<h4 id="1-%E4%BD%BF%E7%94%A8%E6%B3%A8%E9%87%8A%E6%8A%8A-lint-%E8%A7%84%E5%88%99%E7%9B%B4%E6%8E%A5%E5%B5%8C%E5%85%A5%E5%88%B0%E6%BA%90%E4%BB%A3%E7%A0%81%E4%B8%AD">1. 使用注释把 lint 规则直接嵌入到源代码中<a class="anchor" href="#1-%E4%BD%BF%E7%94%A8%E6%B3%A8%E9%87%8A%E6%8A%8A-lint-%E8%A7%84%E5%88%99%E7%9B%B4%E6%8E%A5%E5%B5%8C%E5%85%A5%E5%88%B0%E6%BA%90%E4%BB%A3%E7%A0%81%E4%B8%AD">§</a></h4>
+<p>这是最简单粗暴的方式，直接在源代码中使用 ESLint 能够识别的注释方式，进行 lint 规则的定义。</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">/* eslint eqeqeq: "error" */</span>
+<span class="token keyword">var</span> num <span class="token operator">=</span> <span class="token number">1</span>
+num <span class="token operator">==</span> <span class="token string">'1'</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/20190727153758.png" alt="image"></p>
+<p>当然我们一般使用注释是为了临时禁止某些严格的 lint 规则出现的警告：</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">/* eslint-disable */</span>
+<span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'该注释放在文件顶部，整个文件都不会出现 lint 警告'</span><span class="token punctuation">)</span>
+
+<span class="token comment">/* eslint-enable */</span>
+<span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'重新启用 lint 告警'</span><span class="token punctuation">)</span>
+
+<span class="token comment">/* eslint-disable eqeqeq */</span>
+<span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'只禁止某一个或多个规则'</span><span class="token punctuation">)</span>
+
+<span class="token comment">/* eslint-disable-next-line */</span>
+<span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'当前行禁止 lint 警告'</span><span class="token punctuation">)</span>
+
+<span class="token function">alert</span><span class="token punctuation">(</span><span class="token string">'当前行禁止 lint 警告'</span><span class="token punctuation">)</span> <span class="token comment">// eslint-disable-line</span>
+</code></pre>
+<h4 id="2-%E4%BD%BF%E7%94%A8%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%BF%9B%E8%A1%8C-lint-%E8%A7%84%E5%88%99%E9%85%8D%E7%BD%AE">2. 使用配置文件进行 lint 规则配置<a class="anchor" href="#2-%E4%BD%BF%E7%94%A8%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%BF%9B%E8%A1%8C-lint-%E8%A7%84%E5%88%99%E9%85%8D%E7%BD%AE">§</a></h4>
+<p>在初始化过程中，有一个选项就是使用什么文件类型进行 lint 配置（<code>What format do you want your config file to be in?</code>）：</p>
+<pre class="language-autoit"><code class="language-autoit">{
+    type<span class="token punctuation">:</span> <span class="token string">"list"</span><span class="token punctuation">,</span>
+    name<span class="token punctuation">:</span> <span class="token string">"format"</span><span class="token punctuation">,</span>
+    message<span class="token punctuation">:</span> <span class="token string">"What format do you want your config file to be in?"</span><span class="token punctuation">,</span>
+    <span class="token keyword">default</span><span class="token punctuation">:</span> <span class="token string">"JavaScript"</span><span class="token punctuation">,</span>
+    choices<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">"JavaScript"</span><span class="token punctuation">,</span> <span class="token string">"YAML"</span><span class="token punctuation">,</span> <span class="token string">"JSON"</span><span class="token punctuation">]</span>
+}
+</code></pre>
+<p>官方一共提供了三个选项：</p>
+<ol>
+<li>JavaScript (eslintrc.js)</li>
+<li>YAML (eslintrc.yaml)</li>
+<li>JSON (eslintrc.json)</li>
+</ol>
+<p>另外，你也可以自己在 <code>package.json</code> 文件中添加 <code>eslintConfig</code> 字段进行配置。</p>
+<p>翻阅 ESLint <a href="https://github.com/eslint/eslint/blob/v6.0.1/lib/cli-engine/config-array-factory.js#L52">源码</a>可以看到，其配置文件的优先级如下：</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">const</span> configFilenames <span class="token operator">=</span> <span class="token punctuation">[</span>
+  <span class="token string">".eslintrc.js"</span><span class="token punctuation">,</span>
+  <span class="token string">".eslintrc.yaml"</span><span class="token punctuation">,</span>
+  <span class="token string">".eslintrc.yml"</span><span class="token punctuation">,</span>
+  <span class="token string">".eslintrc.json"</span><span class="token punctuation">,</span>
+  <span class="token string">".eslintrc"</span><span class="token punctuation">,</span>
+  <span class="token string">"package.json"</span>
+<span class="token punctuation">]</span><span class="token punctuation">;</span>
+</code></pre>
+<pre class="language-autoit"><code class="language-autoit"><span class="token punctuation">.</span>eslintrc<span class="token punctuation">.</span>js <span class="token operator">></span> <span class="token punctuation">.</span>eslintrc<span class="token punctuation">.</span>yaml  <span class="token operator">></span> <span class="token punctuation">.</span>eslintrc<span class="token punctuation">.</span>yml <span class="token operator">></span> <span class="token punctuation">.</span>eslintrc<span class="token punctuation">.</span>json <span class="token operator">></span> <span class="token punctuation">.</span>eslintrc <span class="token operator">></span> package<span class="token punctuation">.</span>json
+</code></pre>
+<p>当然你也可以使用 cli 自己指定配置文件路径：</p>
+<p><img src="https://file.shenfq.com/20190727153813.png" alt="image"></p>
+<h4 id="%E9%A1%B9%E7%9B%AE%E7%BA%A7%E4%B8%8E%E7%9B%AE%E5%BD%95%E7%BA%A7%E7%9A%84%E9%85%8D%E7%BD%AE">项目级与目录级的配置<a class="anchor" href="#%E9%A1%B9%E7%9B%AE%E7%BA%A7%E4%B8%8E%E7%9B%AE%E5%BD%95%E7%BA%A7%E7%9A%84%E9%85%8D%E7%BD%AE">§</a></h4>
+<p>我们有如下目录结构，此时在根目录运行 ESLint，那么我们将得到两个配置文件 <code>.eslintrc.js</code>（项目级配置） 和 <code>src/.eslintrc.js</code>（目录级配置），这两个配置文件会进行合并，但是 <code>src/.eslintrc.js</code> 具有更高的优先级。</p>
+<p><img src="https://file.shenfq.com/20190727153810.png" alt="目录结构"></p>
+<p>但是，我们只要在 <code>src/.eslintrc.js</code> 中配置 <code>&quot;root&quot;: true</code>，那么 ESLint 就会认为 <code>src</code> 目录为根目录，不再向上查找配置。</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token punctuation">{</span>
+  <span class="token string">"root"</span><span class="token operator">:</span> <span class="token boolean">true</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0">配置参数<a class="anchor" href="#%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0">§</a></h3>
+<p>下面我们一起来细细品味 ESLinte 的配置规则。</p>
+<h4 id="%E8%A7%A3%E6%9E%90%E5%99%A8%E9%85%8D%E7%BD%AE">解析器配置<a class="anchor" href="#%E8%A7%A3%E6%9E%90%E5%99%A8%E9%85%8D%E7%BD%AE">§</a></h4>
+<pre class="language-javascript"><code class="language-javascript"><span class="token punctuation">{</span>
+  <span class="token comment">// 解析器类型</span>
+  <span class="token comment">// espima(默认), babel-eslint, @typescript-eslint/parse</span>
+  <span class="token string">"parse"</span><span class="token operator">:</span> <span class="token string">"esprima"</span><span class="token punctuation">,</span>
+  <span class="token comment">// 解析器配置参数</span>
+  <span class="token string">"parseOptions"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 代码类型：script(默认), module</span>
+    <span class="token string">"sourceType"</span><span class="token operator">:</span> <span class="token string">"script"</span><span class="token punctuation">,</span>
+    <span class="token comment">// es 版本号，默认为 5，也可以是用年份，比如 2015 (同 6)</span>
+    <span class="token string">"ecamVersion"</span><span class="token operator">:</span> <span class="token number">6</span><span class="token punctuation">,</span>
+    <span class="token comment">// es 特性配置</span>
+    <span class="token string">"ecmaFeatures"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token string">"globalReturn"</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span> <span class="token comment">// 允许在全局作用域下使用 return 语句</span>
+        <span class="token string">"impliedStrict"</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span> <span class="token comment">// 启用全局 strict mode </span>
+        <span class="token string">"jsx"</span><span class="token operator">:</span> <span class="token boolean">true</span> <span class="token comment">// 启用 JSX</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>对于 <code>@typescript-eslint/parse</code> 这个解析器，主要是为了替代之前存在的 TSLint，TS 团队因为 ESLint 生态的繁荣，且 ESLint 具有更多的配置项，不得不抛弃 TSLint 转而实现一个 ESLint 的解析器。同时，该解析器拥有<a href="https://www.npmjs.com/package/@typescript-eslint/parser#configuration">不同的配置</a>：</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token punctuation">{</span>
+  <span class="token string">"parserOptions"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token string">"ecmaFeatures"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token string">"jsx"</span><span class="token operator">:</span> <span class="token boolean">true</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token string">"useJSXTextNode"</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    <span class="token string">"project"</span><span class="token operator">:</span> <span class="token string">"./tsconfig.json"</span><span class="token punctuation">,</span>
+    <span class="token string">"tsconfigRootDir"</span><span class="token operator">:</span> <span class="token string">"../../"</span><span class="token punctuation">,</span>
+    <span class="token string">"extraFileExtensions"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">".vue"</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h4 id="%E7%8E%AF%E5%A2%83%E4%B8%8E%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F">环境与全局变量<a class="anchor" href="#%E7%8E%AF%E5%A2%83%E4%B8%8E%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F">§</a></h4>
+<p>ESLint 会检测未声明的变量，并发出警告，但是有些变量是我们引入的库声明的，这里就需要提前在配置中声明。</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token punctuation">{</span>
+  <span class="token string">"globals"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 声明 jQuery 对象为全局变量</span>
+    <span class="token string">"$"</span><span class="token operator">:</span> <span class="token boolean">false</span> <span class="token comment">// true表示该变量为 writeable，而 false 表示 readonly</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>在 <code>globals</code> 中一个个的进行声明未免有点繁琐，这个时候就需要使用到 <code>env</code> ，这是对一个环境定义的一组全局变量的预设（类似于 babel 的 presets）。</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token punctuation">{</span>
+  <span class="token string">"env"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token string">"amd"</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    <span class="token string">"commonjs"</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    <span class="token string">"jquery"</span><span class="token operator">:</span> <span class="token boolean">true</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>可选的环境很多，预设值都在<a href="https://github.com/eslint/eslint/blob/v6.0.1/conf/environments.js">这个文件</a>中进行定义，查看源码可以发现，其预设变量都引用自 <a href="https://github.com/sindresorhus/globals/blob/master/globals.json"><code>globals</code></a> 包。</p>
+<p><img src="https://file.shenfq.com/20190727153811.png" alt="env"></p>
+<p><img src="https://file.shenfq.com/20190727153809.png" alt="env"></p>
+<h3 id="%E8%A7%84%E5%88%99%E8%AE%BE%E7%BD%AE">规则设置<a class="anchor" href="#%E8%A7%84%E5%88%99%E8%AE%BE%E7%BD%AE">§</a></h3>
+<p>ESLint 附带有<a href="https://cn.eslint.org/docs/rules/">大量的规则</a>，你可以在配置文件的 <code>rules</code> 属性中配置你想要的规则。每一条规则接受一个参数，参数的值如下：</p>
+<ul>
+<li>&quot;off&quot; 或 0：关闭规则</li>
+<li>&quot;warn&quot; 或 1：开启规则，warn 级别的错误 (不会导致程序退出)</li>
+<li>&quot;error&quot; 或 2：开启规则，error级别的错误(当被触发的时候，程序会退出)</li>
+</ul>
+<p>举个例子，我们先写一段使用了平等(equality)的代码，然后对 <code>eqeqeq</code> 规则分别进行不同的配置。</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// demo.js</span>
+<span class="token keyword">var</span> num <span class="token operator">=</span> <span class="token number">1</span>
+num <span class="token operator">==</span> <span class="token string">'1'</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/20190727153814.png" alt="eqeqeq 规则校验"></p>
+<p>这里使用了命令行的配置方式，如果你只想对单个文件进行某个规则的校验就可以使用这种方式。</p>
+<p>但是，事情往往没有我们想象中那么简单，ESLint 的规则不仅只有关闭和开启这么简单，每一条规则还有自己的配置项。如果需要对某个规则进行配置，就需要使用数组形式的参数。</p>
+<p>我们看下 <code>quotes</code> 规则，根据官网介绍，它支持字符串和对象两个配置项。</p>
+<p><img src="https://file.shenfq.com/20190727153812.png" alt="quotes"></p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token punctuation">{</span>
+  <span class="token string">"rules"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 使用数组形式，对规则进行配置</span>
+    <span class="token comment">// 第一个参数为是否启用规则</span>
+    <span class="token comment">// 后面的参数才是规则的配置项</span>
+    <span class="token string">"quotes"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+      <span class="token string">"error"</span><span class="token punctuation">,</span>
+      <span class="token string">"single"</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span>
+        <span class="token string">"avoidEscape"</span><span class="token operator">:</span> <span class="token boolean">true</span> 
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>根据上面的规则：</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// bad</span>
+<span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">"test 'ESLint' rule"</span>
+
+<span class="token comment">// good</span>
+<span class="token keyword">var</span> str <span class="token operator">=</span> <span class="token string">'test "ESLint" rule'</span>
+</code></pre>
+<h3 id="%E6%89%A9%E5%B1%95">扩展<a class="anchor" href="#%E6%89%A9%E5%B1%95">§</a></h3>
+<p>扩展就是直接使用别人已经写好的 lint 规则，方便快捷。扩展一般支持三种类型：</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token punctuation">{</span>
+  <span class="token string">"extends"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token string">"eslint:recommended"</span><span class="token punctuation">,</span>
+    <span class="token string">"plugin:react/recommended"</span><span class="token punctuation">,</span>
+    <span class="token string">"eslint-config-standard"</span><span class="token punctuation">,</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<ul>
+<li><code>eslint:</code> 开头的是 ESLint 官方的扩展，一共有两个：<a href="https://github.com/eslint/eslint/blob/v6.0.1/conf/eslint-recommended.js"><code>eslint:recommended</code></a> 、<a href="https://github.com/eslint/eslint/blob/master/conf/eslint-all.js"><code>eslint:all</code></a>。</li>
+<li><code>plugin:</code> 开头的是扩展是插件类型，也可以直接在 <code>plugins</code> 属性中进行设置，后面一节会详细讲到。</li>
+<li>最后一种扩展来自 npm 包，官方规定 npm 包的扩展必须以 <code>eslint-config-</code> 开头，使用时可以省略这个头，上面案例中 <code>eslint-config-standard</code> 可以直接简写成 <code>standard</code>。</li>
+</ul>
+<p>如果你觉得自己的配置十分满意，也可以将自己的 lint 配置发布到 npm 包，只要将包名命名为 <code>eslint-config-xxx</code> 即可，同时，需要在 package.json 的 peerDependencies 字段中声明你依赖的 ESLint 的版本号。</p>
+<h3 id="%E6%8F%92%E4%BB%B6">插件<a class="anchor" href="#%E6%8F%92%E4%BB%B6">§</a></h3>
+<h4 id="%E4%BD%BF%E7%94%A8%E6%8F%92%E4%BB%B6">使用插件<a class="anchor" href="#%E4%BD%BF%E7%94%A8%E6%8F%92%E4%BB%B6">§</a></h4>
+<p>虽然官方提供了上百种的规则可供选择，但是这还不够，因为官方的规则只能检查标准的 JavaScript 语法，如果你写的是 JSX 或者 Vue 单文件组件，ESLint 的规则就开始束手无策了。</p>
+<p>这个时候就需要安装 ESLint 的插件，来定制一些特定的规则进行检查。ESLint 的插件与扩展一样有固定的命名格式，以 <code>eslint-plugin-</code> 开头，使用的时候也可以省略这个头。</p>
+<pre class="language-bash"><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> --save-dev eslint-plugin-vue eslint-plugin-react
+</code></pre>
+<pre class="language-javascript"><code class="language-javascript"><span class="token punctuation">{</span>
+  <span class="token string">"plugins"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token string">"react"</span><span class="token punctuation">,</span> <span class="token comment">// eslint-plugin-react</span>
+    <span class="token string">"vue"</span><span class="token punctuation">,</span>   <span class="token comment">// eslint-plugin-vue</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>或者是在扩展中引入插件，前面有提到 <code>plugin:</code> 开头的是扩展是进行插件的加载。</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token punctuation">{</span>
+  <span class="token string">"extends"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token string">"plugin:react/recommended"</span><span class="token punctuation">,</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>通过扩展的方式加载插件的规则如下：</p>
+<pre class="language-javascript"><code class="language-javascript">extPlugin <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">plugin:</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>pluginName<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>configName<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span>
+</code></pre>
+<p>对照上面的案例，插件名(pluginName) 为 react，也就是之前安装 <code>eslint-plugin-react</code> 包，配置名(configName)为 recommended。那么这个配置名又是从哪里来的呢？</p>
+<p>可以看到 <code>eslint-plugin-react</code> 的<a href="https://github.com/yannickcr/eslint-plugin-react/blob/master/index.js#L108">源码</a>。</p>
+<pre class="language-javascript"><code class="language-javascript">module<span class="token punctuation">.</span><span class="token property-access">exports</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 自定义的 rule</span>
+  rules<span class="token operator">:</span> allRules<span class="token punctuation">,</span>
+  <span class="token comment">// 可用的扩展</span>
+  configs<span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token comment">// plugin:react/recommended</span>
+    recomended<span class="token operator">:</span> <span class="token punctuation">{</span>
+      plugins<span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token string">'react'</span> <span class="token punctuation">]</span>
+      rules<span class="token operator">:</span> <span class="token punctuation">{</span><span class="token spread operator">...</span><span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token comment">// plugin:react/all</span>
+    all<span class="token operator">:</span> <span class="token punctuation">{</span>
+      plugins<span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token string">'react'</span> <span class="token punctuation">]</span>
+      rules<span class="token operator">:</span> <span class="token punctuation">{</span><span class="token spread operator">...</span><span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>配置名是插件配置的 configs 属性定义的，这里的配置其实就是 ESLint 的扩展，通过这种方式即可以加载插件，又可以加载扩展。</p>
+<h4 id="%E5%BC%80%E5%8F%91%E6%8F%92%E4%BB%B6">开发插件<a class="anchor" href="#%E5%BC%80%E5%8F%91%E6%8F%92%E4%BB%B6">§</a></h4>
+<p>ESLint 官方为了方便开发者，提供了 Yeoman 的模板（generator-eslint）。</p>
+<pre class="language-bash"><code class="language-bash"><span class="token comment"># 安装模块</span>
+<span class="token function">npm</span> <span class="token function">install</span> -g yo generator-eslint
+
+<span class="token comment"># 创建目录</span>
+<span class="token function">mkdir</span> eslint-plugin-demo
+<span class="token builtin class-name">cd</span> eslint-plugin-demo
+
+<span class="token comment"># 创建模板</span>
+yo eslint:plugin
+</code></pre>
+<p><img src="https://file.shenfq.com/2019-7-27-16-2-20" alt="eslint:plugin"></p>
+<p><img src="https://file.shenfq.com/2019-7-27-16-5-24.png" alt="eslint:plugin 目录"></p>
+<p>创建好项目之后，就可以开始创建一条规则了，幸运的是 generator-eslint 除了能够生成插件的模板代码外，还具有创建规则的模板代码。打开之前创建的 <code>eslint-plugin-demo</code> 文件夹，在该目录下添加一条规则，我希望这条规则能检测出我的代码里面是否有 <code>console</code> ，所以，我给该规则命名为 <code>disable-console</code>。</p>
+<pre class="language-bash"><code class="language-bash">yo eslint:rule
+</code></pre>
+<p><img src="https://file.shenfq.com/2019-7-27-16-36-30.png" alt="eslint:rule"></p>
+<p><img src="https://file.shenfq.com/2019-7-27-16-38-5.png" alt="eslint:rule 目录"></p>
+<p>接下来我们看看如何来指定 ESLinte 的一个规则：</p>
+<p>打开 <code>lib/rules/disable-console.js</code> ，可以看到默认的模板代码如下：</p>
+<pre class="language-javascript"><code class="language-javascript">module<span class="token punctuation">.</span><span class="token property-access">exports</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+  meta<span class="token operator">:</span> <span class="token punctuation">{</span>
+    docs<span class="token operator">:</span> <span class="token punctuation">{</span>
+      description<span class="token operator">:</span> <span class="token string">"disable console"</span><span class="token punctuation">,</span>
+      category<span class="token operator">:</span> <span class="token string">"Fill me in"</span><span class="token punctuation">,</span>
+      recommended<span class="token operator">:</span> <span class="token boolean">false</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    schema<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">create</span><span class="token operator">:</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">context</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// variables should be defined here</span>
+    <span class="token keyword control-flow">return</span> <span class="token punctuation">{</span>
+      <span class="token comment">// give me methods</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>简单的介绍下其中的参数（更详细的介绍可以查看<a href="https://cn.eslint.org/docs/developer-guide/working-with-rules#rule-basics">官方文档</a>）：</p>
+<ul>
+<li>meta：规则的一些描述信息
+<ul>
+<li>docs：规则的描述对象
+<ul>
+<li>descrition(string)：规则的简短描述</li>
+<li>category(string)： 规则的类别（具体类别可以查看<a href="https://cn.eslint.org/docs/rules/">官网</a>）</li>
+<li>recommended(boolean)：是否加入 <code>eslint:recommended</code></li>
+</ul>
+</li>
+<li>schema(array)：规则所接受的配置项</li>
+</ul>
+</li>
+<li>create：返回一个对象，该对象包含 ESLint 在遍历 JavaScript 代码 AST 时，所触发的一系列事件勾子。</li>
+</ul>
+<p>在详细讲解如何创建一个规则之前，我们先来谈谈 AST（抽象语法树）。ESLint 使用了一个叫做 Espree 的 JavaScript 解析器来把 JavaScript 代码解析为一个 AST 。然后深度遍历 AST，每条规则都会对匹配的过程进行监听，每当匹配到一个类型，相应的规则就会进行检查。为了方便查看 AST 的各个节点类型，这里提供一个网站能十分清晰的查看一段代码解析成 AST 之后的样子：<a href="https://astexplorer.net/">astexplorer</a>。如果你想找到所有 AST 节点的类型，可以查看 <a href="https://github.com/estree/estree">estree</a>。</p>
+<p><img src="https://file.shenfq.com/2019-7-27-23-27-1.png" alt="astexplorer"></p>
+<p><img src="https://file.shenfq.com/2019-7-27-23-35-57.png" alt="astexplorer"></p>
+<p>可以看到 <code>console.log()</code> 属于 <code>ExpressionStatement(表达式语句)</code> 中的 <code>CallExpression(调用语句)</code>。</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token punctuation">{</span>
+  <span class="token string">"type"</span><span class="token operator">:</span> <span class="token string">"ExpressionStatement"</span><span class="token punctuation">,</span>
+  <span class="token string">"expression"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token string">"type"</span><span class="token operator">:</span> <span class="token string">"CallExpression"</span><span class="token punctuation">,</span>
+    <span class="token string">"callee"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token string">"type"</span><span class="token operator">:</span> <span class="token string">"MemberExpression"</span><span class="token punctuation">,</span>
+      <span class="token string">"object"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token string">"type"</span><span class="token operator">:</span> <span class="token string">"Identifier"</span><span class="token punctuation">,</span>
+        <span class="token string">"name"</span><span class="token operator">:</span> <span class="token string">"console"</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token string">"property"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token string">"type"</span><span class="token operator">:</span> <span class="token string">"Identifier"</span><span class="token punctuation">,</span>
+        <span class="token string">"name"</span><span class="token operator">:</span> <span class="token string">"log"</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token string">"computed"</span><span class="token operator">:</span> <span class="token boolean">false</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>所以，我们要判断代码中是否调用了 <code>console</code>，可以在 create 方法返回的对象中，写一个 CallExpression 方法，在 ESLint 遍历 AST 的过程中，对调用语句进行监听，然后检查该调用语句是否为 <code>console</code> 调用。</p>
+<pre class="language-javascript"><code class="language-javascript">module<span class="token punctuation">.</span><span class="token property-access">exports</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token function-variable function">create</span><span class="token operator">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">context</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword control-flow">return</span> <span class="token punctuation">{</span>
+      <span class="token function"><span class="token maybe-class-name">CallExpression</span></span><span class="token punctuation">(</span><span class="token parameter">node</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 获取调用语句的调用对象</span>
+        <span class="token keyword">const</span> callObj <span class="token operator">=</span> node<span class="token punctuation">.</span><span class="token property-access">callee</span><span class="token punctuation">.</span><span class="token property-access">object</span>
+        <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>callObj<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword control-flow">return</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>callObj<span class="token punctuation">.</span><span class="token property-access">name</span> <span class="token operator">===</span> <span class="token string">'console'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token comment">// 如果调用对象为 console，通知 ESLint</span>
+          context<span class="token punctuation">.</span><span class="token method function property-access">report</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+            node<span class="token punctuation">,</span>
+            message<span class="token operator">:</span> <span class="token string">'error: should remove console'</span>
+          <span class="token punctuation">}</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>可以看到我们最后通过 <code>context.report</code> 方法，告诉 ESLint 这是一段有问题的代码，具体要怎么处理，就要看 ESLint 配置中，该条规则是 <code>[off, warn, error]</code> 中的哪一个了。</p>
+<p>之前介绍规则的时候，有讲到规则是可以接受配置的，下面看看我们自己制定规则的时候，要如何接受配置项。其实很简单，只需要在 mate 对象的 schema 中定义好参数的类型，然后在 create 方法中，通过 <code>context.options</code> 获取即可。下面对 <code>disable-console</code> 进行修改，毕竟禁止所有的 console 太过严格，我们可以添加一个参数，该参数是一个数组，表示允许调用的 console 方法。</p>
+<pre class="language-javascript"><code class="language-javascript">module<span class="token punctuation">.</span><span class="token property-access">exports</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+  meta<span class="token operator">:</span> <span class="token punctuation">{</span>
+    docs<span class="token operator">:</span> <span class="token punctuation">{</span>
+      description<span class="token operator">:</span> <span class="token string">"disable console"</span><span class="token punctuation">,</span> <span class="token comment">// 规则描述</span>
+      category<span class="token operator">:</span> <span class="token string">"Possible Errors"</span><span class="token punctuation">,</span>    <span class="token comment">// 规则类别</span>
+      recommended<span class="token operator">:</span> <span class="token boolean">false</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    schema<span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token comment">// 接受一个参数</span>
+      <span class="token punctuation">{</span>
+        type<span class="token operator">:</span> <span class="token string">'array'</span><span class="token punctuation">,</span> <span class="token comment">// 接受参数类型为数组</span>
+        items<span class="token operator">:</span> <span class="token punctuation">{</span>
+          type<span class="token operator">:</span> <span class="token string">'string'</span> <span class="token comment">// 数组的每一项为一个字符串</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">]</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+
+  <span class="token function-variable function">create</span><span class="token operator">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">context</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> logs <span class="token operator">=</span> <span class="token punctuation">[</span> <span class="token comment">// console 的所以方法</span>
+        <span class="token string">"debug"</span><span class="token punctuation">,</span> <span class="token string">"error"</span><span class="token punctuation">,</span> <span class="token string">"info"</span><span class="token punctuation">,</span> <span class="token string">"log"</span><span class="token punctuation">,</span> <span class="token string">"warn"</span><span class="token punctuation">,</span> 
+        <span class="token string">"dir"</span><span class="token punctuation">,</span> <span class="token string">"dirxml"</span><span class="token punctuation">,</span> <span class="token string">"table"</span><span class="token punctuation">,</span> <span class="token string">"trace"</span><span class="token punctuation">,</span> 
+        <span class="token string">"group"</span><span class="token punctuation">,</span> <span class="token string">"groupCollapsed"</span><span class="token punctuation">,</span> <span class="token string">"groupEnd"</span><span class="token punctuation">,</span> 
+        <span class="token string">"clear"</span><span class="token punctuation">,</span> <span class="token string">"count"</span><span class="token punctuation">,</span> <span class="token string">"countReset"</span><span class="token punctuation">,</span> <span class="token string">"assert"</span><span class="token punctuation">,</span> 
+        <span class="token string">"profile"</span><span class="token punctuation">,</span> <span class="token string">"profileEnd"</span><span class="token punctuation">,</span> 
+        <span class="token string">"time"</span><span class="token punctuation">,</span> <span class="token string">"timeLog"</span><span class="token punctuation">,</span> <span class="token string">"timeEnd"</span><span class="token punctuation">,</span> <span class="token string">"timeStamp"</span><span class="token punctuation">,</span> 
+        <span class="token string">"context"</span><span class="token punctuation">,</span> <span class="token string">"memory"</span>
+    <span class="token punctuation">]</span>
+    <span class="token keyword control-flow">return</span> <span class="token punctuation">{</span>
+      <span class="token function"><span class="token maybe-class-name">CallExpression</span></span><span class="token punctuation">(</span><span class="token parameter">node</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+         <span class="token comment">// 接受的参数</span>
+        <span class="token keyword">const</span> allowLogs <span class="token operator">=</span> context<span class="token punctuation">.</span><span class="token property-access">options</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+        <span class="token keyword">const</span> disableLogs <span class="token operator">=</span> <span class="token known-class-name class-name">Array</span><span class="token punctuation">.</span><span class="token method function property-access">isArray</span><span class="token punctuation">(</span>allowLogs<span class="token punctuation">)</span>
+          <span class="token comment">// 过滤掉允许调用的方法</span>
+          <span class="token operator">?</span> logs<span class="token punctuation">.</span><span class="token method function property-access">filter</span><span class="token punctuation">(</span><span class="token parameter">log</span> <span class="token arrow operator">=></span> <span class="token operator">!</span>allowLogs<span class="token punctuation">.</span><span class="token method function property-access">includes</span><span class="token punctuation">(</span>log<span class="token punctuation">)</span><span class="token punctuation">)</span>
+          <span class="token operator">:</span> logs
+        <span class="token keyword">const</span> callObj <span class="token operator">=</span> node<span class="token punctuation">.</span><span class="token property-access">callee</span><span class="token punctuation">.</span><span class="token property-access">object</span>
+        <span class="token keyword">const</span> callProp <span class="token operator">=</span> node<span class="token punctuation">.</span><span class="token property-access">callee</span><span class="token punctuation">.</span><span class="token property-access">property</span>
+        <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>callObj <span class="token operator">||</span> <span class="token operator">!</span>callProp<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword control-flow">return</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>callObj<span class="token punctuation">.</span><span class="token property-access">name</span> <span class="token operator">!==</span> <span class="token string">'console'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword control-flow">return</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment">// 检测掉不允许调用的 console 方法</span>
+        <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>disableLogs<span class="token punctuation">.</span><span class="token method function property-access">includes</span><span class="token punctuation">(</span>callProp<span class="token punctuation">.</span><span class="token property-access">name</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          context<span class="token punctuation">.</span><span class="token method function property-access">report</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+            node<span class="token punctuation">,</span>
+            message<span class="token operator">:</span> <span class="token string">'error: should remove console'</span>
+          <span class="token punctuation">}</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>规则写完之后，打开 <code>tests/rules/disable-console.js</code> ，编写测试用例。</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">var</span> rule <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"../../../lib/rules/disable-console"</span><span class="token punctuation">)</span>
+<span class="token keyword">var</span> <span class="token maybe-class-name">RuleTester</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"eslint"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token property-access"><span class="token maybe-class-name">RuleTester</span></span>
+
+<span class="token keyword">var</span> ruleTester <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">RuleTester</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+ruleTester<span class="token punctuation">.</span><span class="token method function property-access">run</span><span class="token punctuation">(</span><span class="token string">"disable-console"</span><span class="token punctuation">,</span> rule<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  valid<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+    code<span class="token operator">:</span> <span class="token string">"console.info(test)"</span><span class="token punctuation">,</span>
+    options<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token string">'info'</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  invalid<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+    code<span class="token operator">:</span> <span class="token string">"console.log(test)"</span><span class="token punctuation">,</span>
+    errors<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span> message<span class="token operator">:</span> <span class="token string">"error: should remove console"</span> <span class="token punctuation">}</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/2019-7-28-0-38-3.png" alt="test"></p>
+<p>最后，只需要引入插件，然后开启规则即可。</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// eslintrc.js</span>
+module<span class="token punctuation">.</span><span class="token property-access">exports</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+  plugins<span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token string">'demo'</span> <span class="token punctuation">]</span><span class="token punctuation">,</span>
+  rules<span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token string">'demo/disable-console'</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+      <span class="token string">'error'</span><span class="token punctuation">,</span> <span class="token punctuation">[</span> <span class="token string">'info'</span> <span class="token punctuation">]</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/2019-7-28-1-1-19.png" alt="use plugin demo"></p>
+<h2 id="%E6%9C%80%E4%BD%B3%E9%85%8D%E7%BD%AE">最佳配置<a class="anchor" href="#%E6%9C%80%E4%BD%B3%E9%85%8D%E7%BD%AE">§</a></h2>
+<p><img src="https://file.shenfq.com/20190728133740.png" alt="最佳配置"></p>
+<p>业界有许多 JavaScript 的推荐编码规范，较为出名的就是下面两个：</p>
+<ol>
+<li><a href="https://github.com/airbnb/javascript">airbnb style</a></li>
+<li><a href="https://github.com/standard/standard">javascript standard</a></li>
+</ol>
+<p>同时这里也推荐 AlloyTeam 的 <a href="https://github.com/AlloyTeam/eslint-config-alloy">eslint-config-alloy</a>。</p>
+<p>但是代码规范这个东西，最好是团队成员之间一起来制定，确保大家都能够接受，如果实在是有人有异议，就只能少数服从多数了。虽然这节的标题叫最佳配置，但是软件行业并有没有什么方案是最佳方案，即使 javascript standard 也不是 javascript 标准的编码规范，它仅仅只是叫这个名字而已，只有适合的才是最好的。</p>
+<p>最后安利一下，将 ESLint 和 Prettier 结合使用，不仅统一编码规范，也能统一代码风格。具体实践方式，请参考我的文章：<a href="https://juejin.im/post/5b27a326e51d45588a7dac57">使用ESLint+Prettier来统一前端代码风格</a>。</p>
+<h2 id="%E6%80%BB%E7%BB%93">总结<a class="anchor" href="#%E6%80%BB%E7%BB%93">§</a></h2>
+<p>看到这里我们做一个总结，JavaScript 的 linter 工具发展历史其实也不算短，ESLint 之所以能够后来者居上，主要原因还是 JSLint 和 JSHint 采用自顶向下的方式来解析代码，并且早期 JavaScript 语法万年不更新，能这种方式够以较快的速度来解析代码，找到可能存在的语法错误和不规范的代码。但是 ES6 发布之后，JavaScript 语法发生了很多的改动，比如：箭头函数、模板字符串、扩展运算符……，这些语法的发布，导致 JSLint 和 JSHint 如果不更新解析器就没法检测 ES6 的代码。而 ESLint 另辟蹊径，采用 AST 的方式对代码进行静态分析，并保留了强大的可扩展性和灵活的配置能力。这也告诉我们，在日常的编码过程中，一定要考虑到后续的扩展能力。</p>
+<p>正是因为这个强大扩展能力，让业界的很多 JavaScript 编码规范能够在各个团队进行快速的落地，并且团队自己定制的代码规范也可以对外共享。</p>
+<p>最后，希望你通过上面的学习已经理解了 ESLint 带来的好处，同时掌握了 ESLint 的用法，并可以为现有的项目引入 ESLint 改善项目的代码质量。</p>
+<h2 id="%E5%8F%82%E8%80%83">参考<a class="anchor" href="#%E5%8F%82%E8%80%83">§</a></h2>
+<ul>
+<li><a href="https://cn.eslint.org/">ESLint 官网</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/34656263/">JS Linter 进化史</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/53680918">ESLint 工作原理探讨</a></li>
+</ul></article></section><footer>Powered by <a href="https://github.com/xcatliu/pagic" target="_blank">Pagic</a></footer><script src="https://cdn.pagic.org/react@16.13.1/umd/react.production.min.js"></script><script src="https://cdn.pagic.org/react-dom@16.13.1/umd/react-dom.production.min.js"></script><script type="module" src="/index.js"></script></body></html>

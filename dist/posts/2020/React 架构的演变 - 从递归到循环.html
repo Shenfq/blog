@@ -1,0 +1,379 @@
+<!doctype html><html class="" data-reactroot=""><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous"/>
+<meta data-react-helmet="true" charset="utf-8"/><meta data-react-helmet="true" http-equiv="x-ua-compatible" content="ie=edge"/><meta data-react-helmet="true" name="description" content="前端工程师@拼多多，爱折腾，擅长 JavaScript，欢迎我的关注公众号「更了不起的前端」"/><meta data-react-helmet="true" name="viewport" content="width=device-width, initial-scale=1"/>
+<title data-react-helmet="true">React 架构的演变 - 从递归到循环 · 自然醒的博客</title>
+<link data-react-helmet="true" rel="stylesheet" href="/assets/index.css"/><link data-react-helmet="true" id="prismTheme" rel="stylesheet" href="/assets/prism.css"/>
+<script data-react-helmet="true" >
+    const shouldSetIsDark = document.cookie.includes('is_dark=1') ? true : document.cookie.includes('is_dark=0') ? false : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (shouldSetIsDark) {
+      document.documentElement.classList.add('is_dark');
+      document.getElementById('prismTheme').href = "/assets/prism_tomorrow.css";
+    }
+  </script>
+</head><body><a class="czs-menu-l show_on_mobile aside_button_open" href="#" style="background-image:url(&quot;/assets/czs-menu-l.svg&quot;)"></a><a class="show_on_mobile aside_button_text" href="/">自然醒的博客</a><aside class="hide_on_mobile"><a class="czs-menu-l show_on_mobile aside_button_close" href="#" style="background-image:url(&quot;/assets/czs-close-l.svg&quot;)"></a><h1><a href="/">自然醒的博客</a></h1><p class="description">前端工程师@拼多多，爱折腾，擅长 JavaScript，欢迎我的关注公众号「更了不起的前端」</p><ul class="social list_style_none"><li class="flex_center"><a class="czs-github-logo" href="https://github.com/Shenfq" target="_blank" style="background-image:url(&quot;/assets/czs-github-logo.svg&quot;)"></a></li><li class="flex_center"><a class="czs-message-l" href="mailto:shenfq95@foxmail.com" target="_blank" style="background-image:url(&quot;/assets/czs-message-l.svg&quot;)"></a></li><li style="flex-grow:1"></li><li class="toggle_dark flex_center"><span class="czs-sun" style="background-image:url(&quot;/assets/czs-sun.svg&quot;)"></span><span class="czs-sun-l" style="background-image:url(&quot;/assets/czs-sun-l.svg&quot;)"></span><span class="czs-moon" style="background-image:url(&quot;/assets/czs-moon.svg&quot;)"></span><span class="czs-moon-l" style="background-image:url(&quot;/assets/czs-moon-l.svg&quot;)"></span></li></ul><nav><ul class="menu list_style_none"><li><a class="flex_center" href="/"><span class="czs-home-l" style="background-image:url(&quot;/assets/czs-home-l.svg&quot;)"></span>首页</a></li><li><a class="flex_center" href="/categories/"><span class="czs-category-l" style="background-image:url(&quot;/assets/czs-category-l.svg&quot;)"></span>分类</a></li><li><a class="flex_center" href="/tags/"><span class="czs-tag-l" style="background-image:url(&quot;/assets/czs-tag-l.svg&quot;)"></span>标签</a></li><li><a class="flex_center" href="/about/"><span class="czs-about-l" style="background-image:url(&quot;/assets/czs-about-l.svg&quot;)"></span>关于</a></li><li><a class="flex_center" href="/archives/"><span class="czs-box-l" style="background-image:url(&quot;/assets/czs-box-l.svg&quot;)"></span>归档</a></li></ul></nav></aside><section class="main"><div class="main_post_meta"><time dateTime="2020/09/29">2020-09-30</time> · <!-- -->unknown</div><article><p>这篇文章是 React 架构演变的第二篇，上一篇主要介绍了更新机制从同步修改为异步，这一篇重点介绍 Fiber 架构下通过循环遍历更新的过程，之所以要使用循环遍历的方式，是因为递归更新过程一旦开始就不能暂停，只能不断向下，直到递归结束或者出现异常。</p>
+<h2 id="%E9%80%92%E5%BD%92%E6%9B%B4%E6%96%B0%E7%9A%84%E5%AE%9E%E7%8E%B0">递归更新的实现<a class="anchor" href="#%E9%80%92%E5%BD%92%E6%9B%B4%E6%96%B0%E7%9A%84%E5%AE%9E%E7%8E%B0">§</a></h2>
+<p>React 15 的递归更新逻辑是先将需要更新的组件放入脏组件队列（这里在上篇文章已经介绍过，没看过的可以先看看<a href="https://blog.shenfq.com/2020/react-%E6%9E%B6%E6%9E%84%E7%9A%84%E6%BC%94%E5%8F%98-%E4%BB%8E%E5%90%8C%E6%AD%A5%E5%88%B0%E5%BC%82%E6%AD%A5/">《React 架构的演变 - 从同步到异步》</a>），然后取出组件进行一次递归，不停向下寻找子节点来查找是否需要更新。</p>
+<p>下面使用一段代码来简单描述一下这个过程：</p>
+<pre class="language-js"><code class="language-js"><span class="token function">updateComponent</span> <span class="token punctuation">(</span><span class="token parameter">prevElement<span class="token punctuation">,</span> nextElement</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>
+    <span class="token comment">// 如果组件的 type 和 key 都没有发生变化，进行更新</span>
+    prevElement<span class="token punctuation">.</span><span class="token property-access">type</span> <span class="token operator">===</span> nextElement<span class="token punctuation">.</span><span class="token property-access">type</span> <span class="token operator">&amp;&amp;</span>
+    prevElement<span class="token punctuation">.</span><span class="token property-access">key</span> <span class="token operator">===</span> nextElement<span class="token punctuation">.</span><span class="token property-access">key</span>
+  <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 文本节点更新</span>
+    <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>prevElement<span class="token punctuation">.</span><span class="token property-access">type</span> <span class="token operator">===</span> <span class="token string">'text'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>prevElement<span class="token punctuation">.</span><span class="token property-access">value</span> <span class="token operator">!==</span> nextElement<span class="token punctuation">.</span><span class="token property-access">value</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token method function property-access">replaceText</span><span class="token punctuation">(</span>nextElement<span class="token punctuation">.</span><span class="token property-access">value</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// DOM 节点的更新</span>
+    <span class="token keyword control-flow">else</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 先更新 DOM 属性</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token method function property-access">updateProps</span><span class="token punctuation">(</span>prevElement<span class="token punctuation">,</span> nextElement<span class="token punctuation">)</span>
+      <span class="token comment">// 再更新 children</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token method function property-access">updateChildren</span><span class="token punctuation">(</span>prevElement<span class="token punctuation">,</span> nextElement<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token comment">// 如果组件的 type 和 key 发生变化，直接重新渲染组件</span>
+  <span class="token keyword control-flow">else</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 触发 unmount 生命周期</span>
+    <span class="token maybe-class-name">ReactReconciler</span><span class="token punctuation">.</span><span class="token method function property-access">unmountComponent</span><span class="token punctuation">(</span>prevElement<span class="token punctuation">)</span>
+    <span class="token comment">// 渲染新的组件</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token method function property-access">_instantiateReactComponent</span><span class="token punctuation">(</span>nextElement<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token function">updateChildren</span> <span class="token punctuation">(</span><span class="token parameter">prevElement<span class="token punctuation">,</span> nextElement</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> prevChildren <span class="token operator">=</span> prevElement<span class="token punctuation">.</span><span class="token property-access">children</span>
+  <span class="token keyword">var</span> nextChildren <span class="token operator">=</span> nextElement<span class="token punctuation">.</span><span class="token property-access">children</span>
+  <span class="token comment">// 省略通过 key 重新排序的 diff 过程</span>
+  <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>prevChildren <span class="token operator">===</span> <span class="token keyword null nil">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token punctuation">}</span> <span class="token comment">// 渲染新的子节点</span>
+  <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>nextChildren <span class="token operator">===</span> <span class="token keyword null nil">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token punctuation">}</span> <span class="token comment">// 清空所有子节点</span>
+  <span class="token comment">// 子节点对比</span>
+  prevChildren<span class="token punctuation">.</span><span class="token method function property-access">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">prevChild<span class="token punctuation">,</span> index</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> nextChild <span class="token operator">=</span> nextChildren<span class="token punctuation">[</span>index<span class="token punctuation">]</span>
+    <span class="token comment">// 递归过程</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token method function property-access">updateComponent</span><span class="token punctuation">(</span>prevChild<span class="token punctuation">,</span> nextChild<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>为了更清晰的看到这个过程，我们还是写一个简单的Demo，构造一个 3 * 3 的 Table 组件。</p>
+<p><img src="https://file.shenfq.com/pic/20200926153531.png" alt="Table"></p>
+<pre class="language-jsx"><code class="language-jsx"><span class="token comment">// <a class="token url-link" href="https://codesandbox.io/embed/react-sync-demo-nlijf">https://codesandbox.io/embed/react-sync-demo-nlijf</a></span>
+<span class="token keyword">class</span> <span class="token class-name">Col</span> <span class="token keyword">extends</span> <span class="token class-name">React<span class="token punctuation">.</span>Component</span> <span class="token punctuation">{</span>
+  <span class="token function">render</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 渲染之前暂停 8ms，给 render 制造一点点压力</span>
+    <span class="token keyword">const</span> start <span class="token operator">=</span> <span class="token dom variable">performance</span><span class="token punctuation">.</span><span class="token method function property-access">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword control-flow">while</span> <span class="token punctuation">(</span><span class="token dom variable">performance</span><span class="token punctuation">.</span><span class="token method function property-access">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> start <span class="token operator">&lt;</span> <span class="token number">8</span><span class="token punctuation">)</span>
+    <span class="token keyword control-flow">return</span> <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>td</span><span class="token punctuation">></span></span><span class="token punctuation">{</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">props</span><span class="token punctuation">.</span><span class="token property-access">children</span><span class="token punctuation">}</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>td</span><span class="token punctuation">></span></span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword module">export</span> <span class="token keyword module">default</span> <span class="token keyword">class</span> <span class="token class-name">Demo</span> <span class="token keyword">extends</span> <span class="token class-name">React<span class="token punctuation">.</span>Component</span> <span class="token punctuation">{</span>
+  state <span class="token operator">=</span> <span class="token punctuation">{</span>
+    val<span class="token operator">:</span> <span class="token number">0</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">render</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> <span class="token punctuation">{</span> val <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">state</span>
+    <span class="token keyword">const</span> array <span class="token operator">=</span> <span class="token known-class-name class-name">Array</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">fill</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token comment">// 构造一个 3 * 3 表格</span>
+    <span class="token keyword">const</span> rows <span class="token operator">=</span> array<span class="token punctuation">.</span><span class="token method function property-access">map</span><span class="token punctuation">(</span>
+      <span class="token punctuation">(</span><span class="token parameter">_<span class="token punctuation">,</span> row</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>tr</span> <span class="token attr-name">key</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">{</span>row<span class="token punctuation">}</span></span><span class="token punctuation">></span></span><span class="token plain-text">
+        </span><span class="token punctuation">{</span>array<span class="token punctuation">.</span><span class="token method function property-access">map</span><span class="token punctuation">(</span>
+          <span class="token punctuation">(</span><span class="token parameter">_<span class="token punctuation">,</span> col</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token class-name">Col</span></span> <span class="token attr-name">key</span><span class="token script language-javascript"><span class="token script-punctuation punctuation">=</span><span class="token punctuation">{</span>col<span class="token punctuation">}</span></span><span class="token punctuation">></span></span><span class="token punctuation">{</span>val<span class="token punctuation">}</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span><span class="token class-name">Col</span></span><span class="token punctuation">></span></span>
+        <span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token plain-text">
+      </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>tr</span><span class="token punctuation">></span></span>
+    <span class="token punctuation">)</span>
+    <span class="token keyword control-flow">return</span> <span class="token punctuation">(</span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>table</span> <span class="token attr-name">className</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>table<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token plain-text">
+        </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>tbody</span><span class="token punctuation">></span></span><span class="token punctuation">{</span>rows<span class="token punctuation">}</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>tbody</span><span class="token punctuation">></span></span><span class="token plain-text">
+      </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>table</span><span class="token punctuation">></span></span>
+    <span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>然后每秒对 Table 里面的值更新一次，让 val 每次 + 1，从 0 ~ 9 不停循环。</p>
+<p><img src="https://file.shenfq.com/pic/20200926153958.gif" alt="Table Loop"></p>
+<pre class="language-jsx"><code class="language-jsx"><span class="token comment">// <a class="token url-link" href="https://codesandbox.io/embed/react-sync-demo-nlijf">https://codesandbox.io/embed/react-sync-demo-nlijf</a></span>
+<span class="token keyword module">export</span> <span class="token keyword module">default</span> <span class="token keyword">class</span> <span class="token class-name">Demo</span> <span class="token keyword">extends</span> <span class="token class-name">React<span class="token punctuation">.</span>Component</span> <span class="token punctuation">{</span>
+	<span class="token function-variable function">tick</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+    <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token method function property-access">setState</span><span class="token punctuation">(</span><span class="token punctuation">{</span> val<span class="token operator">:</span> next <span class="token operator">&lt;</span> <span class="token number">10</span> <span class="token operator">?</span> next <span class="token operator">:</span> <span class="token number">0</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token method function property-access">tick</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">1000</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">componentDidMount</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token method function property-access">tick</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>完整代码的线上地址： <a href="https://codesandbox.io/embed/react-sync-demo-nlijf">https://codesandbox.io/embed/react-sync-demo-nlijf</a>。Demo 组件每次调用 setState，React 会先判断该组件的类型有没有发生修改，如果有就整个组件进行重新渲染，如果没有会更新 state，然后向下判断 table 组件，table 组件继续向下判断 tr 组件，tr 组件再向下判断 td 组件，最后发现 td 组件下的文本节点发生了修改，通过 DOM API 更新。</p>
+<p><img src="https://file.shenfq.com/pic/20200926154214.gif" alt="Update"></p>
+<p>通过 Performance 的函数调用堆栈也能清晰的看到这个过程，updateComponent 之后 的 updateChildren 会继续调用子组件的 updateComponent，直到递归完所有组件，表示更新完成。</p>
+<p><img src="https://file.shenfq.com/pic/20200926161103.png" alt="调用堆栈"></p>
+<p>递归的缺点很明显，不能暂停更新，一旦开始必须从头到尾，这与 React 16 拆分时间片，给浏览器喘口气的理念明显不符，所以 React 必须要切换架构，将虚拟 DOM 从树形结构修改为链表结构。</p>
+<h2 id="%E5%8F%AF%E5%BE%AA%E7%8E%AF%E7%9A%84-fiber">可循环的 Fiber<a class="anchor" href="#%E5%8F%AF%E5%BE%AA%E7%8E%AF%E7%9A%84-fiber">§</a></h2>
+<p>这里说的链表结构就是 Fiber 了，链表结构最大的优势就是可以通过循环的方式来遍历，只要记住当前遍历的位置，即使中断后也能快速还原，重新开始遍历。</p>
+<p>我们先看看一个 Fiber 节点的数据结构：</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function"><span class="token maybe-class-name">FiberNode</span></span> <span class="token punctuation">(</span><span class="token parameter">tag<span class="token punctuation">,</span> key</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 节点 key，主要用于了优化列表 diff</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">key</span> <span class="token operator">=</span> key
+  <span class="token comment">// 节点类型；FunctionComponent: 0, ClassComponent: 1, HostRoot: 3 ...</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">tag</span> <span class="token operator">=</span> tag
+
+  <span class="token comment">// 子节点</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">child</span> <span class="token operator">=</span> <span class="token keyword null nil">null</span>
+  <span class="token comment">// 父节点</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token keyword control-flow">return</span> <span class="token operator">=</span> <span class="token keyword null nil">null</span> 
+  <span class="token comment">// 兄弟节点</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">sibling</span> <span class="token operator">=</span> <span class="token keyword null nil">null</span>
+  
+  <span class="token comment">// 更新队列，用于暂存 setState 的值</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">updateQueue</span> <span class="token operator">=</span> <span class="token keyword null nil">null</span>
+  
+  <span class="token comment">// 节点更新过期时间，用于时间分片</span>
+  <span class="token comment">// react 17 改为：lanes、childLanes</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">expirationTime</span> <span class="token operator">=</span> <span class="token maybe-class-name">NoLanes</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">childExpirationTime</span> <span class="token operator">=</span> <span class="token maybe-class-name">NoLanes</span>
+
+  <span class="token comment">// 对应到页面的真实 DOM 节点</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">stateNode</span> <span class="token operator">=</span> <span class="token keyword null nil">null</span>
+  <span class="token comment">// Fiber 节点的副本，可以理解为备胎，主要用于提升更新的性能</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">alternate</span> <span class="token operator">=</span> <span class="token keyword null nil">null</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>下面举个例子，我们这里有一段普通的 HTML 文本：</p>
+<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>table</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>table<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>tr</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>td</span><span class="token punctuation">></span></span>1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>td</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>td</span><span class="token punctuation">></span></span>1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>td</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>tr</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>tr</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>td</span><span class="token punctuation">></span></span>1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>td</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>tr</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>table</span><span class="token punctuation">></span></span>
+</code></pre>
+<p>在之前的 React 版本中，jsx 会转化为 createElement 方法，创建树形结构的虚拟 DOM。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> <span class="token maybe-class-name">VDOMRoot</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+  type<span class="token operator">:</span> <span class="token string">'table'</span><span class="token punctuation">,</span>
+  props<span class="token operator">:</span> <span class="token punctuation">{</span> className<span class="token operator">:</span> <span class="token string">'table'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  children<span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      type<span class="token operator">:</span> <span class="token string">'tr'</span><span class="token punctuation">,</span>
+      props<span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      children<span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span>
+          type<span class="token operator">:</span> <span class="token string">'td'</span><span class="token punctuation">,</span>
+          props<span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+          children<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>type<span class="token operator">:</span> <span class="token string">'text'</span><span class="token punctuation">,</span> value<span class="token operator">:</span> <span class="token string">'1'</span><span class="token punctuation">}</span><span class="token punctuation">]</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span>
+          type<span class="token operator">:</span> <span class="token string">'td'</span><span class="token punctuation">,</span>
+          props<span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+          children<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>type<span class="token operator">:</span> <span class="token string">'text'</span><span class="token punctuation">,</span> value<span class="token operator">:</span> <span class="token string">'1'</span><span class="token punctuation">}</span><span class="token punctuation">]</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      type<span class="token operator">:</span> <span class="token string">'tr'</span><span class="token punctuation">,</span>
+      props<span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      children<span class="token operator">:</span> <span class="token punctuation">[</span>
+        <span class="token punctuation">{</span>
+          type<span class="token operator">:</span> <span class="token string">'td'</span><span class="token punctuation">,</span>
+          props<span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+          children<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>type<span class="token operator">:</span> <span class="token string">'text'</span><span class="token punctuation">,</span> value<span class="token operator">:</span> <span class="token string">'1'</span><span class="token punctuation">}</span><span class="token punctuation">]</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>Fiber 架构下，结构如下：</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// 有所简化，并非与 React 真实的 Fiber 结构一致</span>
+<span class="token keyword">const</span> <span class="token maybe-class-name">FiberRoot</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+  type<span class="token operator">:</span> <span class="token string">'table'</span><span class="token punctuation">,</span>
+  <span class="token keyword control-flow">return</span><span class="token operator">:</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span>
+  sibling<span class="token operator">:</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span>
+  child<span class="token operator">:</span> <span class="token punctuation">{</span>
+    type<span class="token operator">:</span> <span class="token string">'tr'</span><span class="token punctuation">,</span>
+    <span class="token keyword control-flow">return</span><span class="token operator">:</span> <span class="token maybe-class-name">FiberNode</span><span class="token punctuation">,</span> <span class="token comment">// table 的 FiberNode</span>
+    sibling<span class="token operator">:</span> <span class="token punctuation">{</span>
+      type<span class="token operator">:</span> <span class="token string">'tr'</span><span class="token punctuation">,</span>
+      <span class="token keyword control-flow">return</span><span class="token operator">:</span> <span class="token maybe-class-name">FiberNode</span><span class="token punctuation">,</span> <span class="token comment">// table 的 FiberNode</span>
+      sibling<span class="token operator">:</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span>
+      child<span class="token operator">:</span> <span class="token punctuation">{</span>
+        type<span class="token operator">:</span> <span class="token string">'td'</span><span class="token punctuation">,</span>
+        <span class="token keyword control-flow">return</span><span class="token operator">:</span> <span class="token maybe-class-name">FiberNode</span><span class="token punctuation">,</span> <span class="token comment">// tr 的 FiberNode</span>
+        sibling<span class="token operator">:</span> <span class="token punctuation">{</span>
+          type<span class="token operator">:</span> <span class="token string">'td'</span><span class="token punctuation">,</span>
+          <span class="token keyword control-flow">return</span><span class="token operator">:</span> <span class="token maybe-class-name">FiberNode</span><span class="token punctuation">,</span> <span class="token comment">// tr 的 FiberNode</span>
+          sibling<span class="token operator">:</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span>
+          child<span class="token operator">:</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span>
+          text<span class="token operator">:</span> <span class="token string">'1'</span> <span class="token comment">// 子节点仅有文本节点</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        child<span class="token operator">:</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span>
+        text<span class="token operator">:</span> <span class="token string">'1'</span> <span class="token comment">// 子节点仅有文本节点</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    child<span class="token operator">:</span> <span class="token punctuation">{</span>
+      type<span class="token operator">:</span> <span class="token string">'td'</span><span class="token punctuation">,</span>
+      <span class="token keyword control-flow">return</span><span class="token operator">:</span> <span class="token maybe-class-name">FiberNode</span><span class="token punctuation">,</span> <span class="token comment">// tr 的 FiberNode</span>
+      sibling<span class="token operator">:</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span>
+      child<span class="token operator">:</span> <span class="token keyword null nil">null</span><span class="token punctuation">,</span>
+      text<span class="token operator">:</span> <span class="token string">'1'</span> <span class="token comment">// 子节点仅有文本节点</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/20200929103938.png" alt="Fiber"></p>
+<h2 id="%E5%BE%AA%E7%8E%AF%E6%9B%B4%E6%96%B0%E7%9A%84%E5%AE%9E%E7%8E%B0">循环更新的实现<a class="anchor" href="#%E5%BE%AA%E7%8E%AF%E6%9B%B4%E6%96%B0%E7%9A%84%E5%AE%9E%E7%8E%B0">§</a></h2>
+<p>那么，在 setState 的时候，React 是如何进行一次 Fiber 的遍历的呢？</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">let</span> workInProgress <span class="token operator">=</span> <span class="token maybe-class-name">FiberRoot</span>
+
+<span class="token comment">// 遍历 Fiber 节点，如果时间片时间用完就停止遍历</span>
+<span class="token keyword">function</span> <span class="token function">workLoopConcurrent</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword control-flow">while</span> <span class="token punctuation">(</span>
+    workInProgress <span class="token operator">!==</span> <span class="token keyword null nil">null</span> <span class="token operator">&amp;&amp;</span>
+    <span class="token operator">!</span><span class="token function">shouldYield</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// 用于判断当前时间片是否到期</span>
+  <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">performUnitOfWork</span><span class="token punctuation">(</span>workInProgress<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">performUnitOfWork</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> next <span class="token operator">=</span> <span class="token function">beginWork</span><span class="token punctuation">(</span>workInProgress<span class="token punctuation">)</span> <span class="token comment">// 返回当前 Fiber 的 child</span>
+  <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>next<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment">// child 存在</span>
+    <span class="token comment">// 重置 workInProgress 为 child</span>
+    workInProgress <span class="token operator">=</span> next
+  <span class="token punctuation">}</span> <span class="token keyword control-flow">else</span> <span class="token punctuation">{</span> <span class="token comment">// child 不存在</span>
+    <span class="token comment">// 向上回溯节点</span>
+    <span class="token keyword">let</span> completedWork <span class="token operator">=</span> workInProgress
+    <span class="token keyword control-flow">while</span> <span class="token punctuation">(</span>completedWork <span class="token operator">!==</span> <span class="token keyword null nil">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 收集副作用，主要是用于标记节点是否需要操作 DOM</span>
+      <span class="token function">completeWork</span><span class="token punctuation">(</span>completedWork<span class="token punctuation">)</span>
+
+      <span class="token comment">// 获取 Fiber.sibling</span>
+      <span class="token keyword">let</span> siblingFiber <span class="token operator">=</span> workInProgress<span class="token punctuation">.</span><span class="token property-access">sibling</span>
+      <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>siblingFiber<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// sibling 存在，则跳出 complete 流程，继续 beginWork</span>
+        workInProgress <span class="token operator">=</span> siblingFiber
+        <span class="token keyword control-flow">return</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+
+      completedWork <span class="token operator">=</span> completedWork<span class="token punctuation">.</span><span class="token keyword control-flow">return</span>
+      workInProgress <span class="token operator">=</span> completedWork
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">beginWork</span><span class="token punctuation">(</span><span class="token parameter">workInProgress</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 调用 render 方法，创建子 Fiber，进行 diff</span>
+  <span class="token comment">// 操作完毕后，返回当前 Fiber 的 child</span>
+  <span class="token keyword control-flow">return</span> workInProgress<span class="token punctuation">.</span><span class="token property-access">child</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">function</span> <span class="token function">completeWork</span><span class="token punctuation">(</span><span class="token parameter">workInProgress</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 收集节点副作用</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>Fiber 的遍历本质上就是一个循环，全局有一个 <code>workInProgress</code> 变量，用来存储当前正在 diff 的节点，先通过 <code>beginWork</code> 方法对当前节点然后进行 diff 操作（diff 之前会调用 render，重新计算 state、prop），并返回当前节点的第一个子节点( <code>fiber.child</code>)作为新的工作节点，直到不存在子节点。然后，对当前节点调用 <code>completedWork</code> 方法，存储 <code>beginWork</code> 过程中产生的副作用，如果当前节点存在兄弟节点( <code>fiber.sibling</code>)，则将工作节点修改为兄弟节点，重新进入 <code>beginWork</code> 流程。直到  <code>completedWork</code> 重新返回到根节点，执行 <code>commitRoot</code> 将所有的副作用反应到真实 DOM 中。</p>
+<p><img src="https://file.shenfq.com/pic/20200929115604.gif" alt="Fiber work loop"></p>
+<p>在一次遍历过程中，每个节点都会经历 <code>beginWork</code>、<code>completeWork</code> ，直到返回到根节点，最后通过 <code>commitRoot</code> 将所有的更新提交，关于这部分的内容可以看：<a href="https://react.iamkasong.com/process/reconciler.html">《React 技术揭秘》</a>。</p>
+<h2 id="%E6%97%B6%E9%97%B4%E5%88%86%E7%89%87%E7%9A%84%E7%A7%98%E5%AF%86">时间分片的秘密<a class="anchor" href="#%E6%97%B6%E9%97%B4%E5%88%86%E7%89%87%E7%9A%84%E7%A7%98%E5%AF%86">§</a></h2>
+<p>前面说过，Fiber 结构的遍历是支持中断恢复，为了观察这个过程，我们将之前的 3 * 3 的 Table 组件改成 Concurrent 模式，线上地址：<a href="https://codesandbox.io/embed/react-async-demo-h1lbz">https://codesandbox.io/embed/react-async-demo-h1lbz</a>。由于每次调用 Col 组件的 render 部分需要耗时 8ms，会超出了一个时间片，所以每个 td 部分都会暂停一次。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">class</span> <span class="token class-name">Col</span> <span class="token keyword">extends</span> <span class="token class-name">React<span class="token punctuation">.</span>Component</span> <span class="token punctuation">{</span>
+  <span class="token function">render</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 渲染之前暂停 8ms，给 render 制造一点点压力</span>
+    <span class="token keyword">const</span> start <span class="token operator">=</span> <span class="token dom variable">performance</span><span class="token punctuation">.</span><span class="token method function property-access">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword control-flow">while</span> <span class="token punctuation">(</span><span class="token dom variable">performance</span><span class="token punctuation">.</span><span class="token method function property-access">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> start <span class="token operator">&lt;</span> <span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword control-flow">return</span> <span class="token operator">&lt;</span>td<span class="token operator">></span><span class="token punctuation">{</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">props</span><span class="token punctuation">.</span><span class="token property-access">children</span><span class="token punctuation">}</span><span class="token operator">&lt;</span><span class="token operator">/</span>td<span class="token operator">></span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>在这个 3 * 3 组件里，一共有 9 个 Col 组件，所以会有 9 次耗时任务，分散在 9 个时间片进行，通过 Performance 的调用栈可以看到具体情况：</p>
+<p><img src="https://file.shenfq.com/pic/20200929143815.png" alt="异步模式的调用栈"></p>
+<p>在非 Concurrent 模式下，Fiber 节点的遍历是一次性进行的，并不会切分多个时间片，差别就是在遍历的时候调用了 <code>workLoopSync</code> 方法，该方法并不会判断时间片是否用完。</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// 遍历 Fiber 节点</span>
+<span class="token keyword">function</span> <span class="token function">workLoopSync</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword control-flow">while</span> <span class="token punctuation">(</span>workInProgress <span class="token operator">!==</span> <span class="token keyword null nil">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">performUnitOfWork</span><span class="token punctuation">(</span>workInProgress<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/20200929153752.png" alt="同步模式的调用栈"></p>
+<p>通过上面的分析可以看出， <code>shouldYield</code> 方法决定了当前时间片是否已经用完，这也是决定 React 是同步渲染还是异步渲染的关键。如果去除任务优先级的概念，<code>shouldYield</code> 方法可以说很简单，就是判断了当前的时间，是否已经超过了预设的 <code>deadline</code>。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">getCurrentTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword control-flow">return</span> <span class="token dom variable">performance</span><span class="token punctuation">.</span><span class="token method function property-access">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">function</span> <span class="token function">shouldYield</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 获取当前时间</span>
+  <span class="token keyword">var</span> currentTime <span class="token operator">=</span> <span class="token function">getCurrentTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token keyword control-flow">return</span> currentTime <span class="token operator">>=</span> deadline
+<span class="token punctuation">}</span>
+</code></pre>
+<p><code>deadline</code> 又是如何得的呢？可以回顾上一篇文章（<a href="https://blog.shenfq.com/2020/react-%E6%9E%B6%E6%9E%84%E7%9A%84%E6%BC%94%E5%8F%98-%E4%BB%8E%E5%90%8C%E6%AD%A5%E5%88%B0%E5%BC%82%E6%AD%A5/">《React 架构的演变 - 从同步到异步》</a>）提到的 ChannelMessage，更新开始的时候会通过 <code>requestHostCallback</code>（即：<code>port2.send</code>）发送异步消息，在 <code>performWorkUntilDeadline</code> （即：<code>port1.onmessage</code>）中接收消息。<code>performWorkUntilDeadline</code> 每次接收到消息时，表示已经进入了下一个任务队列，这个时候就会更新 <code>deadline</code>。</p>
+<p><img src="https://file.shenfq.com/pic/20200927105705.png" alt="异步调用栈"></p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">var</span> channel <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">MessageChannel</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">var</span> port <span class="token operator">=</span> channel<span class="token punctuation">.</span><span class="token property-access">port2</span>
+channel<span class="token punctuation">.</span><span class="token property-access">port1</span><span class="token punctuation">.</span><span class="token method-variable function-variable method function property-access">onmessage</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token function">performWorkUntilDeadline</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>scheduledHostCallback <span class="token operator">!==</span> <span class="token keyword null nil">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> currentTime <span class="token operator">=</span> <span class="token function">getCurrentTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token comment">// 重置超时时间 </span>
+    deadline <span class="token operator">=</span> currentTime <span class="token operator">+</span> yieldInterval
+    
+    <span class="token keyword">var</span> hasTimeRemaining <span class="token operator">=</span> <span class="token boolean">true</span>
+    <span class="token keyword">var</span> hasMoreWork <span class="token operator">=</span> <span class="token function">scheduledHostCallback</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>hasMoreWork<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 已经没有任务了，修改状态 </span>
+      isMessageLoopRunning <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+      scheduledHostCallback <span class="token operator">=</span> <span class="token keyword null nil">null</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword control-flow">else</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 还有任务，放到下个任务队列执行，给浏览器喘息的机会 </span>
+      port<span class="token punctuation">.</span><span class="token method function property-access">postMessage</span> <span class="token punctuation">(</span><span class="token keyword null nil">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span> <span class="token keyword control-flow">else</span> <span class="token punctuation">{</span>
+    isMessageLoopRunning <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token function-variable function">requestHostCallback</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">callback</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">//callback 挂载到 scheduledHostCallback</span>
+  scheduledHostCallback <span class="token operator">=</span> callback
+  <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>isMessageLoopRunning<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    isMessageLoopRunning <span class="token operator">=</span> <span class="token boolean">true</span>
+    <span class="token comment">// 推送消息，下个队列队列调用 callback</span>
+    port<span class="token punctuation">.</span><span class="token method function property-access">postMessage</span> <span class="token punctuation">(</span><span class="token keyword null nil">null</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>超时时间的设置就是在当前时间的基础上加上了一个 <code>yieldInterval</code>， 这个 <code>yieldInterval</code> 的值，默认是 5ms。</p>
+<pre class="language-js"><code class="language-js">deadline <span class="token operator">=</span> currentTime <span class="token operator">+</span> yieldInterval
+</code></pre>
+<p>同时 React 也提供了修改 <code>yieldInterval</code> 的手段，通过手动指定 fps，来确定一帧的具体时间（单位：ms），fps 越高，一个时间分片的时间就越短，对设备的性能要求就越高。</p>
+<pre class="language-js"><code class="language-js"><span class="token function-variable function">forceFrameRate</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">fps</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>fps <span class="token operator">&lt;</span> <span class="token number">0</span> <span class="token operator">||</span> fps <span class="token operator">></span> <span class="token number">125</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 帧率仅支持 0~125</span>
+    <span class="token keyword control-flow">return</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>fps <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 一般 60 fps 的设备</span>
+    <span class="token comment">// 一个时间分片的时间为 Math.floor(1000/60) = 16</span>
+    yieldInterval <span class="token operator">=</span> <span class="token known-class-name class-name">Math</span><span class="token punctuation">.</span><span class="token method function property-access">floor</span><span class="token punctuation">(</span><span class="token number">1000</span> <span class="token operator">/</span> fps<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span> <span class="token keyword control-flow">else</span> <span class="token punctuation">{</span>
+    <span class="token comment">// reset the framerate</span>
+    yieldInterval <span class="token operator">=</span> <span class="token number">5</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="%E6%80%BB%E7%BB%93">总结<a class="anchor" href="#%E6%80%BB%E7%BB%93">§</a></h2>
+<p>下面我们将异步逻辑、循环更新、时间分片串联起来。先回顾一下之前的文章讲过，Concurrent 模式下，setState 后的调用顺序：</p>
+<pre class="language-js"><code class="language-js"><span class="token maybe-class-name">Component</span><span class="token punctuation">.</span><span class="token method function property-access">setState</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token arrow operator">=></span> <span class="token function">enqueueSetState</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token arrow operator">=></span> <span class="token function">scheduleUpdate</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token arrow operator">=></span> <span class="token function">scheduleCallback</span><span class="token punctuation">(</span><span class="token parameter">performConcurrentWorkOnRoot</span><span class="token punctuation">)</span>
+  <span class="token arrow operator">=></span> <span class="token function">requestHostCallback</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token arrow operator">=></span> <span class="token function">postMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token arrow operator">=></span> <span class="token function">performWorkUntilDeadline</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<p><code>scheduleCallback</code> 方法会将传入的回调（<code>performConcurrentWorkOnRoot</code>）组装成一个任务放入 <code>taskQueue</code> 中，然后调用 <code>requestHostCallback</code> 发送一个消息，进入异步任务。<code>performWorkUntilDeadline</code> 接收到异步消息，从  <code>taskQueue</code>  取出任务开始执行，这里的任务就是之前传入的  <code>performConcurrentWorkOnRoot</code> 方法，这个方法最后会调用<code>workLoopConcurrent</code>（<code>workLoopConcurrent</code> 前面已经介绍过了，这个不再重复）。如果 <code>workLoopConcurrent</code> 是由于超时中断的，<code>hasMoreWork</code> 返回为 true，通过 <code>postMessage</code> 发送消息，将操作延迟到下一个任务队列。</p>
+<p><img src="https://file.shenfq.com/pic/20200929195346.png" alt="流程图"></p>
+<p>到这里整个流程已经结束，希望大家看完文章能有所收获，下一篇文章会介绍 Fiber 架构下 Hooks 的实现。</p></article></section><footer>Powered by <a href="https://github.com/xcatliu/pagic" target="_blank">Pagic</a></footer><script src="https://cdn.pagic.org/react@16.13.1/umd/react.production.min.js"></script><script src="https://cdn.pagic.org/react-dom@16.13.1/umd/react-dom.production.min.js"></script><script type="module" src="/index.js"></script></body></html>
