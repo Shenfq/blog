@@ -1,5 +1,5 @@
 ---
-title: 如何让 Node.js 服务性能翻倍？
+title: Node.js 服务性能翻倍的秘密（一）
 author: shenfq
 date: 2020/12/13
 categories:
@@ -11,7 +11,7 @@ tags:
 - fastify
 ---
 
-# 如何让 Node.js 服务性能翻倍？
+# Node.js 服务性能翻倍的秘密（一）
 
 ## 前言
 
