@@ -1,0 +1,377 @@
+<!doctype html><html class="" data-reactroot=""><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous"/>
+<meta data-react-helmet="true" charset="utf-8"/><meta data-react-helmet="true" http-equiv="x-ua-compatible" content="ie=edge"/><meta data-react-helmet="true" name="description" content="前端工程师@拼多多，爱折腾，擅长 JavaScript，欢迎关注我的公众号「更了不起的前端」"/><meta data-react-helmet="true" name="viewport" content="width=device-width, initial-scale=1"/>
+<title data-react-helmet="true">如何让 Node.js 服务性能翻倍？ · 自然醒的博客</title>
+<link data-react-helmet="true" rel="stylesheet" href="/assets/index.css"/><link data-react-helmet="true" id="prismTheme" rel="stylesheet" href="/assets/prism.css"/>
+<script data-react-helmet="true" >
+    const shouldSetIsDark = document.cookie.includes('is_dark=1') ? true : document.cookie.includes('is_dark=0') ? false : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (shouldSetIsDark) {
+      document.documentElement.classList.add('is_dark');
+      document.getElementById('prismTheme').href = "/assets/prism_tomorrow.css";
+    }
+  </script>
+</head><body><a class="czs-menu-l show_on_mobile aside_button_open" href="#" style="background-image:url(&quot;/assets/czs-menu-l.svg&quot;)"></a><a class="show_on_mobile aside_button_text" href="/">自然醒的博客</a><aside class="hide_on_mobile"><a class="czs-menu-l show_on_mobile aside_button_close" href="#" style="background-image:url(&quot;/assets/czs-close-l.svg&quot;)"></a><h1><a href="/">自然醒的博客</a></h1><p class="description">前端工程师@拼多多，爱折腾，擅长 JavaScript，欢迎关注我的公众号「更了不起的前端」</p><ul class="social list_style_none"><li class="flex_center"><a class="czs-github-logo" href="https://github.com/Shenfq" target="_blank" style="background-image:url(&quot;/assets/czs-github-logo.svg&quot;)"></a></li><li class="flex_center"><a class="czs-message-l" href="mailto:shenfq95@foxmail.com" target="_blank" style="background-image:url(&quot;/assets/czs-message-l.svg&quot;)"></a></li><li style="flex-grow:1"></li><li class="toggle_dark flex_center"><span class="czs-sun" style="background-image:url(&quot;/assets/czs-sun.svg&quot;)"></span><span class="czs-sun-l" style="background-image:url(&quot;/assets/czs-sun-l.svg&quot;)"></span><span class="czs-moon" style="background-image:url(&quot;/assets/czs-moon.svg&quot;)"></span><span class="czs-moon-l" style="background-image:url(&quot;/assets/czs-moon-l.svg&quot;)"></span></li></ul><nav><ul class="menu list_style_none"><li><a class="flex_center" href="/"><span class="czs-home-l" style="background-image:url(&quot;/assets/czs-home-l.svg&quot;)"></span>首页</a></li><li><a class="flex_center" href="/categories/"><span class="czs-category-l" style="background-image:url(&quot;/assets/czs-category-l.svg&quot;)"></span>分类</a></li><li><a class="flex_center" href="/tags/"><span class="czs-tag-l" style="background-image:url(&quot;/assets/czs-tag-l.svg&quot;)"></span>标签</a></li><li><a class="flex_center" href="/about/"><span class="czs-about-l" style="background-image:url(&quot;/assets/czs-about-l.svg&quot;)"></span>关于</a></li><li><a class="flex_center" href="/archives/"><span class="czs-box-l" style="background-image:url(&quot;/assets/czs-box-l.svg&quot;)"></span>归档</a></li></ul></nav></aside><section class="main"><h1>如何让 Node.js 服务性能翻倍？</h1><div class="main_post_meta"><time dateTime="2020/12/13">2020-12-14</time> · <!-- -->shenfq</div><article><h2 id="%E5%89%8D%E8%A8%80">前言<a class="anchor" href="#%E5%89%8D%E8%A8%80">§</a></h2>
+<p>用过 Node.js 开发过的同学肯定都上手过 koa，因为他简单优雅的写法，再加上丰富的社区生态，而且现存的许多 Node.js 框架都是基于 koa 进行二次封装的。但是说到性能，就不得不提到一个知名框架： <code>fastify</code> ，听名字就知道它的特性就是快，官方给出的<a href="https://github.com/fastify/fastify#benchmarks">Benchmarks</a>甚至比 Node.js 原生的 <code>http.Server</code> 还要快。</p>
+<p><img src="https://file.shenfq.com/pic/20201213162826.png" alt="Benchmarks"></p>
+<h2 id="%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84%E5%85%B3%E9%94%AE">性能提升的关键<a class="anchor" href="#%E6%80%A7%E8%83%BD%E6%8F%90%E5%8D%87%E7%9A%84%E5%85%B3%E9%94%AE">§</a></h2>
+<p>我们先看看 <code>fastify</code> 是如何启动一个服务的。</p>
+<pre class="language-bash"><code class="language-bash"><span class="token comment"># 安装 fastify</span>
+<span class="token function">npm</span> i -S fastify@3.9.1
+</code></pre>
+<pre class="language-js"><code class="language-js"><span class="token comment">// 创建服务实例</span>
+<span class="token keyword">const</span> fastify <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'fastify'</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+app<span class="token punctuation">.</span><span class="token method function property-access">get</span><span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  schema<span class="token operator">:</span> <span class="token punctuation">{</span>
+    response<span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token comment">// key 为响应状态码</span>
+      <span class="token string">'200'</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        type<span class="token operator">:</span> <span class="token string">'object'</span><span class="token punctuation">,</span>
+        properties<span class="token operator">:</span> <span class="token punctuation">{</span>
+          hello<span class="token operator">:</span> <span class="token punctuation">{</span> type<span class="token operator">:</span> <span class="token string">'string'</span> <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword control-flow">return</span> <span class="token punctuation">{</span> hello<span class="token operator">:</span> <span class="token string">'world'</span> <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment">// 启动服务</span>
+<span class="token punctuation">;</span><span class="token punctuation">(</span><span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword control-flow">try</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> port <span class="token operator">=</span> <span class="token number">3001</span> <span class="token comment">// 监听端口</span>
+    <span class="token keyword control-flow">await</span> app<span class="token punctuation">.</span><span class="token method function property-access">listen</span><span class="token punctuation">(</span>port<span class="token punctuation">)</span>
+    <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">info</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">server listening on </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>port<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span> <span class="token keyword control-flow">catch</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">error</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span>
+    process<span class="token punctuation">.</span><span class="token method function property-access">exit</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<p>从上面代码可以看出，<code>fastify</code> 对请求的响应体定义了一个 <code>schema</code>，<code>fastify</code> 除了可以定义响应体的 <code>schema</code>，还支持对如下数据定义 <code>schema</code>：</p>
+<ol>
+<li><code>body</code>：当为 POST 或 PUT 方法时，校验请求主体；</li>
+<li><code>query</code>：校验 url 的 查询参数；</li>
+<li><code>params</code>：校验 url 参数；</li>
+<li><code>response</code>：过滤并生成用于响应体的 <code>schema</code>。</li>
+</ol>
+<pre class="language-js"><code class="language-js">app<span class="token punctuation">.</span><span class="token method function property-access">post</span><span class="token punctuation">(</span><span class="token string">'/user/:id'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  schema<span class="token operator">:</span> <span class="token punctuation">{</span>
+    params<span class="token operator">:</span> <span class="token punctuation">{</span>
+      type<span class="token operator">:</span> <span class="token string">'object'</span><span class="token punctuation">,</span>
+      properties<span class="token operator">:</span> <span class="token punctuation">{</span>
+      	id<span class="token operator">:</span> <span class="token punctuation">{</span> type<span class="token operator">:</span> <span class="token string">'number'</span> <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    response<span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 2xx 表示 200~299 的状态都适用此 schema</span>
+      <span class="token string">'2xx'</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        type<span class="token operator">:</span> <span class="token string">'object'</span><span class="token punctuation">,</span>
+        properties<span class="token operator">:</span> <span class="token punctuation">{</span>
+          id<span class="token operator">:</span> <span class="token punctuation">{</span> type<span class="token operator">:</span> <span class="token string">'number'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+          name<span class="token operator">:</span> <span class="token punctuation">{</span> type<span class="token operator">:</span> <span class="token string">'string'</span> <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter">req</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> id <span class="token operator">=</span> req<span class="token punctuation">.</span><span class="token property-access">params</span><span class="token punctuation">.</span><span class="token property-access">id</span>
+  <span class="token keyword">const</span> userInfo <span class="token operator">=</span> <span class="token keyword control-flow">await</span> <span class="token maybe-class-name">User</span><span class="token punctuation">.</span><span class="token method function property-access">findById</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span>
+  <span class="token comment">// Content-Type 默认为 application/json</span>
+  <span class="token keyword control-flow">return</span> userInfo
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>让 <code>fastify</code> 性能提升的的秘诀在于，其返回 <code>application/json</code> 类型数据的时候，并没有使用原生的 <code>JSON.stringify</code>，而是自己内部重新实现了一套 JSON 序列化的方法，这个 <code>schema</code> 就是 JSON 序列化性能翻倍的关键。</p>
+<h2 id="%E5%A6%82%E4%BD%95%E5%AF%B9-json-%E5%BA%8F%E5%88%97%E5%8C%96">如何对 JSON 序列化<a class="anchor" href="#%E5%A6%82%E4%BD%95%E5%AF%B9-json-%E5%BA%8F%E5%88%97%E5%8C%96">§</a></h2>
+<p>在探索 <code>fastify</code> 如何对 JSON 数据序列化之前，我们先看看 <code>JSON.stringify</code> 需要经过多么繁琐的步骤，这里我们参考 Douglas Crockford （JSON 格式的创建者）开源的 <code>JSON-js</code> 中实现的 <code>stringify</code> 方法。</p>
+<blockquote>
+<p>JSON-js：<a href="https://github.com/douglascrockford/JSON-js/blob/master/json2.js">https://github.com/douglascrockford/JSON-js/blob/master/json2.js</a></p>
+</blockquote>
+<pre class="language-js"><code class="language-js"><span class="token comment">// 只展示 JSON.stringify 核心代码，其他代码有所省略</span>
+<span class="token keyword control-flow">if</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> <span class="token known-class-name class-name">JSON</span> <span class="token operator">!==</span> <span class="token string">"object"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token known-class-name class-name">JSON</span> <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token known-class-name class-name">JSON</span><span class="token punctuation">.</span><span class="token method-variable function-variable method function property-access">stringify</span> <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">value</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword control-flow">return</span> <span class="token function">str</span><span class="token punctuation">(</span><span class="token string">""</span><span class="token punctuation">,</span> <span class="token punctuation">{</span><span class="token string">""</span><span class="token operator">:</span> value<span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">function</span> <span class="token function">str</span><span class="token punctuation">(</span><span class="token parameter">key<span class="token punctuation">,</span> holder</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> value <span class="token operator">=</span> holder<span class="token punctuation">[</span>key<span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token keyword control-flow">switch</span><span class="token punctuation">(</span><span class="token keyword">typeof</span> value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">case</span> <span class="token string">"string"</span><span class="token operator">:</span>
+      <span class="token keyword control-flow">return</span> <span class="token function">quote</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token string">"number"</span><span class="token operator">:</span>
+      <span class="token keyword control-flow">return</span> <span class="token punctuation">(</span><span class="token function">isFinite</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">?</span> <span class="token known-class-name class-name">String</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token operator">:</span> <span class="token string">"null"</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token string">"boolean"</span><span class="token operator">:</span>
+    <span class="token keyword">case</span> <span class="token string">"null"</span><span class="token operator">:</span>
+      <span class="token keyword control-flow">return</span> <span class="token known-class-name class-name">String</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token string">"object"</span><span class="token operator">:</span>
+      <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword control-flow">return</span> <span class="token string">"null"</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      partial <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+      <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span><span class="token class-name">Object</span><span class="token punctuation">.</span><span class="token property-access">prototype</span><span class="token punctuation">.</span><span class="token method function property-access">toString</span><span class="token punctuation">.</span><span class="token method function property-access">apply</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token operator">===</span> <span class="token string">"[object Array]"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 处理数组</span>
+        length <span class="token operator">=</span> value<span class="token punctuation">.</span><span class="token property-access">length</span><span class="token punctuation">;</span>
+        <span class="token keyword control-flow">for</span> <span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> length<span class="token punctuation">;</span> i <span class="token operator">+=</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token comment">// 每个元素都需要单独处理</span>
+          partial<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">str</span><span class="token punctuation">(</span>i<span class="token punctuation">,</span> value<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token string">"null"</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment">// 将 partial 转成 ”[...]“</span>
+        v <span class="token operator">=</span> partial<span class="token punctuation">.</span><span class="token property-access">length</span> <span class="token operator">===</span> <span class="token number">0</span>
+          <span class="token operator">?</span> <span class="token string">"[]"</span>
+          <span class="token operator">:</span> <span class="token string">"["</span> <span class="token operator">+</span> partial<span class="token punctuation">.</span><span class="token method function property-access">join</span><span class="token punctuation">(</span><span class="token string">","</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">"]"</span><span class="token punctuation">;</span>
+        <span class="token keyword control-flow">return</span> v<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span> <span class="token keyword control-flow">else</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 处理对象</span>
+        <span class="token keyword control-flow">for</span> <span class="token punctuation">(</span>k <span class="token keyword">in</span> value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span><span class="token class-name">Object</span><span class="token punctuation">.</span><span class="token property-access">prototype</span><span class="token punctuation">.</span><span class="token method function property-access">hasOwnProperty</span><span class="token punctuation">.</span><span class="token method function property-access">call</span><span class="token punctuation">(</span>value<span class="token punctuation">,</span> k<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            v <span class="token operator">=</span> <span class="token function">str</span><span class="token punctuation">(</span>k<span class="token punctuation">,</span> value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>v<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+              partial<span class="token punctuation">.</span><span class="token method function property-access">push</span><span class="token punctuation">(</span><span class="token function">quote</span><span class="token punctuation">(</span>k<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">":"</span> <span class="token operator">+</span> v<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+          <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment">// 将 partial 转成 "{...}"</span>
+        v <span class="token operator">=</span> partial<span class="token punctuation">.</span><span class="token property-access">length</span> <span class="token operator">===</span> <span class="token number">0</span>
+          <span class="token operator">?</span> <span class="token string">"{}"</span>
+        	<span class="token operator">:</span> <span class="token string">"{"</span> <span class="token operator">+</span> partial<span class="token punctuation">.</span><span class="token method function property-access">join</span><span class="token punctuation">(</span><span class="token string">","</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">"}"</span><span class="token punctuation">;</span>
+        <span class="token keyword control-flow">return</span> v<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>从上面的代码可以看出，进行 JSON 对象序列化时，需要遍历所有的数组与对象，逐一进行类型的判断，并对所有的 key 加上 <code>&quot;&quot;</code>，而且这里还不包括一些特殊字符的 encode 操作。但是，如果我们有了 <code>schema</code> 之后，这些情况会变得简单很多。<code>fastify</code> 官方将 JSON 的序列化单独成了一个仓库：<code>fast-json-stringify</code>，后期还引入了 <code>ajv</code> 来进行校验，这里为了更容易看懂代码，选择看比较早期的版本：0.1.0，逻辑比较简单，便于理解。</p>
+<blockquote>
+<p>fast-json-stringify@0.1.0： <a href="https://github.com/fastify/fast-json-stringify/blob/v0.1.0/index.js">https://github.com/fastify/fast-json-stringify/blob/v0.1.0/index.js</a></p>
+</blockquote>
+<pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">$Null</span> <span class="token punctuation">(</span><span class="token parameter">i</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword control-flow">return</span> <span class="token string">'null'</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> $<span class="token known-class-name class-name">Number</span> <span class="token punctuation">(</span><span class="token parameter">i</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> num <span class="token operator">=</span> <span class="token known-class-name class-name">Number</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span>
+  <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span><span class="token function">isNaN</span><span class="token punctuation">(</span>num<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword control-flow">return</span> <span class="token string">'null'</span>
+  <span class="token punctuation">}</span> <span class="token keyword control-flow">else</span> <span class="token punctuation">{</span>
+    <span class="token keyword control-flow">return</span> <span class="token known-class-name class-name">String</span><span class="token punctuation">(</span>num<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> $<span class="token known-class-name class-name">String</span> <span class="token punctuation">(</span><span class="token parameter">i</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword control-flow">return</span> <span class="token string">'"'</span> <span class="token operator">+</span> i <span class="token operator">+</span> <span class="token string">'"'</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">buildObject</span> <span class="token punctuation">(</span><span class="token parameter">schema<span class="token punctuation">,</span> code<span class="token punctuation">,</span> name</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 序列化对象 ...</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">buildArray</span> <span class="token punctuation">(</span><span class="token parameter">schema<span class="token punctuation">,</span> code<span class="token punctuation">,</span> name</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 序列化数组 ...</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">build</span> <span class="token punctuation">(</span><span class="token parameter">schema</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> code <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+    'use strict'
+
+    </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>$<span class="token known-class-name class-name">String</span><span class="token punctuation">.</span><span class="token method function property-access">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">
+    </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>$<span class="token known-class-name class-name">Number</span><span class="token punctuation">.</span><span class="token method function property-access">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">
+    </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>$Null<span class="token punctuation">.</span><span class="token method function property-access">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">
+  </span><span class="token template-punctuation string">`</span></span>
+  <span class="token keyword">var</span> main
+
+  code <span class="token operator">=</span> <span class="token function">buildObject</span><span class="token punctuation">(</span>schema<span class="token punctuation">,</span> code<span class="token punctuation">,</span> <span class="token string">'$main'</span><span class="token punctuation">)</span>
+
+  code <span class="token operator">+=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+    ;
+    return $main
+  </span><span class="token template-punctuation string">`</span></span>
+
+  <span class="token keyword control-flow">return</span> <span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Function</span><span class="token punctuation">(</span>code<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+module<span class="token punctuation">.</span><span class="token property-access">exports</span> <span class="token operator">=</span> build
+</code></pre>
+<p><code>fast-json-stringify</code> 对外暴露一个 <code>build</code> 方法，该方法接受一个 <code>schema</code>，返回一个函数（<code>$main</code>），用于将 <code>schema</code> 对应的对象进行序列化，具体使用方式如下：</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> build <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'fast-json-stringify'</span><span class="token punctuation">)</span>
+
+<span class="token keyword">const</span> stringify <span class="token operator">=</span> <span class="token function">build</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  type<span class="token operator">:</span> <span class="token string">'object'</span><span class="token punctuation">,</span>
+  properties<span class="token operator">:</span> <span class="token punctuation">{</span>
+    id<span class="token operator">:</span> <span class="token punctuation">{</span> type<span class="token operator">:</span> <span class="token string">'number'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    name<span class="token operator">:</span> <span class="token punctuation">{</span> type<span class="token operator">:</span> <span class="token string">'string'</span> <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span>stringify<span class="token punctuation">)</span>
+
+<span class="token keyword">const</span> objString <span class="token operator">=</span> <span class="token function">stringify</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  id<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span> name<span class="token operator">:</span> <span class="token string">'shenfq'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span>objString<span class="token punctuation">)</span> <span class="token comment">// {"id":1,"name":"shenfq"}</span>
+</code></pre>
+<p>经过 <code>build</code> 构造后，返回的序列化方法如下：</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">function</span> $<span class="token known-class-name class-name">String</span> <span class="token punctuation">(</span><span class="token parameter">i</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword control-flow">return</span> <span class="token string">'"'</span> <span class="token operator">+</span> i <span class="token operator">+</span> <span class="token string">'"'</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">function</span> $<span class="token known-class-name class-name">Number</span> <span class="token punctuation">(</span><span class="token parameter">i</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> num <span class="token operator">=</span> <span class="token known-class-name class-name">Number</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span>
+  <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span><span class="token function">isNaN</span><span class="token punctuation">(</span>num<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword control-flow">return</span> <span class="token string">'null'</span>
+  <span class="token punctuation">}</span> <span class="token keyword control-flow">else</span> <span class="token punctuation">{</span>
+    <span class="token keyword control-flow">return</span> <span class="token known-class-name class-name">String</span><span class="token punctuation">(</span>num<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">function</span> <span class="token function">$Null</span> <span class="token punctuation">(</span><span class="token parameter">i</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword control-flow">return</span> <span class="token string">'null'</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// 序列化方法</span>
+<span class="token keyword">function</span> <span class="token function">$main</span> <span class="token punctuation">(</span><span class="token parameter">obj</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> json <span class="token operator">=</span> <span class="token string">'{'</span>
+
+  json <span class="token operator">+=</span> <span class="token string">'"id":'</span>
+
+  json <span class="token operator">+=</span> $<span class="token known-class-name class-name">Number</span><span class="token punctuation">(</span>obj<span class="token punctuation">.</span><span class="token property-access">id</span><span class="token punctuation">)</span>
+  json <span class="token operator">+=</span> <span class="token string">','</span>
+  json <span class="token operator">+=</span> <span class="token string">'"name":'</span>
+
+  json <span class="token operator">+=</span> $<span class="token known-class-name class-name">String</span><span class="token punctuation">(</span>obj<span class="token punctuation">.</span><span class="token property-access">name</span><span class="token punctuation">)</span>
+
+  json <span class="token operator">+=</span> <span class="token string">'}'</span>
+  <span class="token keyword control-flow">return</span> json
+<span class="token punctuation">}</span>
+</code></pre>
+<p>可以看到，有 <code>schema</code> 做支撑，序列化的逻辑瞬间变得无比简单，最后得到的 JSON 字符串只保留需要的属性，简洁高效。我们回过头再看看 <code>buildObject</code> 是如何生成 <code>$main</code> 内的代码的：</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">buildObject</span> <span class="token punctuation">(</span><span class="token parameter">schema<span class="token punctuation">,</span> code<span class="token punctuation">,</span> name</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 构造一个函数</span>
+  code <span class="token operator">+=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+    function </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> (obj) {
+      var json = '{'
+  </span><span class="token template-punctuation string">`</span></span>
+  <span class="token keyword">var</span> laterCode <span class="token operator">=</span> <span class="token string">''</span>
+  <span class="token comment">// 遍历 schema 的属性</span>
+  <span class="token keyword">const</span> <span class="token punctuation">{</span> properties <span class="token punctuation">}</span> <span class="token operator">=</span> schema
+  <span class="token known-class-name class-name">Object</span><span class="token punctuation">.</span><span class="token method function property-access">keys</span><span class="token punctuation">(</span>properties<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">key<span class="token punctuation">,</span> i<span class="token punctuation">,</span> a</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+    <span class="token comment">// key 需要加上双引号</span>
+    code <span class="token operator">+=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+      json += '</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>$<span class="token known-class-name class-name">String</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">:'
+    </span><span class="token template-punctuation string">`</span></span>
+    <span class="token comment">// 通过 nested 转化 value</span>
+    <span class="token keyword">const</span> value <span class="token operator">=</span> properties<span class="token punctuation">[</span>key<span class="token punctuation">]</span>
+    <span class="token keyword">const</span> result <span class="token operator">=</span> <span class="token function">nested</span><span class="token punctuation">(</span>laterCode<span class="token punctuation">,</span> name<span class="token punctuation">,</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">.</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>key<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span> value<span class="token punctuation">)</span>
+
+    code <span class="token operator">+=</span> result<span class="token punctuation">.</span><span class="token property-access">code</span>
+    laterCode <span class="token operator">=</span> result<span class="token punctuation">.</span><span class="token property-access">laterCode</span>
+
+    <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>i <span class="token operator">&lt;</span> a<span class="token punctuation">.</span><span class="token property-access">length</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      code <span class="token operator">+=</span> <span class="token string">'json += \',\''</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+  code <span class="token operator">+=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+      json += '}'
+      return json
+    }
+  </span><span class="token template-punctuation string">`</span></span>
+
+  code <span class="token operator">+=</span> laterCode
+
+  <span class="token keyword control-flow">return</span> code
+<span class="token punctuation">}</span>
+
+<span class="token keyword">function</span> <span class="token function">nested</span> <span class="token punctuation">(</span><span class="token parameter">laterCode<span class="token punctuation">,</span> name<span class="token punctuation">,</span> key<span class="token punctuation">,</span> schema</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> code <span class="token operator">=</span> <span class="token string">''</span>
+  <span class="token keyword">var</span> funcName
+  <span class="token comment">// 判断 value 的类型，不同类型进行不同的处理</span>
+  <span class="token keyword">const</span> type <span class="token operator">=</span> schema<span class="token punctuation">.</span><span class="token property-access">type</span>
+  <span class="token keyword control-flow">switch</span> <span class="token punctuation">(</span>type<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">case</span> <span class="token string">'null'</span><span class="token operator">:</span>
+      code <span class="token operator">+=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+      json += $Null()
+      </span><span class="token template-punctuation string">`</span></span>
+      <span class="token keyword control-flow">break</span>
+    <span class="token keyword">case</span> <span class="token string">'string'</span><span class="token operator">:</span>
+      code <span class="token operator">+=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+      json += $String(obj</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>key<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">)
+      </span><span class="token template-punctuation string">`</span></span>
+      <span class="token keyword control-flow">break</span>
+    <span class="token keyword">case</span> <span class="token string">'number'</span><span class="token operator">:</span>
+    <span class="token keyword">case</span> <span class="token string">'integer'</span><span class="token operator">:</span>
+      code <span class="token operator">+=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+      json += $Number(obj</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>key<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">)
+      </span><span class="token template-punctuation string">`</span></span>
+      <span class="token keyword control-flow">break</span>
+    <span class="token keyword">case</span> <span class="token string">'object'</span><span class="token operator">:</span>
+      <span class="token comment">// 如果 value 为一个对象，需要一个新的方法进行构造</span>
+      funcName <span class="token operator">=</span> <span class="token punctuation">(</span>name <span class="token operator">+</span> key<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">replace</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">[-.\[\]]</span><span class="token regex-delimiter">/</span><span class="token regex-flags">g</span></span><span class="token punctuation">,</span> <span class="token string">''</span><span class="token punctuation">)</span>
+      laterCode <span class="token operator">=</span> <span class="token function">buildObject</span><span class="token punctuation">(</span>schema<span class="token punctuation">,</span> laterCode<span class="token punctuation">,</span> funcName<span class="token punctuation">)</span>
+      code <span class="token operator">+=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+        json += </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>funcName<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">(obj</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>key<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">)
+      </span><span class="token template-punctuation string">`</span></span>
+      <span class="token keyword control-flow">break</span>
+    <span class="token keyword">case</span> <span class="token string">'array'</span><span class="token operator">:</span>
+      funcName <span class="token operator">=</span> <span class="token punctuation">(</span>name <span class="token operator">+</span> key<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">replace</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">[-.\[\]]</span><span class="token regex-delimiter">/</span><span class="token regex-flags">g</span></span><span class="token punctuation">,</span> <span class="token string">''</span><span class="token punctuation">)</span>
+      laterCode <span class="token operator">=</span> <span class="token function">buildArray</span><span class="token punctuation">(</span>schema<span class="token punctuation">,</span> laterCode<span class="token punctuation">,</span> funcName<span class="token punctuation">)</span>
+      code <span class="token operator">+=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+        json += </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>funcName<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">(obj</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>key<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">)
+      </span><span class="token template-punctuation string">`</span></span>
+      <span class="token keyword control-flow">break</span>
+    <span class="token keyword module">default</span><span class="token operator">:</span>
+      <span class="token keyword control-flow">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>type<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> unsupported</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword control-flow">return</span> <span class="token punctuation">{</span>
+    code<span class="token punctuation">,</span>
+    laterCode
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>其实就是对 <code>type</code> 为 <code>&quot;object&quot;</code> 的 <code>properties</code> 进行一次遍历，然后针对 <code>value</code> 不同的类型进行二次处理，如果碰到新的对象，会构造一个新的函数进行处理。</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// 如果包含子对象</span>
+<span class="token keyword">const</span> stringify <span class="token operator">=</span> <span class="token function">build</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  type<span class="token operator">:</span> <span class="token string">'object'</span><span class="token punctuation">,</span>
+  properties<span class="token operator">:</span> <span class="token punctuation">{</span>
+    id<span class="token operator">:</span> <span class="token punctuation">{</span> type<span class="token operator">:</span> <span class="token string">'number'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    info<span class="token operator">:</span> <span class="token punctuation">{</span>
+      type<span class="token operator">:</span> <span class="token string">'object'</span><span class="token punctuation">,</span>
+      properties<span class="token operator">:</span> <span class="token punctuation">{</span>
+        age<span class="token operator">:</span> <span class="token punctuation">{</span> type<span class="token operator">:</span> <span class="token string">'number'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        name<span class="token operator">:</span> <span class="token punctuation">{</span> type<span class="token operator">:</span> <span class="token string">'string'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span>stringify<span class="token punctuation">.</span><span class="token method function property-access">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">$main</span> <span class="token punctuation">(</span><span class="token parameter">obj</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> json <span class="token operator">=</span> <span class="token string">'{'</span>
+
+  json <span class="token operator">+=</span> <span class="token string">'"id":'</span>
+
+  json <span class="token operator">+=</span> $<span class="token known-class-name class-name">Number</span><span class="token punctuation">(</span>obj<span class="token punctuation">.</span><span class="token property-access">id</span><span class="token punctuation">)</span>
+  json <span class="token operator">+=</span> <span class="token string">','</span>
+  json <span class="token operator">+=</span> <span class="token string">'"info":'</span>
+
+  json <span class="token operator">+=</span> <span class="token function">$maininfo</span><span class="token punctuation">(</span>obj<span class="token punctuation">.</span><span class="token property-access">info</span><span class="token punctuation">)</span>
+
+  json <span class="token operator">+=</span> <span class="token string">'}'</span>
+  <span class="token keyword control-flow">return</span> json
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 子对象会通过另一个函数处理</span>
+<span class="token keyword">function</span> <span class="token function">$maininfo</span> <span class="token punctuation">(</span><span class="token parameter">obj</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> json <span class="token operator">=</span> <span class="token string">'{'</span>
+
+  json <span class="token operator">+=</span> <span class="token string">'"age":'</span>
+
+  json <span class="token operator">+=</span> $<span class="token known-class-name class-name">Number</span><span class="token punctuation">(</span>obj<span class="token punctuation">.</span><span class="token property-access">age</span><span class="token punctuation">)</span>
+  json <span class="token operator">+=</span> <span class="token string">','</span>
+  json <span class="token operator">+=</span> <span class="token string">'"name":'</span>
+
+  json <span class="token operator">+=</span> $<span class="token known-class-name class-name">String</span><span class="token punctuation">(</span>obj<span class="token punctuation">.</span><span class="token property-access">name</span><span class="token punctuation">)</span>
+
+  json <span class="token operator">+=</span> <span class="token string">'}'</span>
+  <span class="token keyword control-flow">return</span> json
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="%E6%80%BB%E7%BB%93">总结<a class="anchor" href="#%E6%80%BB%E7%BB%93">§</a></h2>
+<p>当然，<code>fastify</code> 之所以号称自己快，内部还有一些其他的优化方法，例如，在路由库的实现上使用了 <a href="https://zh.wikipedia.org/zh-hans/%E5%9F%BA%E6%95%B0%E6%A0%91"><code>Radix Tree</code></a> 、对上下文对象可进行复用（使用  <a href="https://github.com/fastify/middie"><code>middie</code></a> 库）。本文只是介绍了其中的一种体现最重要明显优化思路，希望大家阅读之后能有所收获。</p></article></section><footer>Powered by <a href="https://github.com/xcatliu/pagic" target="_blank">Pagic</a></footer><script src="https://cdn.pagic.org/react@16.13.1/umd/react.production.min.js"></script><script src="https://cdn.pagic.org/react-dom@16.13.1/umd/react-dom.production.min.js"></script><script type="module" src="/index.js"></script></body></html>

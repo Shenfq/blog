@@ -23,13 +23,35 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2020-12-09T14:23:05.000Z",
+    'date': "2020-12-13T14:25:20.000Z",
     'updated': null,
     'excerpt': "",
     'cover': undefined,
     'blog': {
         "isPost": false,
         "posts": [
+            {
+                "pagePath": "posts/2020/如何让 Node.js 服务性能翻倍？.md",
+                "title": "如何让 Node.js 服务性能翻倍？",
+                "link": "posts/2020/如何让 Node.js 服务性能翻倍？.html",
+                "date": "2020/12/13",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "Node.js"
+                ],
+                "tags": [
+                    "性能",
+                    "Node",
+                    "JSON",
+                    "fastify"
+                ],
+                "excerpt": "前言 用过 Node.js 开发过的同学肯定都上手过 koa，因为他简单优雅的写法，再加上丰富的社区生态，而且现存的许多 Node.js 框架都是基于 koa 进行二次封装的。但是说到性能，就不得不提到一个知名框架： fastify ，听名字就知道...",
+                "cover": "https://file.shenfq.com/pic/20201213162826.png"
+            },
             {
                 "pagePath": "posts/2020/我是怎么读源码的.md",
                 "title": "我是如何阅读源码的",
@@ -1099,12 +1121,12 @@ export default {
                 "count": 18
             },
             {
-                "name": "前端工程",
+                "name": "Node.js",
                 "count": 7
             },
             {
-                "name": "Node.js",
-                "count": 6
+                "name": "前端工程",
+                "count": 7
             },
             {
                 "name": "模块化",
@@ -1170,7 +1192,7 @@ export default {
             },
             {
                 "name": "Node",
-                "count": 5
+                "count": 6
             },
             {
                 "name": "React",
@@ -1281,6 +1303,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "fastify",
+                "count": 1
+            },
+            {
                 "name": "fetch",
                 "count": 1
             },
@@ -1290,6 +1316,10 @@ export default {
             },
             {
                 "name": "gulp",
+                "count": 1
+            },
+            {
+                "name": "JSON",
                 "count": 1
             },
             {
@@ -1378,6 +1408,10 @@ export default {
             },
             {
                 "name": "工程化",
+                "count": 1
+            },
+            {
+                "name": "性能",
                 "count": 1
             },
             {
