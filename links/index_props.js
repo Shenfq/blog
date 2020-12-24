@@ -1,12 +1,12 @@
 import projectConfig from '/pagic.config.js';
 export default {
     config: { "root": "/", ...projectConfig },
-    'pagePath': "archives/README.md",
-    'layoutPath': "archives/_layout.tsx",
-    'outputPath': "archives/index.html",
-    'title': "归档",
+    'pagePath': "links/README.md",
+    'layoutPath': "_layout.tsx",
+    'outputPath': "links/index.html",
+    'title': "友情链接",
     'content': React.createElement("article", { dangerouslySetInnerHTML: {
-            __html: '<h1>归档</h1>'
+            __html: '<h1>友情链接</h1>\n<ul>\n<li><a href="https://hungryturbo.com/"><font color=#FF0000>童欧巴博客</font></a></li>\n</ul>'
         } }),
     'head': React.createElement(React.Fragment, null,
         React.createElement("link", { crossOrigin: "anonymous", href: "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css", integrity: "sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X", rel: "stylesheet" })),
@@ -14,9 +14,9 @@ export default {
         React.createElement("script", { src: "https://cdn.pagic.org/react@16.13.1/umd/react.production.min.js" }),
         React.createElement("script", { src: "https://cdn.pagic.org/react-dom@16.13.1/umd/react-dom.production.min.js" }),
         React.createElement("script", { src: "/index.js", type: "module" })),
-    'contentTitle': React.createElement("h1", { key: "0" }, "\u5F52\u6863"),
+    'contentTitle': React.createElement("h1", { key: "0" }, "\u53CB\u60C5\u94FE\u63A5"),
     'contentBody': React.createElement("article", { dangerouslySetInnerHTML: {
-            __html: ''
+            __html: '<ul>\n<li><a href="https://hungryturbo.com/"><font color=#FF0000>童欧巴博客</font></a></li>\n</ul>'
         } }),
     'toc': null,
     'author': "Shenfq",
@@ -25,7 +25,7 @@ export default {
     ],
     'date': "2020-12-24T02:43:36.000Z",
     'updated': null,
-    'excerpt': "",
+    'excerpt': " - 童欧巴博客",
     'cover': undefined,
     'blog': {
         "isPost": false,
