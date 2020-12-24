@@ -38,5 +38,10 @@ export default {
       link: '/archives/',
       icon: 'czs-box-l',
     },
+    {
+      text: '友情链接',
+      link: '/links/index.html',
+      icon: 'czs-link-l',
+    },
   ],
 };
