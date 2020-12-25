@@ -175,19 +175,15 @@ export default {
                 "count": 2
             },
             {
-                "name": "fastify",
-                "count": 2
-            },
-            {
-                "name": "JSON",
-                "count": 2
-            },
-            {
                 "name": "Koa",
                 "count": 2
             },
             {
                 "name": "react",
+                "count": 2
+            },
+            {
+                "name": "router",
                 "count": 2
             },
             {
@@ -235,6 +231,10 @@ export default {
                 "count": 2
             },
             {
+                "name": "路由",
+                "count": 2
+            },
+            {
                 "name": "AMD",
                 "count": 1
             },
@@ -259,6 +259,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "fastify",
+                "count": 1
+            },
+            {
                 "name": "fetch",
                 "count": 1
             },
@@ -268,6 +272,10 @@ export default {
             },
             {
                 "name": "gulp",
+                "count": 1
+            },
+            {
+                "name": "JSON",
                 "count": 1
             },
             {
@@ -292,10 +300,6 @@ export default {
             },
             {
                 "name": "react hooks",
-                "count": 1
-            },
-            {
-                "name": "router",
                 "count": 1
             },
             {
@@ -404,10 +408,6 @@ export default {
             },
             {
                 "name": "负载均衡",
-                "count": 1
-            },
-            {
-                "name": "路由",
                 "count": 1
             }
         ]

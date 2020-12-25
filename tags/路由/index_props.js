@@ -15,6 +15,28 @@ export default {
         "isPost": false,
         "posts": [
             {
+                "pagePath": "posts/2020/Node.js 服务性能翻倍的秘密（二）.md",
+                "title": "Node.js 服务性能翻倍的秘密（二）",
+                "link": "posts/2020/Node.js 服务性能翻倍的秘密（二）.html",
+                "date": "2020/12/25",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "Node.js"
+                ],
+                "tags": [
+                    "性能",
+                    "Node",
+                    "router",
+                    "路由"
+                ],
+                "excerpt": "前言 前一篇文章介绍了 fastify 通过 schema 来序列化 JSON，为 Node.js 服务提升性能的方法。今天的文章会介绍 fastify 使用的路由库，翻阅其源码（lib/route.js）可以发现，fastify 的路由库并不是内置的，而是使用了一个叫做...",
+                "cover": "https://file.shenfq.com/pic/20201218150431.png"
+            },
+            {
                 "pagePath": "posts/2018/koa-router源码解析.md",
                 "title": "koa-router源码解析",
                 "link": "posts/2018/koa-router源码解析.html",
@@ -153,19 +175,15 @@ export default {
                 "count": 2
             },
             {
-                "name": "fastify",
-                "count": 2
-            },
-            {
-                "name": "JSON",
-                "count": 2
-            },
-            {
                 "name": "Koa",
                 "count": 2
             },
             {
                 "name": "react",
+                "count": 2
+            },
+            {
+                "name": "router",
                 "count": 2
             },
             {
@@ -213,6 +231,10 @@ export default {
                 "count": 2
             },
             {
+                "name": "路由",
+                "count": 2
+            },
+            {
                 "name": "AMD",
                 "count": 1
             },
@@ -237,6 +259,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "fastify",
+                "count": 1
+            },
+            {
                 "name": "fetch",
                 "count": 1
             },
@@ -246,6 +272,10 @@ export default {
             },
             {
                 "name": "gulp",
+                "count": 1
+            },
+            {
+                "name": "JSON",
                 "count": 1
             },
             {
@@ -270,10 +300,6 @@ export default {
             },
             {
                 "name": "react hooks",
-                "count": 1
-            },
-            {
-                "name": "router",
                 "count": 1
             },
             {
@@ -382,10 +408,6 @@ export default {
             },
             {
                 "name": "负载均衡",
-                "count": 1
-            },
-            {
-                "name": "路由",
                 "count": 1
             }
         ]
