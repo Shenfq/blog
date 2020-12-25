@@ -62,6 +62,28 @@ export default {
                 "cover": "https://file.shenfq.com/pic/20201213162826.png"
             },
             {
+                "pagePath": "posts/2020/Node.js 服务性能翻倍的秘密（二）.md",
+                "title": "Node.js 服务性能翻倍的秘密（二）",
+                "link": "posts/2020/Node.js 服务性能翻倍的秘密（二）.html",
+                "date": "2020/12/13",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "Node.js"
+                ],
+                "tags": [
+                    "性能",
+                    "Node",
+                    "JSON",
+                    "fastify"
+                ],
+                "excerpt": "前言 前一篇文章介绍了 fastify 通过 schema 来序列化 JSON，为 Node.js 服务提升性能的方法。今天的文章会介绍 fastify 使用的路由库，翻阅其源码（lib/route.js）可以发现，fastify 的路由库并不是内置的，而是使用了一个叫做...",
+                "cover": "https://file.shenfq.com/pic/20201218150431.png"
+            },
+            {
                 "pagePath": "posts/2020/我是怎么读源码的.md",
                 "title": "我是如何阅读源码的",
                 "link": "posts/2020/我是怎么读源码的.html",
@@ -1131,7 +1153,7 @@ export default {
             },
             {
                 "name": "Node.js",
-                "count": 7
+                "count": 8
             },
             {
                 "name": "前端工程",
@@ -1196,12 +1218,12 @@ export default {
                 "count": 7
             },
             {
-                "name": "Vue.js",
+                "name": "Node",
                 "count": 7
             },
             {
-                "name": "Node",
-                "count": 6
+                "name": "Vue.js",
+                "count": 7
             },
             {
                 "name": "React",
@@ -1240,6 +1262,14 @@ export default {
                 "count": 2
             },
             {
+                "name": "fastify",
+                "count": 2
+            },
+            {
+                "name": "JSON",
+                "count": 2
+            },
+            {
                 "name": "Koa",
                 "count": 2
             },
@@ -1265,6 +1295,10 @@ export default {
             },
             {
                 "name": "微信小程序",
+                "count": 2
+            },
+            {
+                "name": "性能",
                 "count": 2
             },
             {
@@ -1312,10 +1346,6 @@ export default {
                 "count": 1
             },
             {
-                "name": "fastify",
-                "count": 1
-            },
-            {
                 "name": "fetch",
                 "count": 1
             },
@@ -1325,10 +1355,6 @@ export default {
             },
             {
                 "name": "gulp",
-                "count": 1
-            },
-            {
-                "name": "JSON",
                 "count": 1
             },
             {
@@ -1417,10 +1443,6 @@ export default {
             },
             {
                 "name": "工程化",
-                "count": 1
-            },
-            {
-                "name": "性能",
                 "count": 1
             },
             {

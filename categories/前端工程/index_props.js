@@ -175,7 +175,7 @@ export default {
             },
             {
                 "name": "Node.js",
-                "count": 7
+                "count": 8
             },
             {
                 "name": "前端工程",
@@ -240,12 +240,12 @@ export default {
                 "count": 7
             },
             {
-                "name": "Vue.js",
+                "name": "Node",
                 "count": 7
             },
             {
-                "name": "Node",
-                "count": 6
+                "name": "Vue.js",
+                "count": 7
             },
             {
                 "name": "React",
@@ -284,6 +284,14 @@ export default {
                 "count": 2
             },
             {
+                "name": "fastify",
+                "count": 2
+            },
+            {
+                "name": "JSON",
+                "count": 2
+            },
+            {
                 "name": "Koa",
                 "count": 2
             },
@@ -309,6 +317,10 @@ export default {
             },
             {
                 "name": "微信小程序",
+                "count": 2
+            },
+            {
+                "name": "性能",
                 "count": 2
             },
             {
@@ -356,10 +368,6 @@ export default {
                 "count": 1
             },
             {
-                "name": "fastify",
-                "count": 1
-            },
-            {
                 "name": "fetch",
                 "count": 1
             },
@@ -369,10 +377,6 @@ export default {
             },
             {
                 "name": "gulp",
-                "count": 1
-            },
-            {
-                "name": "JSON",
                 "count": 1
             },
             {
@@ -461,10 +465,6 @@ export default {
             },
             {
                 "name": "工程化",
-                "count": 1
-            },
-            {
-                "name": "性能",
                 "count": 1
             },
             {
