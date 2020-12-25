@@ -1,3 +1,4 @@
 # 友情链接
 
-- [<font color=#FF0000>童欧巴博客</font>](https://hungryturbo.com/)
+- [童欧巴](https://hungryturbo.com/)
+- [少年民仔](https://www.feminzai.com/)
