@@ -1,6 +1,6 @@
 import projectConfig from '/pagic.config.js';
 export default {
-    config: { "root": "/", ...projectConfig },
+    config: { "root": "/", ...projectConfig, branch: 'main' },
     'pagePath': "posts/2017/babel到底该如何配置？.md",
     'layoutPath': "posts/_layout.tsx",
     'outputPath': "posts/2017/babel到底该如何配置？.html",

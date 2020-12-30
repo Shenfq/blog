@@ -1,6 +1,6 @@
 import projectConfig from '/pagic.config.js';
 export default {
-    config: { "root": "/", ...projectConfig },
+    config: { "root": "/", ...projectConfig, branch: 'main' },
     'pagePath': "posts/2020/Vue 3 的组合 API 如何请求数据？.md",
     'layoutPath': "posts/_layout.tsx",
     'outputPath': "posts/2020/Vue 3 的组合 API 如何请求数据？.html",

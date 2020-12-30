@@ -1,6 +1,6 @@
 import projectConfig from '/pagic.config.js';
 export default {
-    config: { "root": "/", ...projectConfig },
+    config: { "root": "/", ...projectConfig, branch: 'main' },
     'pagePath': "posts/2020/Node.js 服务性能翻倍的秘密（二）.md",
     'layoutPath': "posts/_layout.tsx",
     'outputPath': "posts/2020/Node.js 服务性能翻倍的秘密（二）.html",

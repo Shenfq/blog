@@ -1,6 +1,6 @@
 import projectConfig from '/pagic.config.js';
 export default {
-    config: { "root": "/", ...projectConfig },
+    config: { "root": "/", ...projectConfig, branch: 'main' },
     'pagePath': "tags/小程序/",
     'layoutPath': "archives/_layout.tsx",
     'outputPath': "tags/小程序/index.html",

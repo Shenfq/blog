@@ -1,6 +1,6 @@
 import projectConfig from '/pagic.config.js';
 export default {
-    config: { "root": "/", ...projectConfig },
+    config: { "root": "/", ...projectConfig, branch: 'main' },
     'pagePath': "posts/2020/Vue3 模板编译优化.md",
     'layoutPath': "posts/_layout.tsx",
     'outputPath': "posts/2020/Vue3 模板编译优化.html",

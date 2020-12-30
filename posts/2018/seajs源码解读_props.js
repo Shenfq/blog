@@ -1,6 +1,6 @@
 import projectConfig from '/pagic.config.js';
 export default {
-    config: { "root": "/", ...projectConfig },
+    config: { "root": "/", ...projectConfig, branch: 'main' },
     'pagePath': "posts/2018/seajs源码解读.md",
     'layoutPath': "posts/_layout.tsx",
     'outputPath': "posts/2018/seajs源码解读.html",

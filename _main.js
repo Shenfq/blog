@@ -5,7 +5,7 @@ const Main = (props) => {
     return (React.createElement("section", { className: "main" }, loading ? (React.createElement(Loading, null)) : (blog === null || blog === void 0 ? void 0 : blog.isPost) ? (React.createElement(React.Fragment, null,
         contentTitle,
         date && (React.createElement("div", { className: "main_post_meta" },
-            React.createElement("time", { dateTime: date.toString() }, dateFormatter['YYYY-MM-DD'](date)),
+            React.createElement("time", { dateTime: date.toString() }, dateFormatter['yyyy-MM-dd'](date)),
             " \u00B7 ", author !== null && author !== void 0 ? author : 'unknown')),
         contentBody)) : (content)));
 };

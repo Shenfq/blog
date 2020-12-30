@@ -11,7 +11,7 @@ const Posts = (props) => {
                     React.createElement("a", { href: `${config.root}${link}` }, title)),
                 excerpt && React.createElement("p", null, excerpt),
                 React.createElement("div", { className: "main_posts_meta" },
-                    React.createElement("time", { dateTime: date.toString() }, dateFormatter['YYYY-MM-DD'](date)),
+                    React.createElement("time", { dateTime: date.toString() }, dateFormatter['yyyy-MM-dd'](date)),
                     author && React.createElement(React.Fragment, null,
                         "\u00A0\u00B7\u00A0",
                         author),

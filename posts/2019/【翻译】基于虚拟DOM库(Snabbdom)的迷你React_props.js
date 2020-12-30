@@ -1,6 +1,6 @@
 import projectConfig from '/pagic.config.js';
 export default {
-    config: { "root": "/", ...projectConfig },
+    config: { "root": "/", ...projectConfig, branch: 'main' },
     'pagePath': "posts/2019/【翻译】基于虚拟DOM库(Snabbdom)的迷你React.md",
     'layoutPath': "posts/_layout.tsx",
     'outputPath': "posts/2019/【翻译】基于虚拟DOM库(Snabbdom)的迷你React.html",

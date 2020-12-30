@@ -1,6 +1,6 @@
 import projectConfig from '/pagic.config.js';
 export default {
-    config: { "root": "/", ...projectConfig },
+    config: { "root": "/", ...projectConfig, branch: 'main' },
     'pagePath': "posts/2019/【翻译】在 React Hooks 中如何请求数据？.md",
     'layoutPath': "posts/_layout.tsx",
     'outputPath': "posts/2019/【翻译】在 React Hooks 中如何请求数据？.html",

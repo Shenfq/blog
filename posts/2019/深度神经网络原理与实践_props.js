@@ -1,6 +1,6 @@
 import projectConfig from '/pagic.config.js';
 export default {
-    config: { "root": "/", ...projectConfig },
+    config: { "root": "/", ...projectConfig, branch: 'main' },
     'pagePath': "posts/2019/深度神经网络原理与实践.md",
     'layoutPath': "posts/_layout.tsx",
     'outputPath': "posts/2019/深度神经网络原理与实践.html",
