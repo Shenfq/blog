@@ -255,7 +255,7 @@ export default {
             },
             {
                 "name": "年终总结",
-                "count": 3
+                "count": 4
             },
             {
                 "name": "机器学习",
@@ -320,20 +320,20 @@ export default {
                 "count": 5
             },
             {
-                "name": "翻译",
+                "name": "工作",
                 "count": 5
             },
             {
-                "name": "工作",
-                "count": 4
-            },
-            {
                 "name": "总结",
-                "count": 4
+                "count": 5
             },
             {
                 "name": "感悟",
-                "count": 4
+                "count": 5
+            },
+            {
+                "name": "翻译",
+                "count": 5
             },
             {
                 "name": "机器学习",
