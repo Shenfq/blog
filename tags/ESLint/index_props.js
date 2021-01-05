@@ -62,7 +62,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 18
+                "count": 19
             },
             {
                 "name": "Node.js",
@@ -112,7 +112,7 @@ export default {
         "tags": [
             {
                 "name": "前端",
-                "count": 23
+                "count": 24
             },
             {
                 "name": "前端框架",
@@ -163,6 +163,10 @@ export default {
                 "count": 3
             },
             {
+                "name": "组件化",
+                "count": 3
+            },
+            {
                 "name": "CommonJS",
                 "count": 2
             },
@@ -203,6 +207,10 @@ export default {
                 "count": 2
             },
             {
+                "name": "工程化",
+                "count": 2
+            },
+            {
                 "name": "微信小程序",
                 "count": 2
             },
@@ -220,10 +228,6 @@ export default {
             },
             {
                 "name": "算法",
-                "count": 2
-            },
-            {
-                "name": "组件化",
                 "count": 2
             },
             {
@@ -252,6 +256,10 @@ export default {
             },
             {
                 "name": "CMD",
+                "count": 1
+            },
+            {
+                "name": "CSS",
                 "count": 1
             },
             {
@@ -359,11 +367,11 @@ export default {
                 "count": 1
             },
             {
-                "name": "工程化",
+                "name": "推荐系统",
                 "count": 1
             },
             {
-                "name": "推荐系统",
+                "name": "样式",
                 "count": 1
             },
             {

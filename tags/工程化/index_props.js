@@ -15,6 +15,29 @@ export default {
         "isPost": false,
         "posts": [
             {
+                "pagePath": "posts/2021/介绍两种 CSS 命名规范.md",
+                "title": "【翻译】CommonJS 是如何导致打包后体积增大的？",
+                "link": "posts/2021/介绍两种 CSS 命名规范.html",
+                "date": "2020/11/18",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "前端"
+                ],
+                "tags": [
+                    "CSS",
+                    "前端",
+                    "样式",
+                    "组件化",
+                    "工程化"
+                ],
+                "excerpt": "前言 说起 CSS 命名规范，大家应该都很熟悉，或者应该听说过 BEM 。BEM 是由 Yandex 团队提出的一种 CSS Class 命名方法，旨在帮助开发人员创建更好的且结构一致的 CSS 模块。 BEM 将页面的类名分为块（Block）、元素（Element...",
+                "cover": "https://file.shenfq.com/pic/20210103214204.png"
+            },
+            {
                 "pagePath": "posts/2018/ElementUI的构建流程.md",
                 "title": "ElementUI的构建流程",
                 "link": "posts/2018/ElementUI的构建流程.html",
@@ -39,7 +62,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 18
+                "count": 19
             },
             {
                 "name": "Node.js",
@@ -89,7 +112,7 @@ export default {
         "tags": [
             {
                 "name": "前端",
-                "count": 23
+                "count": 24
             },
             {
                 "name": "前端框架",
@@ -140,6 +163,10 @@ export default {
                 "count": 3
             },
             {
+                "name": "组件化",
+                "count": 3
+            },
+            {
                 "name": "CommonJS",
                 "count": 2
             },
@@ -180,6 +207,10 @@ export default {
                 "count": 2
             },
             {
+                "name": "工程化",
+                "count": 2
+            },
+            {
                 "name": "微信小程序",
                 "count": 2
             },
@@ -197,10 +228,6 @@ export default {
             },
             {
                 "name": "算法",
-                "count": 2
-            },
-            {
-                "name": "组件化",
                 "count": 2
             },
             {
@@ -229,6 +256,10 @@ export default {
             },
             {
                 "name": "CMD",
+                "count": 1
+            },
+            {
+                "name": "CSS",
                 "count": 1
             },
             {
@@ -336,11 +367,11 @@ export default {
                 "count": 1
             },
             {
-                "name": "工程化",
+                "name": "推荐系统",
                 "count": 1
             },
             {
-                "name": "推荐系统",
+                "name": "样式",
                 "count": 1
             },
             {
