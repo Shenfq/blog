@@ -15,10 +15,10 @@ export default {
         "isPost": false,
         "posts": [
             {
-                "pagePath": "posts/2021/介绍两种 CSS 命名规范.md",
-                "title": "【翻译】CommonJS 是如何导致打包后体积增大的？",
-                "link": "posts/2021/介绍两种 CSS 命名规范.html",
-                "date": "2020/11/18",
+                "pagePath": "posts/2021/介绍两种 CSS 方法论.md",
+                "title": "介绍两种 CSS 方法论",
+                "link": "posts/2021/介绍两种 CSS 方法论.html",
+                "date": "2021/01/05",
                 "updated": null,
                 "author": "shenfq",
                 "contributors": [

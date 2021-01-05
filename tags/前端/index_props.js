@@ -15,6 +15,29 @@ export default {
         "isPost": false,
         "posts": [
             {
+                "pagePath": "posts/2021/介绍两种 CSS 方法论.md",
+                "title": "介绍两种 CSS 方法论",
+                "link": "posts/2021/介绍两种 CSS 方法论.html",
+                "date": "2021/01/05",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "前端"
+                ],
+                "tags": [
+                    "CSS",
+                    "前端",
+                    "样式",
+                    "组件化",
+                    "工程化"
+                ],
+                "excerpt": "前言 说起 CSS 命名规范，大家应该都很熟悉，或者应该听说过 BEM 。BEM 是由 Yandex 团队提出的一种 CSS Class 命名方法，旨在帮助开发人员创建更好的且结构一致的 CSS 模块。 BEM 将页面的类名分为块（Block）、元素（Element...",
+                "cover": "https://file.shenfq.com/pic/20210103214204.png"
+            },
+            {
                 "pagePath": "posts/2020/我是怎么读源码的.md",
                 "title": "我是如何阅读源码的",
                 "link": "posts/2020/我是怎么读源码的.html",
@@ -34,29 +57,6 @@ export default {
                 ],
                 "excerpt": "最近写了很多源码分析相关的文章，React、Vue 都有，想把我阅读源码的一些心得分享给大家。 React： - React 架构的演变 - 从同步到异步 - React 架构的演变 - 从递归到循环 - React 架构的演变 - 更新机制 - React 架构的演变...",
                 "cover": "https://file.shenfq.com/pic/20201205210806.png"
-            },
-            {
-                "pagePath": "posts/2021/介绍两种 CSS 命名规范.md",
-                "title": "【翻译】CommonJS 是如何导致打包后体积增大的？",
-                "link": "posts/2021/介绍两种 CSS 命名规范.html",
-                "date": "2020/11/18",
-                "updated": null,
-                "author": "shenfq",
-                "contributors": [
-                    "Shenfq"
-                ],
-                "categories": [
-                    "前端"
-                ],
-                "tags": [
-                    "CSS",
-                    "前端",
-                    "样式",
-                    "组件化",
-                    "工程化"
-                ],
-                "excerpt": "前言 说起 CSS 命名规范，大家应该都很熟悉，或者应该听说过 BEM 。BEM 是由 Yandex 团队提出的一种 CSS Class 命名方法，旨在帮助开发人员创建更好的且结构一致的 CSS 模块。 BEM 将页面的类名分为块（Block）、元素（Element...",
-                "cover": "https://file.shenfq.com/pic/20210103214204.png"
             },
             {
                 "pagePath": "posts/2020/【翻译】CommonJS 是如何导致打包体积增大的？.md",
