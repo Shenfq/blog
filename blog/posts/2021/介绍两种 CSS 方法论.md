@@ -1,7 +1,7 @@
 ---
-title: 【翻译】CommonJS 是如何导致打包后体积增大的？
+title: 介绍两种 CSS 方法论
 author: shenfq
-date: 2020/11/18
+date: 2021/01/05
 categories:
 - 前端
 tags:
@@ -12,7 +12,7 @@ tags:
 - 工程化
 ---
 
-# 介绍两种 CSS 命名规范
+# 介绍两种 CSS 方法论
 
 ## 前言
 
