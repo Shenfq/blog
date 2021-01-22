@@ -6,7 +6,7 @@ export default {
     'outputPath': "links/index.html",
     'title': "友情链接",
     'content': React.createElement("article", { dangerouslySetInnerHTML: {
-            __html: '<h1>友情链接</h1>\n<ul>\n<li><a href="https://hungryturbo.com/">童欧巴</a></li>\n<li><a href="https://www.feminzai.com/">少年民仔</a></li>\n</ul>'
+            __html: '<h1>友情链接</h1>\n<ul>\n<li><a href="https://hungryturbo.com/"><image src="http://hungryturbo.gitee.io/webcanteen/images/avatar.jpeg" width="35" style="border-radius: 50%;margin-right: 5px"/>童欧巴</a> —— 你远道而来这世间，想必也是因为热爱吧</li>\n<li><a href="http://blog.lovemysoul.vip"><image src="http://crazy-x-lovemysoul-x-vip.img.abc188.com/images/1611286337189.jpg" width="35" style="border-radius: 50%;margin-right: 5px"/>悲伤日记</a> —— 一个有温度的野生前端猿人</li>\n<li><a href="https://www.feminzai.com/"><image src="https://www.feminzai.com/images/icons/favicon-180x180.ico" width="35" style="border-radius: 50%;margin-right: 5px"/>少年民仔</a> —— 愿你出走半生，归来仍是少年</li>\n</ul>'
         } }),
     'head': React.createElement(React.Fragment, null,
         React.createElement("link", { crossOrigin: "anonymous", href: "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css", integrity: "sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X", rel: "stylesheet" })),
@@ -16,16 +16,16 @@ export default {
         React.createElement("script", { src: "/index.js", type: "module" })),
     'contentTitle': React.createElement("h1", { key: "0" }, "\u53CB\u60C5\u94FE\u63A5"),
     'contentBody': React.createElement("article", { dangerouslySetInnerHTML: {
-            __html: '<ul>\n<li><a href="https://hungryturbo.com/">童欧巴</a></li>\n<li><a href="https://www.feminzai.com/">少年民仔</a></li>\n</ul>'
+            __html: '<ul>\n<li><a href="https://hungryturbo.com/"><image src="http://hungryturbo.gitee.io/webcanteen/images/avatar.jpeg" width="35" style="border-radius: 50%;margin-right: 5px"/>童欧巴</a> —— 你远道而来这世间，想必也是因为热爱吧</li>\n<li><a href="http://blog.lovemysoul.vip"><image src="http://crazy-x-lovemysoul-x-vip.img.abc188.com/images/1611286337189.jpg" width="35" style="border-radius: 50%;margin-right: 5px"/>悲伤日记</a> —— 一个有温度的野生前端猿人</li>\n<li><a href="https://www.feminzai.com/"><image src="https://www.feminzai.com/images/icons/favicon-180x180.ico" width="35" style="border-radius: 50%;margin-right: 5px"/>少年民仔</a> —— 愿你出走半生，归来仍是少年</li>\n</ul>'
         } }),
     'toc': null,
     'author': "Shenfq",
     'contributors': [
         "Shenfq"
     ],
-    'date': "2021-01-05T06:45:35.000Z",
+    'date': "2021-01-22T16:50:28.000Z",
     'updated': null,
-    'excerpt': " - 童欧巴 - 少年民仔",
+    'excerpt': " - 童欧巴 —— 你远道而来这世间，想必也是因为热爱吧 - 悲伤日记 —— 一个有温度的野生前端猿人 - 少年民仔 —— 愿你出走半生，归来仍是少年",
     'cover': undefined,
     'blog': {
         "isPost": false,
