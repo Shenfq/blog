@@ -15,17 +15,17 @@ tags:
 
 ## 题外话
 
-在介绍 MobX 的用法之前，先说点题外话，我们看一下 MobX 的简介。在 MobX 的中文网站上写着：
+在介绍 MobX 的用法之前，先说点题外话，我们可以看一下 MobX 的中文简介。在 MobX 的中文网站上写着：
 
 > MobX 是一个经过战火洗礼的库，它通过透明的函数响应式编程使得状态管理变得简单和可扩展。
 
 ![数据流](https://file.shenfq.com/pic/20210118134728.png)
 
-这个“战火洗礼的库”感觉很奇怪，读起来很拗口😂，而且网上很多介绍 MobX 的文章都是这么写的，在 [github](https://github.com/mobxjs/mobx) 翻阅其 README 发现写的是：
+“战火洗礼的库” 怎么看都感觉很奇怪，读起来很拗口😂，而且网上很多介绍 MobX 的文章都是这么写的，在 [github](https://github.com/mobxjs/mobx) 翻阅其 README 发现写的是：
 
 > MobX is a battle tested library that makes state management simple and scalable by transparently applying functional reactive programming (TFRP). 
 
-可以看到作者原本要表达的意思是 MobX 是经历过许多的测试，拥有比较强的健壮性。下面是通过谷歌翻译的结果，看起来也比中文网的表达要准确一些。
+可以看到作者原本要表达的意思是 MobX 是经过了许多的测试，拥有比较强的健壮性。下面是通过谷歌翻译的结果，看起来也比中文网的表达要准确一些。
 
 ![谷歌翻译](https://file.shenfq.com/pic/20210123154105.png)
 
@@ -115,7 +115,7 @@ const store = makeAutoObservable({
 
 ### 计算属性
 
-MobX 的属性与 Vue 的 `computed` 一样，在 `makeAutoObservable` 就是一个 `getter`，`getter` 依赖的值一旦发生变化，`getter` 本身的返回值也会跟随变化。
+MobX 的属性与 Vue 的 `computed` 一样，在 `makeAutoObservable` 中就是一个 `getter`，`getter` 依赖的值一旦发生变化，`getter` 本身的返回值也会跟随变化。
 
 ```js
 import { makeAutoObservable } from 'mobx'
@@ -147,7 +147,7 @@ document.getElementById("increment").onclick = function () {
 
 ![warn](https://file.shenfq.com/pic/20210124212353.png)
 
-MobX 提示在修改响应式对象的属性时，需要通过 action 的方式修改。虽然直接修改也能生效，但是这样会让 MobX 状态的管理比较混乱，而且将状态修改放到 action 中，能够让 MobX 在内部的事务流程中进行修改，以免获得某些属性还处于中间态。
+MobX 会提示，在修改响应式对象的属性时，需要通过 action 的方式修改。虽然直接修改也能生效，但是这样会让 MobX 状态的管理比较混乱，而且将状态修改放到 action 中，能够让 MobX 在内部的事务流程中进行修改，以免拿到的某个属性还处于中间态，最后计算的结果不够准确。
 
 `makeAutoObservable` 中的所有方法都会被处理成 action。
 
@@ -159,16 +159,16 @@ const store = makeAutoObservable({
   get double() {
     return this.count * 2
   },
-  increment() { // count +1
+  increment() { // action
     this.count += 1
   },
-  decrement() { // count -1
+  decrement() { // action
     this.count -= 1
   }
 })
 ```
 
-不同于 Vuex，将状态的修改划分为 mutation 和 action，同步修改放到 mutation 中，异步的修改放到 action 中。在 MobX 中，不管是同步还是异步操作，都可以放到 action 中，只是异步操作的修改要放到 `runInAction` 中。
+不同于 Vuex，将状态的修改划分为 mutation 和 action，同步修改放到 mutation 中，异步的操作放到 action 中。在 MobX 中，不管是同步还是异步操作，都可以放到 action 中，只是异步操作在修改属性时，需要将赋值操作放到 `runInAction` 中。
 
 ```js
 import { runInAction, makeAutoObservable } from 'mobx'
@@ -221,7 +221,7 @@ store.initCount()
 
 无论是在 React 还是在小程序中想要引入 MobX，都需要在对象变更的时候，通知调用原生的 `setState/setData` 方法，将状态同步到视图上。
 
-通过 `autorun` 方法可以实现这个能力，我们可以把 `autorun` 理解为 React Hooks 中的 `useEffect`。每当 store 的响应属性发生修改时，传入 `autorun` 的方法就会被调用一次。
+通过 `autorun` 方法可以实现这个能力，我们可以把 `autorun` 理解为 React Hooks 中的 `useEffect`。每当 store 的响应属性发生修改时，传入 `autorun` 的方法（`effect`）就会被调用一次。
 
 ```js
 import { autorun, makeAutoObservable } from 'mobx'
