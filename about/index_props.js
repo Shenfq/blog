@@ -25,7 +25,7 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2021-01-25T03:42:25.000Z",
+    'date': "2021-01-25T03:55:43.000Z",
     'updated': null,
     'excerpt': "自我介绍 我是 shenfq ，微信名「自然醒」，互联网一线前端开发。博客除了会分享前端技术，偶尔也会分享我的生活以及读书清单。写博客也是为了强制自己有些输出，为了保证质量，更新不会特别频繁，期望能做到周更。 工作经历 -...",
     'cover': "https://file.shenfq.com/pic/20201209222204.png",
@@ -49,7 +49,7 @@ export default {
                     "MobX",
                     "状态管理"
                 ],
-                "excerpt": "之前用 Redux 比较多，一直听说 Mobx 能让你体验到在 React 里面写 Vue 的感觉，今天打算尝试下 Mobx 是不是真的有写 Vue 的感觉。 题外话 在介绍 MobX 的用法之前，先说点题外话，我们看一下 MobX 的简介。在 MobX 的中文网站...",
+                "excerpt": "之前用 Redux 比较多，一直听说 Mobx 能让你体验到在 React 里面写 Vue 的感觉，今天打算尝试下 Mobx 是不是真的有写 Vue 的感觉。 题外话 在介绍 MobX 的用法之前，先说点题外话，我们可以看一下 MobX 的中文简介。在 MobX 的...",
                 "cover": "https://file.shenfq.com/pic/20210118134728.png"
             },
             {
