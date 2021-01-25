@@ -65,7 +65,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 19
+                "count": 20
             },
             {
                 "name": "Node.js",
@@ -298,6 +298,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "MobX",
+                "count": 1
+            },
+            {
                 "name": "node",
                 "count": 1
             },
@@ -387,6 +391,10 @@ export default {
             },
             {
                 "name": "版本管理",
+                "count": 1
+            },
+            {
+                "name": "状态管理",
                 "count": 1
             },
             {

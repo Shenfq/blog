@@ -44,6 +44,26 @@ export default {
         "isPost": true,
         "posts": [
             {
+                "pagePath": "posts/2021/MobX 上手指南.md",
+                "title": "MobX 上手指南",
+                "link": "posts/2021/MobX 上手指南.html",
+                "date": "2021/01/25",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "前端"
+                ],
+                "tags": [
+                    "MobX",
+                    "状态管理"
+                ],
+                "excerpt": "之前用 Redux 比较多，一直听说 Mobx 能让你体验到在 React 里面写 Vue 的感觉，今天打算尝试下 Mobx 是不是真的有写 Vue 的感觉。 题外话 在介绍 MobX 的用法之前，先说点题外话，我们看一下 MobX 的简介。在 MobX 的中文网站...",
+                "cover": "https://file.shenfq.com/pic/20210118134728.png"
+            },
+            {
                 "pagePath": "posts/2021/介绍两种 CSS 方法论.md",
                 "title": "介绍两种 CSS 方法论",
                 "link": "posts/2021/介绍两种 CSS 方法论.html",
@@ -1197,7 +1217,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 19
+                "count": 20
             },
             {
                 "name": "Node.js",
@@ -1430,6 +1450,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "MobX",
+                "count": 1
+            },
+            {
                 "name": "node",
                 "count": 1
             },
@@ -1519,6 +1543,10 @@ export default {
             },
             {
                 "name": "版本管理",
+                "count": 1
+            },
+            {
+                "name": "状态管理",
                 "count": 1
             },
             {

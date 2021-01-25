@@ -25,13 +25,33 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2021-01-22T16:50:28.000Z",
+    'date': "2021-01-25T03:42:25.000Z",
     'updated': null,
     'excerpt': "自我介绍 我是 shenfq ，微信名「自然醒」，互联网一线前端开发。博客除了会分享前端技术，偶尔也会分享我的生活以及读书清单。写博客也是为了强制自己有些输出，为了保证质量，更新不会特别频繁，期望能做到周更。 工作经历 -...",
     'cover': "https://file.shenfq.com/pic/20201209222204.png",
     'blog': {
         "isPost": false,
         "posts": [
+            {
+                "pagePath": "posts/2021/MobX 上手指南.md",
+                "title": "MobX 上手指南",
+                "link": "posts/2021/MobX 上手指南.html",
+                "date": "2021/01/25",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "前端"
+                ],
+                "tags": [
+                    "MobX",
+                    "状态管理"
+                ],
+                "excerpt": "之前用 Redux 比较多，一直听说 Mobx 能让你体验到在 React 里面写 Vue 的感觉，今天打算尝试下 Mobx 是不是真的有写 Vue 的感觉。 题外话 在介绍 MobX 的用法之前，先说点题外话，我们看一下 MobX 的简介。在 MobX 的中文网站...",
+                "cover": "https://file.shenfq.com/pic/20210118134728.png"
+            },
             {
                 "pagePath": "posts/2021/介绍两种 CSS 方法论.md",
                 "title": "介绍两种 CSS 方法论",
@@ -1186,7 +1206,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 19
+                "count": 20
             },
             {
                 "name": "Node.js",
@@ -1419,6 +1439,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "MobX",
+                "count": 1
+            },
+            {
                 "name": "node",
                 "count": 1
             },
@@ -1508,6 +1532,10 @@ export default {
             },
             {
                 "name": "版本管理",
+                "count": 1
+            },
+            {
+                "name": "状态管理",
                 "count": 1
             },
             {
