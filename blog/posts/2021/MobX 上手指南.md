@@ -94,7 +94,7 @@ const store = new Store()
 
 这么看起来，好像写法并没有得到什么简化，好像比写装饰器还要复杂点。下面我们看看 6.0 版本一个更强大的 API：`makeAutoObservable`。
 
-`makeAutoObservable` 是一个更强大的 `makeObservable`，可以自动未属性加上对象的包装函数，上手成本直线下降。
+`makeAutoObservable` 是一个更强大的 `makeObservable`，可以自动为属性加上对象的包装函数，上手成本直线下降。
 
 ```js
 import { makeAutoObservable } from 'mobx'
