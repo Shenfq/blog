@@ -18,14 +18,19 @@ export default {
     'contentBody': React.createElement("article", { dangerouslySetInnerHTML: {
             __html: '<h2 id="%E8%87%AA%E6%88%91%E4%BB%8B%E7%BB%8D">自我介绍<a class="anchor" href="#%E8%87%AA%E6%88%91%E4%BB%8B%E7%BB%8D">§</a></h2>\n<p>我是 shenfq ，微信名「自然醒」，互联网一线前端开发。博客除了会分享前端技术，偶尔也会分享我的生活以及读书清单。写博客也是为了强制自己有些输出，为了保证质量，更新不会特别频繁，期望能做到周更。</p>\n<h2 id="%E5%B7%A5%E4%BD%9C%E7%BB%8F%E5%8E%86">工作经历<a class="anchor" href="#%E5%B7%A5%E4%BD%9C%E7%BB%8F%E5%8E%86">§</a></h2>\n<ul>\n<li>拼多多-广州（ 2019.9 ~ 至今 ）</li>\n<li>腾讯-深圳（ 2018.2 ~ 2019.9 ）</li>\n<li>小鹅通-深圳（ 2017.3 ~ 2018.2 ）</li>\n</ul>\n<h2 id="%E8%AE%A4%E8%AF%86%E5%8D%9A%E4%B8%BB">认识博主<a class="anchor" href="#%E8%AE%A4%E8%AF%86%E5%8D%9A%E4%B8%BB">§</a></h2>\n<p><img src="https://file.shenfq.com/pic/20201209222204.png" alt=""></p>'
         } }),
-    'toc': React.createElement("aside", { dangerouslySetInnerHTML: {
-            __html: '<nav class="toc"><ol><li><a href="#%E8%87%AA%E6%88%91%E4%BB%8B%E7%BB%8D">自我介绍</a></li><li><a href="#%E5%B7%A5%E4%BD%9C%E7%BB%8F%E5%8E%86">工作经历</a></li><li><a href="#%E8%AE%A4%E8%AF%86%E5%8D%9A%E4%B8%BB">认识博主</a></li></ol></nav>'
-        } }),
+    'toc': React.createElement("nav", { key: "0", className: "toc" },
+        React.createElement("ol", null,
+            React.createElement("li", null,
+                React.createElement("a", { href: "#%E8%87%AA%E6%88%91%E4%BB%8B%E7%BB%8D" }, "\u81EA\u6211\u4ECB\u7ECD")),
+            React.createElement("li", null,
+                React.createElement("a", { href: "#%E5%B7%A5%E4%BD%9C%E7%BB%8F%E5%8E%86" }, "\u5DE5\u4F5C\u7ECF\u5386")),
+            React.createElement("li", null,
+                React.createElement("a", { href: "#%E8%AE%A4%E8%AF%86%E5%8D%9A%E4%B8%BB" }, "\u8BA4\u8BC6\u535A\u4E3B")))),
     'author': "Shenfq",
     'contributors': [
         "Shenfq"
     ],
-    'date': "2021-01-25T03:55:43.000Z",
+    'date': "2021-01-27T02:23:24.000Z",
     'updated': null,
     'excerpt': "自我介绍 我是 shenfq ，微信名「自然醒」，互联网一线前端开发。博客除了会分享前端技术，偶尔也会分享我的生活以及读书清单。写博客也是为了强制自己有些输出，为了保证质量，更新不会特别频繁，期望能做到周更。 工作经历 -...",
     'cover': "https://file.shenfq.com/pic/20201209222204.png",
