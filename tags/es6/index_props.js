@@ -59,7 +59,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 20
+                "count": 21
             },
             {
                 "name": "Node.js",
@@ -256,6 +256,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "Components",
+                "count": 1
+            },
+            {
                 "name": "CSS",
                 "count": 1
             },
@@ -337,6 +341,10 @@ export default {
             },
             {
                 "name": "VSCode",
+                "count": 1
+            },
+            {
+                "name": "Web Components",
                 "count": 1
             },
             {

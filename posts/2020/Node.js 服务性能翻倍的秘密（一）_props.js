@@ -49,6 +49,26 @@ export default {
         "isPost": true,
         "posts": [
             {
+                "pagePath": "posts/2021/Web Components 上手指南.md",
+                "title": "Web Components 上手指南",
+                "link": "posts/2021/Web Components 上手指南.html",
+                "date": "2021/02/23",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "前端"
+                ],
+                "tags": [
+                    "Components",
+                    "Web Components"
+                ],
+                "excerpt": "现在的前端开发基本离不开 React、Vue 这两个框架的支撑，而这两个框架下面又衍生出了许多的自定义组件库： - Element（Vue） - Ant Design（React） 这些组件库的出现，让我们可以直接使用已经封装好的组件，而且在开源社区的...",
+                "cover": "https://file.shenfq.com/pic/20210223154148.png"
+            },
+            {
                 "pagePath": "posts/2021/MobX 上手指南.md",
                 "title": "MobX 上手指南",
                 "link": "posts/2021/MobX 上手指南.html",
@@ -1222,7 +1242,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 20
+                "count": 21
             },
             {
                 "name": "Node.js",
@@ -1419,6 +1439,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "Components",
+                "count": 1
+            },
+            {
                 "name": "CSS",
                 "count": 1
             },
@@ -1500,6 +1524,10 @@ export default {
             },
             {
                 "name": "VSCode",
+                "count": 1
+            },
+            {
+                "name": "Web Components",
                 "count": 1
             },
             {

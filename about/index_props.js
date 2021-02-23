@@ -30,13 +30,33 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2021-01-27T02:23:24.000Z",
+    'date': "2021-02-23T07:42:27.000Z",
     'updated': null,
     'excerpt': "自我介绍 我是 shenfq ，微信名「自然醒」，互联网一线前端开发。博客除了会分享前端技术，偶尔也会分享我的生活以及读书清单。写博客也是为了强制自己有些输出，为了保证质量，更新不会特别频繁，期望能做到周更。 工作经历 -...",
     'cover': "https://file.shenfq.com/pic/20201209222204.png",
     'blog': {
         "isPost": false,
         "posts": [
+            {
+                "pagePath": "posts/2021/Web Components 上手指南.md",
+                "title": "Web Components 上手指南",
+                "link": "posts/2021/Web Components 上手指南.html",
+                "date": "2021/02/23",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "前端"
+                ],
+                "tags": [
+                    "Components",
+                    "Web Components"
+                ],
+                "excerpt": "现在的前端开发基本离不开 React、Vue 这两个框架的支撑，而这两个框架下面又衍生出了许多的自定义组件库： - Element（Vue） - Ant Design（React） 这些组件库的出现，让我们可以直接使用已经封装好的组件，而且在开源社区的...",
+                "cover": "https://file.shenfq.com/pic/20210223154148.png"
+            },
             {
                 "pagePath": "posts/2021/MobX 上手指南.md",
                 "title": "MobX 上手指南",
@@ -1211,7 +1231,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 20
+                "count": 21
             },
             {
                 "name": "Node.js",
@@ -1408,6 +1428,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "Components",
+                "count": 1
+            },
+            {
                 "name": "CSS",
                 "count": 1
             },
@@ -1489,6 +1513,10 @@ export default {
             },
             {
                 "name": "VSCode",
+                "count": 1
+            },
+            {
+                "name": "Web Components",
                 "count": 1
             },
             {
