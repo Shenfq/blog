@@ -183,19 +183,19 @@ export default {
                 "count": 7
             },
             {
-                "name": "React",
-                "count": 5
-            },
-            {
                 "name": "工作",
-                "count": 5
+                "count": 6
             },
             {
                 "name": "总结",
-                "count": 5
+                "count": 6
             },
             {
                 "name": "感悟",
+                "count": 6
+            },
+            {
+                "name": "React",
                 "count": 5
             },
             {
