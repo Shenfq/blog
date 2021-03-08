@@ -28,7 +28,7 @@ Web Components 本身不是一个单独的规范，而是由一组DOM API 和 HT
 
 代码的复用一直都是我们追求的目标，在 JS 中可复用的代码我们可以封装成一个函数，但是对于复杂的HTML（包括相关的样式及交互逻辑），我们一直都没有比较好的办法来进行复用。要么借助后端的模板引擎，要么借助已有框架对 DOM API 的二次封装，而 Web Components 的出现就是为了补足浏览器在这方面的能力。
 
-## 如何使用 Web Component？
+## 如何使用 Web Components？
 
 Web Components 中包含的几个规范，都已在 W3C 和 HTML 标准中进行了规范化，主要由三部分组成：
 
