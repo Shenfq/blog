@@ -30,13 +30,33 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2021-02-23T07:42:27.000Z",
+    'date': "2021-03-08T12:34:45.000Z",
     'updated': null,
     'excerpt': "自我介绍 我是 shenfq ，微信名「自然醒」，互联网一线前端开发。博客除了会分享前端技术，偶尔也会分享我的生活以及读书清单。写博客也是为了强制自己有些输出，为了保证质量，更新不会特别频繁，期望能做到周更。 工作经历 -...",
     'cover': "https://file.shenfq.com/pic/20201209222204.png",
     'blog': {
         "isPost": false,
         "posts": [
+            {
+                "pagePath": "posts/2021/读《贫穷的本质》.md",
+                "title": "读《贫穷的本质》引发的一些思考",
+                "link": "posts/2021/读《贫穷的本质》.html",
+                "date": "2021/03/08",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "读后感"
+                ],
+                "tags": [
+                    "读后感",
+                    "前端思考"
+                ],
+                "excerpt": "最近在看了 《贫穷的本质》这本书，然后结合书中的观点和最近工作的一些思考，写了这么一篇文章，和大家分享一下我的一些想法。 书的最后，给大家总结了五点，穷人之所以一直贫穷的原因，因为看的是翻译的书籍，这里我用我自己...",
+                "cover": "https://file.shenfq.com/pic/20210308135724.jpg"
+            },
             {
                 "pagePath": "posts/2021/Web Components 上手指南.md",
                 "title": "Web Components 上手指南",
@@ -1274,6 +1294,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "读后感",
+                "count": 1
+            },
+            {
                 "name": "随便写写",
                 "count": 1
             }
@@ -1540,6 +1564,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "前端思考",
+                "count": 1
+            },
+            {
                 "name": "前端构建工具",
                 "count": 1
             },
@@ -1597,6 +1625,10 @@ export default {
             },
             {
                 "name": "虚拟DOM",
+                "count": 1
+            },
+            {
+                "name": "读后感",
                 "count": 1
             },
             {

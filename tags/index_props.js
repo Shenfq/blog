@@ -23,13 +23,33 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2021-02-23T07:42:27.000Z",
+    'date': "2021-03-08T12:34:45.000Z",
     'updated': null,
     'excerpt': "",
     'cover': undefined,
     'blog': {
         "isPost": false,
         "posts": [
+            {
+                "pagePath": "posts/2021/读《贫穷的本质》.md",
+                "title": "读《贫穷的本质》引发的一些思考",
+                "link": "posts/2021/读《贫穷的本质》.html",
+                "date": "2021/03/08",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "读后感"
+                ],
+                "tags": [
+                    "读后感",
+                    "前端思考"
+                ],
+                "excerpt": "最近在看了 《贫穷的本质》这本书，然后结合书中的观点和最近工作的一些思考，写了这么一篇文章，和大家分享一下我的一些想法。 书的最后，给大家总结了五点，穷人之所以一直贫穷的原因，因为看的是翻译的书籍，这里我用我自己...",
+                "cover": "https://file.shenfq.com/pic/20210308135724.jpg"
+            },
             {
                 "pagePath": "posts/2021/Web Components 上手指南.md",
                 "title": "Web Components 上手指南",
@@ -1267,6 +1287,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "读后感",
+                "count": 1
+            },
+            {
                 "name": "随便写写",
                 "count": 1
             }
@@ -1533,6 +1557,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "前端思考",
+                "count": 1
+            },
+            {
                 "name": "前端构建工具",
                 "count": 1
             },
@@ -1590,6 +1618,10 @@ export default {
             },
             {
                 "name": "虚拟DOM",
+                "count": 1
+            },
+            {
+                "name": "读后感",
                 "count": 1
             },
             {
