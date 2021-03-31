@@ -18,7 +18,7 @@ export default {
                 "pagePath": "posts/2021/lit-html.md",
                 "title": "下一代的模板引擎：lit-html",
                 "link": "posts/2021/lit-html.html",
-                "date": "2021/02/23",
+                "date": "2021/03/31",
                 "updated": null,
                 "author": "shenfq",
                 "contributors": [
