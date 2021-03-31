@@ -1,39 +1,39 @@
 import projectConfig from '/pagic.config.js';
 export default {
     config: { "root": "/", ...projectConfig, branch: 'main' },
-    'pagePath': "tags/自动化测试/",
+    'pagePath': "tags/模板引擎/",
     'layoutPath': "archives/_layout.tsx",
-    'outputPath': "tags/自动化测试/index.html",
+    'outputPath': "tags/模板引擎/index.html",
     'head': null,
     'script': React.createElement(React.Fragment, null,
         React.createElement("script", { src: "https://cdn.pagic.org/react@16.13.1/umd/react.production.min.js" }),
         React.createElement("script", { src: "https://cdn.pagic.org/react-dom@16.13.1/umd/react-dom.production.min.js" }),
         React.createElement("script", { src: "/index.js", type: "module" })),
-    'title': "自动化测试",
+    'title': "模板引擎",
     'content': null,
     'blog': {
         "isPost": false,
         "posts": [
             {
-                "pagePath": "posts/2020/小程序自动化测试.md",
-                "title": "小程序自动化测试",
-                "link": "posts/2020/小程序自动化测试.html",
-                "date": "2020/08/09",
+                "pagePath": "posts/2021/lit-html.md",
+                "title": "下一代的模板引擎：lit-html",
+                "link": "posts/2021/lit-html.html",
+                "date": "2021/02/23",
                 "updated": null,
                 "author": "shenfq",
                 "contributors": [
                     "Shenfq"
                 ],
                 "categories": [
-                    "微信小程序"
+                    "前端"
                 ],
                 "tags": [
-                    "小程序",
-                    "微信小程序",
-                    "自动化测试"
+                    "模板引擎",
+                    "Components",
+                    "Web Components"
                 ],
-                "excerpt": "背景 近期团队打算做一个小程序自动化测试的工具，期望能够做到业务人员操作一遍小程序后，自动还原之前的操作路径，并且捕获操作过程中发生的异常，以此来判断这次发布是否会影响小程序的基础功能。 上述描述看似简单，但是中...",
-                "cover": "https://file.shenfq.com/ipic/2020-08-09-072710.png"
+                "excerpt": "前面的文章介绍了 Web Components 的基本用法，今天来看看基于这个原生技术，Google 二次封存的框架 lit-html。 其实早在 Google 提出 Web Components 的时候，就在此基础上发布了 Polymer 框架。只是这个框架一直雷声大雨点小...",
+                "cover": "https://file.shenfq.com/pic/20210317192428.png"
             }
         ],
         "categories": [

@@ -41,7 +41,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 21
+                "count": 22
             },
             {
                 "name": "Node.js",
@@ -154,6 +154,10 @@ export default {
                 "count": 2
             },
             {
+                "name": "Components",
+                "count": 2
+            },
+            {
                 "name": "es6",
                 "count": 2
             },
@@ -171,6 +175,10 @@ export default {
             },
             {
                 "name": "router",
+                "count": 2
+            },
+            {
+                "name": "Web Components",
                 "count": 2
             },
             {
@@ -239,10 +247,6 @@ export default {
             },
             {
                 "name": "CMD",
-                "count": 1
-            },
-            {
-                "name": "Components",
                 "count": 1
             },
             {
@@ -330,10 +334,6 @@ export default {
                 "count": 1
             },
             {
-                "name": "Web Components",
-                "count": 1
-            },
-            {
                 "name": "Webpack",
                 "count": 1
             },
@@ -371,6 +371,10 @@ export default {
             },
             {
                 "name": "样式",
+                "count": 1
+            },
+            {
+                "name": "模板引擎",
                 "count": 1
             },
             {

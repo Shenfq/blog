@@ -88,6 +88,27 @@ export default {
                 "cover": "https://file.shenfq.com/pic/20210308135724.jpg"
             },
             {
+                "pagePath": "posts/2021/lit-html.md",
+                "title": "下一代的模板引擎：lit-html",
+                "link": "posts/2021/lit-html.html",
+                "date": "2021/02/23",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "前端"
+                ],
+                "tags": [
+                    "模板引擎",
+                    "Components",
+                    "Web Components"
+                ],
+                "excerpt": "前面的文章介绍了 Web Components 的基本用法，今天来看看基于这个原生技术，Google 二次封存的框架 lit-html。 其实早在 Google 提出 Web Components 的时候，就在此基础上发布了 Polymer 框架。只是这个框架一直雷声大雨点小...",
+                "cover": "https://file.shenfq.com/pic/20210317192428.png"
+            },
+            {
                 "pagePath": "posts/2021/Web Components 上手指南.md",
                 "title": "Web Components 上手指南",
                 "link": "posts/2021/Web Components 上手指南.html",
@@ -1281,7 +1302,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 21
+                "count": 22
             },
             {
                 "name": "Node.js",
@@ -1394,6 +1415,10 @@ export default {
                 "count": 2
             },
             {
+                "name": "Components",
+                "count": 2
+            },
+            {
                 "name": "es6",
                 "count": 2
             },
@@ -1411,6 +1436,10 @@ export default {
             },
             {
                 "name": "router",
+                "count": 2
+            },
+            {
+                "name": "Web Components",
                 "count": 2
             },
             {
@@ -1479,10 +1508,6 @@ export default {
             },
             {
                 "name": "CMD",
-                "count": 1
-            },
-            {
-                "name": "Components",
                 "count": 1
             },
             {
@@ -1570,10 +1595,6 @@ export default {
                 "count": 1
             },
             {
-                "name": "Web Components",
-                "count": 1
-            },
-            {
                 "name": "Webpack",
                 "count": 1
             },
@@ -1611,6 +1632,10 @@ export default {
             },
             {
                 "name": "样式",
+                "count": 1
+            },
+            {
+                "name": "模板引擎",
                 "count": 1
             },
             {
