@@ -121,6 +121,10 @@ export default {
                 "count": 4
             },
             {
+                "name": "Go",
+                "count": 3
+            },
+            {
                 "name": "机器学习",
                 "count": 3
             },
@@ -168,7 +172,7 @@ export default {
             },
             {
                 "name": "模块化",
-                "count": 8
+                "count": 9
             },
             {
                 "name": "JavaScript",
@@ -201,6 +205,10 @@ export default {
             {
                 "name": "翻译",
                 "count": 5
+            },
+            {
+                "name": "Go",
+                "count": 3
             },
             {
                 "name": "机器学习",
@@ -423,11 +431,23 @@ export default {
                 "count": 1
             },
             {
+                "name": "变量",
+                "count": 1
+            },
+            {
                 "name": "多进程",
                 "count": 1
             },
             {
+                "name": "常量",
+                "count": 1
+            },
+            {
                 "name": "推荐系统",
+                "count": 1
+            },
+            {
+                "name": "数组",
                 "count": 1
             },
             {

@@ -59,6 +59,67 @@ export default {
         "isPost": true,
         "posts": [
             {
+                "pagePath": "posts/2021/go/go 数组与切片.md",
+                "title": "Go 数组与切片",
+                "link": "posts/2021/go/go 数组与切片.html",
+                "date": "2021/04/07",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "Go"
+                ],
+                "tags": [
+                    "Go",
+                    "数组"
+                ],
+                "excerpt": "数组 数组是一组类型相同的，长度固定的，按数字编号排列的数据序列。由于 go 语言中，数组的类型相同且长度固定，所以在声明数组的时候，就会体现这两个特点。 var array [5]int // [0 0 0 0 0] 数组通过 [SIZE]（方括号内为数...",
+                "cover": "https://file.shenfq.com/pic/20210407195942.png"
+            },
+            {
+                "pagePath": "posts/2021/go/go 变量与常量.md",
+                "title": "Go 常量与变量",
+                "link": "posts/2021/go/go 变量与常量.html",
+                "date": "2021/04/06",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "Go"
+                ],
+                "tags": [
+                    "Go",
+                    "变量",
+                    "常量"
+                ],
+                "excerpt": "变量 go 语言的变量声明和大多数语言类似，通过 var 关键字声明变量，只是 go 语言作为静态类型语言，声明变量时需要指定其类型。 下面的代码表示声明一个『name』变量，类型为『string』，并给其赋值『\"Shenfq\"』。 var name ...",
+                "cover": "https://file.shenfq.com/pic/20210406135246.png"
+            },
+            {
+                "pagePath": "posts/2021/go/go module.md",
+                "title": "Go 模块化",
+                "link": "posts/2021/go/go module.html",
+                "date": "2021/04/05",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "Go"
+                ],
+                "tags": [
+                    "Go",
+                    "模块化"
+                ],
+                "excerpt": "前言 在很久很久以前，就 push 自己学过 go 语言，但是之前只是看了一下基础语法就放弃了，实在是工作当中没有应用场景。最近发现基于 go 写的 esbuild 异军突起，想要深入研究下它的奥秘，发现看不懂。于是，打算先从 go 开始...",
+                "cover": "https://file.shenfq.com/pic/20210405193808.png"
+            },
+            {
                 "pagePath": "posts/2021/lit-html.md",
                 "title": "下一代的模板引擎：lit-html",
                 "link": "posts/2021/lit-html.html",
@@ -1315,6 +1376,10 @@ export default {
                 "count": 4
             },
             {
+                "name": "Go",
+                "count": 3
+            },
+            {
                 "name": "机器学习",
                 "count": 3
             },
@@ -1362,7 +1427,7 @@ export default {
             },
             {
                 "name": "模块化",
-                "count": 8
+                "count": 9
             },
             {
                 "name": "JavaScript",
@@ -1395,6 +1460,10 @@ export default {
             {
                 "name": "翻译",
                 "count": 5
+            },
+            {
+                "name": "Go",
+                "count": 3
             },
             {
                 "name": "机器学习",
@@ -1617,11 +1686,23 @@ export default {
                 "count": 1
             },
             {
+                "name": "变量",
+                "count": 1
+            },
+            {
                 "name": "多进程",
                 "count": 1
             },
             {
+                "name": "常量",
+                "count": 1
+            },
+            {
                 "name": "推荐系统",
+                "count": 1
+            },
+            {
+                "name": "数组",
                 "count": 1
             },
             {

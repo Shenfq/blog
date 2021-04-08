@@ -15,6 +15,26 @@ export default {
         "isPost": false,
         "posts": [
             {
+                "pagePath": "posts/2021/go/go module.md",
+                "title": "Go 模块化",
+                "link": "posts/2021/go/go module.html",
+                "date": "2021/04/05",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "Go"
+                ],
+                "tags": [
+                    "Go",
+                    "模块化"
+                ],
+                "excerpt": "前言 在很久很久以前，就 push 自己学过 go 语言，但是之前只是看了一下基础语法就放弃了，实在是工作当中没有应用场景。最近发现基于 go 写的 esbuild 异军突起，想要深入研究下它的奥秘，发现看不懂。于是，打算先从 go 开始...",
+                "cover": "https://file.shenfq.com/pic/20210405193808.png"
+            },
+            {
                 "pagePath": "posts/2020/【翻译】CommonJS 是如何导致打包体积增大的？.md",
                 "title": "【翻译】CommonJS 是如何导致打包后体积增大的？",
                 "link": "posts/2020/【翻译】CommonJS 是如何导致打包体积增大的？.html",
@@ -208,6 +228,10 @@ export default {
                 "count": 4
             },
             {
+                "name": "Go",
+                "count": 3
+            },
+            {
                 "name": "机器学习",
                 "count": 3
             },
@@ -255,7 +279,7 @@ export default {
             },
             {
                 "name": "模块化",
-                "count": 8
+                "count": 9
             },
             {
                 "name": "JavaScript",
@@ -288,6 +312,10 @@ export default {
             {
                 "name": "翻译",
                 "count": 5
+            },
+            {
+                "name": "Go",
+                "count": 3
             },
             {
                 "name": "机器学习",
@@ -510,11 +538,23 @@ export default {
                 "count": 1
             },
             {
+                "name": "变量",
+                "count": 1
+            },
+            {
                 "name": "多进程",
                 "count": 1
             },
             {
+                "name": "常量",
+                "count": 1
+            },
+            {
                 "name": "推荐系统",
+                "count": 1
+            },
+            {
+                "name": "数组",
                 "count": 1
             },
             {

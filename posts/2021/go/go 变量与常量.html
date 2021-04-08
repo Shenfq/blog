@@ -1,0 +1,246 @@
+<!doctype html><html class="" data-reactroot=""><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous"/>
+<meta data-react-helmet="true" charset="utf-8"/><meta data-react-helmet="true" http-equiv="x-ua-compatible" content="ie=edge"/><meta data-react-helmet="true" name="description" content="前端工程师@拼多多，爱折腾，擅长 JavaScript，欢迎关注我的公众号「更了不起的前端」"/><meta data-react-helmet="true" name="viewport" content="width=device-width, initial-scale=1"/>
+<title data-react-helmet="true">Go 常量与变量 · 自然醒的博客</title>
+<link data-react-helmet="true" rel="stylesheet" href="/assets/index.css"/><link data-react-helmet="true" id="prismTheme" rel="stylesheet" href="/assets/prism.css"/>
+<script data-react-helmet="true" >
+    const shouldSetIsDark = document.cookie.includes('is_dark=1') ? true : document.cookie.includes('is_dark=0') ? false : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (shouldSetIsDark) {
+      document.documentElement.classList.add('is_dark');
+      document.getElementById('prismTheme').href = "/assets/prism_tomorrow.css";
+    }
+  </script>
+</head><body><a class="czs-menu-l show_on_mobile aside_button_open" href="#" style="background-image:url(&quot;/assets/czs-menu-l.svg&quot;)"></a><a class="show_on_mobile aside_button_text" href="/">自然醒的博客</a><aside class="hide_on_mobile"><div class="aside_card"><a class="czs-menu-l show_on_mobile aside_button_close" href="#" style="background-image:url(&quot;/assets/czs-close-l.svg&quot;)"></a><h1><a href="/">自然醒的博客</a></h1><p class="description">前端工程师@拼多多，爱折腾，擅长 JavaScript，欢迎关注我的公众号「更了不起的前端」</p><ul class="social list_style_none"><li class="flex_center"><a class="czs-github-logo" href="https://github.com/Shenfq" target="_blank" style="background-image:url(&quot;/assets/czs-github-logo.svg&quot;)"></a></li><li class="flex_center"><a class="czs-message-l" href="mailto:shenfq95@foxmail.com" target="_blank" style="background-image:url(&quot;/assets/czs-message-l.svg&quot;)"></a></li><li style="flex-grow:1"></li><li class="toggle_dark flex_center"><span class="czs-sun" style="background-image:url(&quot;/assets/czs-sun.svg&quot;)"></span><span class="czs-sun-l" style="background-image:url(&quot;/assets/czs-sun-l.svg&quot;)"></span><span class="czs-moon" style="background-image:url(&quot;/assets/czs-moon.svg&quot;)"></span><span class="czs-moon-l" style="background-image:url(&quot;/assets/czs-moon-l.svg&quot;)"></span></li></ul><nav><ul class="menu list_style_none"><li><a class="flex_center" href="/"><span class="czs-home-l" style="background-image:url(&quot;/assets/czs-home-l.svg&quot;)"></span>首页</a></li><li><a class="flex_center" href="/categories/"><span class="czs-category-l" style="background-image:url(&quot;/assets/czs-category-l.svg&quot;)"></span>分类</a></li><li><a class="flex_center" href="/tags/"><span class="czs-tag-l" style="background-image:url(&quot;/assets/czs-tag-l.svg&quot;)"></span>标签</a></li><li><a class="flex_center" href="/about/"><span class="czs-about-l" style="background-image:url(&quot;/assets/czs-about-l.svg&quot;)"></span>关于</a></li><li><a class="flex_center" href="/archives/"><span class="czs-box-l" style="background-image:url(&quot;/assets/czs-box-l.svg&quot;)"></span>归档</a></li><li><a class="flex_center" href="/links/index.html"><span class="czs-link-l" style="background-image:url(&quot;/assets/czs-link-l.svg&quot;)"></span>友情链接</a></li></ul></nav></div><nav class="toc"><ol><li><a href="#%E5%8F%98%E9%87%8F">变量</a><ol><li><a href="#%E5%A4%9A%E5%8F%98%E9%87%8F%E5%A3%B0%E6%98%8E">多变量声明</a></li><li><a href="#%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC">类型推导</a></li><li><a href="#%E7%AE%80%E7%9F%AD%E6%A0%BC%E5%BC%8F">简短格式</a><ol></ol></li><li><a href="#%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E4%B8%8E%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F">全局变量与局部变量</a></li><li><a href="#%E7%A9%BA%E7%99%BD%E6%A0%87%E8%AF%86%E7%AC%A6">空白标识符</a></li></ol></li><li><a href="#%E5%B8%B8%E9%87%8F">常量</a><ol><li><a href="#%E5%A4%9A%E5%B8%B8%E9%87%8F%E5%A3%B0%E6%98%8E">多常量声明</a></li><li><a href="#%E7%89%B9%E6%AE%8A%E5%B8%B8%E9%87%8F">特殊常量</a></li></ol></li></ol></nav></aside><section class="main"><h1>Go 变量与常量</h1><div class="main_post_meta"><time dateTime="2021/04/06">2021-04-07</time> · <!-- -->shenfq</div><article><h2 id="%E5%8F%98%E9%87%8F">变量<a class="anchor" href="#%E5%8F%98%E9%87%8F">§</a></h2>
+<p>go 语言的变量声明和大多数语言类似，通过 <code>var</code> 关键字声明变量，只是 go 语言作为静态类型语言，声明变量时需要指定其类型。</p>
+<p>下面的代码表示声明一个『<code>name</code>』变量，类型为『<code>string</code>』，并给其赋值『<code>&quot;Shenfq&quot;</code>』。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">var</span> name <span class="token builtin">string</span> <span class="token operator">=</span> <span class="token string">"Shenfq"</span>
+</code></pre>
+<p>如果我们不进行赋值，这变量会获得一个默认值，下面列举一些 go 语言中的基础类型及其默认值。</p>
+<div class="table_wrapper"><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>int（int32、int64……）</td>
+<td>0</td>
+</tr>
+<tr>
+<td>uint（uint32、uint64……）</td>
+<td>0</td>
+</tr>
+<tr>
+<td>float32、float64</td>
+<td>0.0</td>
+</tr>
+<tr>
+<td>bool</td>
+<td>false</td>
+</tr>
+<tr>
+<td>string</td>
+<td>&quot;&quot;</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="%E5%A4%9A%E5%8F%98%E9%87%8F%E5%A3%B0%E6%98%8E">多变量声明<a class="anchor" href="#%E5%A4%9A%E5%8F%98%E9%87%8F%E5%A3%B0%E6%98%8E">§</a></h3>
+<p>上面介绍 go 语言通过 <code>var</code> 关键字进行单个变量声明，我们还可以通过 <code>var</code> 关键字进行多个变量的声明：</p>
+<pre class="language-go"><code class="language-go"><span class="token comment">// 声明两个变量为同一类型</span>
+<span class="token keyword">var</span> firstName<span class="token punctuation">,</span> lastName <span class="token builtin">string</span>
+<span class="token comment">// 给两个变量同时赋值</span>
+firstName<span class="token punctuation">,</span> lastName <span class="token operator">=</span> <span class="token string">"frank"</span><span class="token punctuation">,</span> <span class="token string">"shen"</span>
+</code></pre>
+<pre class="language-go"><code class="language-go"><span class="token comment">// 声明两个变量为不同类型</span>
+<span class="token keyword">var</span> <span class="token punctuation">(</span>
+  age <span class="token builtin">int</span>
+	name <span class="token builtin">string</span>
+<span class="token punctuation">)</span>
+<span class="token comment">// 给两个变量同时赋值</span>
+age<span class="token punctuation">,</span> name <span class="token operator">=</span> <span class="token number">25</span><span class="token punctuation">,</span> <span class="token string">"Shenfq"</span>
+</code></pre>
+<h3 id="%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC">类型推导<a class="anchor" href="#%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC">§</a></h3>
+<p>如果我们在变量声明阶段，对变量进行了赋值操作，这时候我们是可以直接省略变量类型的，因为 go 在编译过程中会依据所赋予的初始值推导出其类型。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">var</span> age <span class="token operator">=</span> <span class="token number">25</span>
+
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"age 类型为：%T"</span><span class="token punctuation">,</span> age<span class="token punctuation">)</span> <span class="token comment">// age 类型为：int</span>
+</code></pre>
+<pre class="language-go"><code class="language-go"><span class="token keyword">var</span> <span class="token punctuation">(</span>
+  age <span class="token operator">=</span> <span class="token number">18</span>
+  name <span class="token operator">=</span> <span class="token string">"Shenfq"</span>
+<span class="token punctuation">)</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"age 类型为：%T"</span><span class="token punctuation">,</span> age<span class="token punctuation">)</span> <span class="token comment">// age 类型为：int</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"name 类型为：%T"</span><span class="token punctuation">,</span> name<span class="token punctuation">)</span> <span class="token comment">// name 类型为：string</span>
+</code></pre>
+<h3 id="%E7%AE%80%E7%9F%AD%E6%A0%BC%E5%BC%8F">简短格式<a class="anchor" href="#%E7%AE%80%E7%9F%AD%E6%A0%BC%E5%BC%8F">§</a></h3>
+<p>前面介绍了变量声明的时候，如果给定了初始值，go 在编译阶段可以进行类型推导。这种情况，go 提供了一种更简单的声明方式，通过 <code>:=</code> 的方式进行变量声明，可以省略 <code>var</code> 关键字。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  age <span class="token operator">:=</span> <span class="token number">25</span>
+	name <span class="token operator">:=</span> <span class="token string">"Shenfq"</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<pre class="language-go"><code class="language-go"><span class="token comment">// 也可以进行多个变量同时赋值</span>
+<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  age<span class="token punctuation">,</span> name <span class="token operator">:=</span> <span class="token number">25</span><span class="token punctuation">,</span> <span class="token string">"Shenfq"</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h4 id="%E2%9A%A0%EF%B8%8F%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9%E4%B8%80">⚠️注意事项一<a class="anchor" href="#%E2%9A%A0%EF%B8%8F%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9%E4%B8%80">§</a></h4>
+<p>这种声明方式只能用于函数体内，不能用于全局变量的声明。</p>
+<pre class="language-go"><code class="language-go"><span class="token comment">// ⚠️ 不能在全局使用这种方式声明变量</span>
+age<span class="token punctuation">,</span> name <span class="token operator">:=</span> <span class="token number">25</span><span class="token punctuation">,</span> <span class="token string">"Shenfq"</span>
+
+<span class="token comment">// 只能在函数体内使用该方式</span>
+<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	age<span class="token punctuation">,</span> name <span class="token operator">:=</span> <span class="token number">25</span><span class="token punctuation">,</span> <span class="token string">"Shenfq"</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"age 类型为：%T"</span><span class="token punctuation">,</span> age<span class="token punctuation">)</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"name 类型为：%T"</span><span class="token punctuation">,</span> name<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/20210406135246.png" alt="warning"></p>
+<h4 id="%E2%9A%A0%EF%B8%8F%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9%E4%BA%8C">⚠️注意事项二<a class="anchor" href="#%E2%9A%A0%EF%B8%8F%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9%E4%BA%8C">§</a></h4>
+<p>已经声明过的变量，不能使用 <code>:=</code> 的方式进行赋值。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> age <span class="token builtin">int</span>
+	age <span class="token operator">:=</span> <span class="token number">25</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/20210406135740.png" alt=""></p>
+<p>已经声明过的变量，只能通过 <code>=</code> 的方式进行赋值。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> age <span class="token builtin">int</span>
+	age <span class="token operator">=</span> <span class="token number">25</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E4%B8%8E%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F">全局变量与局部变量<a class="anchor" href="#%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E4%B8%8E%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F">§</a></h3>
+<p>简单来说，声明在函数体外的变量为全局变量，声明在函数体内的变量为局部变量。</p>
+<p>局部变量如果有声明，没有进行使用，则不会通过编译。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> age <span class="token builtin">int</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/20210406141652.png" alt=""></p>
+<p>但是，全局变量是可以声明而不使用的。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">var</span> age <span class="token builtin">int</span>
+<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	name <span class="token operator">:=</span> <span class="token string">"Shenfq"</span>
+	<span class="token comment">//fmt.Printf("age 类型为：%T", age)</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"name 类型为：%T"</span><span class="token punctuation">,</span> name<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>上面的代码中，我们声明了 <code>age</code> 全局变量，但是并未使用，可以正常编译。</p>
+<h3 id="%E7%A9%BA%E7%99%BD%E6%A0%87%E8%AF%86%E7%AC%A6">空白标识符<a class="anchor" href="#%E7%A9%BA%E7%99%BD%E6%A0%87%E8%AF%86%E7%AC%A6">§</a></h3>
+<p>前面介绍过，go 在变量赋值的时候，可以一次性对多个变量赋值。同时，go 的函数在 return 的时候，也能一次返回多个结果。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">double</span><span class="token punctuation">(</span>num <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token builtin">string</span><span class="token punctuation">,</span> <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">var</span> err <span class="token builtin">string</span>
+	<span class="token keyword">if</span> num <span class="token operator">&lt;</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+		err <span class="token operator">=</span> <span class="token string">"num 不能为负数"</span>
+		<span class="token keyword">return</span> err<span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span>
+	<span class="token punctuation">}</span>
+	result <span class="token operator">:=</span> num <span class="token operator">*</span> <span class="token number">2</span>
+	<span class="token keyword">return</span> err<span class="token punctuation">,</span> result
+<span class="token punctuation">}</span>
+</code></pre>
+<p>上面我们实现了一个 <code>double</code> 函数，该函数接受一个 <code>int</code> 类型的变量（<code>num</code>），返回两个值，一个为异常提示，一个为 <code>num * 2</code> 的结果。如果 <code>num &lt; 0</code> ， 则提示 <code>num</code> 不能负数。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	err<span class="token punctuation">,</span> res <span class="token operator">:=</span> <span class="token function">double</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span>
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token string">""</span> <span class="token punctuation">{</span>
+		fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span>
+	<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+		fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"结果为：%v"</span><span class="token punctuation">,</span> res<span class="token punctuation">)</span>
+	<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>如果，我们并不关心 <code>err</code> ，只想执行 <code>double</code> 之后，输出其结果。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	err<span class="token punctuation">,</span> res <span class="token operator">:=</span> <span class="token function">double</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"结果为：%v"</span><span class="token punctuation">,</span> res<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/20210406145932.png" alt=""></p>
+<p>运行后，我们会收到一个编译错误，<code>err</code> 变量并未使用。这时候，就需要用到空白标识符（<code>_</code>）。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token boolean">_</span><span class="token punctuation">,</span> res <span class="token operator">:=</span> <span class="token function">double</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"结果为：%v"</span><span class="token punctuation">,</span> res<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>我们可以通过 <code>_</code> 来接受 <code>err</code> 值，这个地方的值就会被抛弃掉，就能顺利通过编译。</p>
+<h2 id="%E5%B8%B8%E9%87%8F">常量<a class="anchor" href="#%E5%B8%B8%E9%87%8F">§</a></h2>
+<p>常量就是不会发生变化的变量，一旦声明就不会改变。go 语言中，常量的声明只需要将变量声明时的 <code>var</code> 关键字替换为 <code>const</code> 关键字。</p>
+<pre class="language-go"><code class="language-go"><span class="token comment">// 隐式类型定义</span>
+<span class="token keyword">const</span> PI <span class="token operator">=</span> <span class="token number">3.14</span>
+<span class="token comment">// 显式类型定义</span>
+<span class="token keyword">const</span> PI2 float  <span class="token operator">=</span> <span class="token number">3.14</span>
+</code></pre>
+<h3 id="%E5%A4%9A%E5%B8%B8%E9%87%8F%E5%A3%B0%E6%98%8E">多常量声明<a class="anchor" href="#%E5%A4%9A%E5%B8%B8%E9%87%8F%E5%A3%B0%E6%98%8E">§</a></h3>
+<p>与变量类似，常量也支持一次性声明多个。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">const</span> <span class="token punctuation">(</span>
+		PI <span class="token operator">=</span> <span class="token number">3.14</span>
+		PI2 <span class="token operator">=</span> <span class="token number">3.14</span>
+	<span class="token punctuation">)</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"结果为：%v\n"</span><span class="token punctuation">,</span> PI<span class="token punctuation">)</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"结果为：%v\n"</span><span class="token punctuation">,</span> PI2<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/20210406171303.png" alt=""></p>
+<p>如果一次声明多个常量时，某个常量如果为进行赋值，默认会与上一个常量的值进行同步。下面代码的运行结果，与上面的代码一致。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">const</span> <span class="token punctuation">(</span>
+		PI <span class="token operator">=</span> <span class="token number">3.14</span>
+		PI2
+	<span class="token punctuation">)</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"结果为：%v\n"</span><span class="token punctuation">,</span> PI<span class="token punctuation">)</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"结果为：%v\n"</span><span class="token punctuation">,</span> PI2<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="%E7%89%B9%E6%AE%8A%E5%B8%B8%E9%87%8F">特殊常量<a class="anchor" href="#%E7%89%B9%E6%AE%8A%E5%B8%B8%E9%87%8F">§</a></h3>
+<p>有个叫做 <code>iota</code> 的特殊常量，在常量的赋值过程中，会进行累加。</p>
+<pre class="language-go"><code class="language-go">
+<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">const</span> <span class="token punctuation">(</span>
+		A <span class="token operator">=</span> <span class="token boolean">iota</span>
+		B
+		C
+	<span class="token punctuation">)</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span>A<span class="token punctuation">,</span> B<span class="token punctuation">,</span> C<span class="token punctuation">)</span> <span class="token comment">// 0 1 2</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>在 <code>iota</code> 累加的过程中，可以对其进行打断。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">const</span> <span class="token punctuation">(</span>
+		A <span class="token operator">=</span> <span class="token boolean">iota</span>
+		B
+		C <span class="token operator">=</span> <span class="token string">"Shenfq"</span>
+    D
+    E
+	<span class="token punctuation">)</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span>A<span class="token punctuation">,</span> B<span class="token punctuation">,</span> C<span class="token punctuation">,</span> D<span class="token punctuation">,</span> E<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>这时候输出的结果为：</p>
+<p><img src="https://file.shenfq.com/pic/20210406172317.png" alt=""></p>
+<p>这是由于我们将常量 <code>C</code> 修改为了字符串 <code>&quot;Shenfq&quot;</code>，常量 <code>D</code>、<code>E</code> 会默认与上一条常量保持同步，所以会得到上述结果。但是， <code>iota</code>  是支持重新恢复累加，只需要在指定位置重新赋值一次 <code>iota</code> 即可。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">const</span> <span class="token punctuation">(</span>
+		A <span class="token operator">=</span> <span class="token boolean">iota</span>
+		B
+		C <span class="token operator">=</span> <span class="token string">"Shenfq"</span>
+		D <span class="token operator">=</span> <span class="token boolean">iota</span> <span class="token comment">// 恢复累加状态</span>
+		E
+	<span class="token punctuation">)</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span>A<span class="token punctuation">,</span> B<span class="token punctuation">,</span> C<span class="token punctuation">,</span> D<span class="token punctuation">,</span> E<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+</code></pre>
+<p>由于 <code>C</code> 占用了原本 <code>2</code> 的位置，所以 <code>D</code> 恢复后，也是从 <code>3</code> 开始的。</p>
+<p><img src="https://file.shenfq.com/pic/20210406172627.png" alt=""></p>
+<p><code>iota</code> 这种累加的特性，特别像我们在其他语言中使用的枚举，所以在 go 语言中，我们可以直接将 <code>iota</code> 当做枚举来使用。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">type</span> ButtonType <span class="token builtin">int</span>
+<span class="token keyword">const</span> <span class="token punctuation">(</span>
+  Default ButtonType <span class="token operator">=</span> <span class="token boolean">iota</span>
+  Primary
+  Warning
+  Error
+<span class="token punctuation">)</span>
+</code></pre></article></section><footer>Powered by <a href="https://github.com/xcatliu/pagic" target="_blank">Pagic</a></footer><script src="https://cdn.pagic.org/react@16.13.1/umd/react.production.min.js"></script><script src="https://cdn.pagic.org/react-dom@16.13.1/umd/react-dom.production.min.js"></script><script type="module" src="/index.js"></script></body></html>
