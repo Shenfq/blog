@@ -43,7 +43,7 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2021/04/07",
+    'date': "2021/04/08",
     'updated': null,
     'excerpt': "数组 数组是一组类型相同的，长度固定的，按数字编号排列的数据序列。由于 go 语言中，数组的类型相同且长度固定，所以在声明数组的时候，就会体现这两个特点。 var array [5]int // [0 0 0 0 0] 数组通过 [SIZE]（方括号内为数...",
     'cover': "https://file.shenfq.com/pic/20210407195942.png",
@@ -61,7 +61,7 @@ export default {
                 "pagePath": "posts/2021/go/go 数组与切片.md",
                 "title": "Go 数组与切片",
                 "link": "posts/2021/go/go 数组与切片.html",
-                "date": "2021/04/07",
+                "date": "2021/04/08",
                 "updated": null,
                 "author": "shenfq",
                 "contributors": [

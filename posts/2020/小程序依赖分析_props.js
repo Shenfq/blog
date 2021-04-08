@@ -66,7 +66,7 @@ export default {
                 "pagePath": "posts/2021/go/go 数组与切片.md",
                 "title": "Go 数组与切片",
                 "link": "posts/2021/go/go 数组与切片.html",
-                "date": "2021/04/07",
+                "date": "2021/04/08",
                 "updated": null,
                 "author": "shenfq",
                 "contributors": [

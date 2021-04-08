@@ -30,7 +30,7 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2021-04-08T07:32:49.000Z",
+    'date': "2021-04-08T07:34:34.000Z",
     'updated': null,
     'excerpt': "自我介绍 我是 shenfq ，微信名「自然醒」，互联网一线前端开发。博客除了会分享前端技术，偶尔也会分享我的生活以及读书清单。写博客也是为了强制自己有些输出，为了保证质量，更新不会特别频繁，期望能做到周更。 工作经历 -...",
     'cover': "https://file.shenfq.com/pic/20201209222204.png",
@@ -41,7 +41,7 @@ export default {
                 "pagePath": "posts/2021/go/go 数组与切片.md",
                 "title": "Go 数组与切片",
                 "link": "posts/2021/go/go 数组与切片.html",
-                "date": "2021/04/07",
+                "date": "2021/04/08",
                 "updated": null,
                 "author": "shenfq",
                 "contributors": [
