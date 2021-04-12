@@ -133,7 +133,7 @@ fmt<span class="token punctuation">.</span><span class="token function">Printf</
 </code></pre>
 <p>此时的切片的长度已经变成了 6，超过了切片的容量，那这个时候切换的容量会不会也变成 6？</p>
 <p><img src="https://file.shenfq.com/pic/20210408144255.png" alt=""></p>
-<p>根据输出的结果，此时切片的容量变成了 10，这意味着切片的容量的扩充是在之前的基础长进行翻倍操作的。为了验证这个结论，我们在切片后继续追加 5 个值，让切片的长度变成 11，超出当前的容量，看看容量会变成多少。</p>
+<p>根据输出的结果，此时切片的容量变成了 10，这意味着切片的容量的扩充是在之前的基础上进行翻倍操作的。为了验证这个结论，我们在切片后继续追加 5 个值，让切片的长度变成 11，超出当前的容量，看看容量会变成多少。</p>
 <pre class="language-go"><code class="language-go">s1 <span class="token operator">:=</span> <span class="token function">make</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span>
 s1 <span class="token operator">=</span> <span class="token function">append</span><span class="token punctuation">(</span>s1<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
 s1 <span class="token operator">=</span> <span class="token function">append</span><span class="token punctuation">(</span>s1<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span>

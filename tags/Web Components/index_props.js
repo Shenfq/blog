@@ -74,12 +74,12 @@ export default {
                 "count": 6
             },
             {
-                "name": "年终总结",
+                "name": "Go",
                 "count": 4
             },
             {
-                "name": "Go",
-                "count": 3
+                "name": "年终总结",
+                "count": 4
             },
             {
                 "name": "机器学习",
@@ -165,7 +165,7 @@ export default {
             },
             {
                 "name": "Go",
-                "count": 3
+                "count": 4
             },
             {
                 "name": "机器学习",
@@ -373,6 +373,10 @@ export default {
             },
             {
                 "name": "依赖分析",
+                "count": 1
+            },
+            {
+                "name": "函数",
                 "count": 1
             },
             {

@@ -24,13 +24,33 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2021-04-12T03:20:15.000Z",
+    'date': "2021-04-12T08:40:40.000Z",
     'updated': null,
     'excerpt': " - 童欧巴 —— 你远道而来这世间，想必也是因为热爱吧 - 悲伤日记 —— 一个有温度的野生前端猿人 - 少年民仔 —— 愿你出走半生，归来仍是少年",
     'cover': undefined,
     'blog': {
         "isPost": false,
         "posts": [
+            {
+                "pagePath": "posts/2021/go/go 函数与指针.md",
+                "title": "Go 函数与指针",
+                "link": "posts/2021/go/go 函数与指针.html",
+                "date": "2021/04/12",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "Go"
+                ],
+                "tags": [
+                    "Go",
+                    "函数"
+                ],
+                "excerpt": "函数 函数就是一段基本的代码块，一般用来对需要重复执行的代码进行复用。在 go 中，函数是『一等公民』，这与 js 类似，也就是可以将函数当做一个变量进行传递。 函数声明 由于是强类型语言，与 js 不同，在函数声明的过程中，...",
+                "cover": "https://file.shenfq.com/pic/20210411144315.png"
+            },
             {
                 "pagePath": "posts/2021/go/go 数组与切片.md",
                 "title": "Go 数组与切片",
@@ -1345,12 +1365,12 @@ export default {
                 "count": 6
             },
             {
-                "name": "年终总结",
+                "name": "Go",
                 "count": 4
             },
             {
-                "name": "Go",
-                "count": 3
+                "name": "年终总结",
+                "count": 4
             },
             {
                 "name": "机器学习",
@@ -1436,7 +1456,7 @@ export default {
             },
             {
                 "name": "Go",
-                "count": 3
+                "count": 4
             },
             {
                 "name": "机器学习",
@@ -1644,6 +1664,10 @@ export default {
             },
             {
                 "name": "依赖分析",
+                "count": 1
+            },
+            {
+                "name": "函数",
                 "count": 1
             },
             {

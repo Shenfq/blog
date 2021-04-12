@@ -1,41 +1,38 @@
 import projectConfig from '/pagic.config.js';
 export default {
     config: { "root": "/", ...projectConfig, branch: 'main' },
-    'pagePath': "tags/fetch/",
+    'pagePath': "tags/函数/",
     'layoutPath': "archives/_layout.tsx",
-    'outputPath': "tags/fetch/index.html",
+    'outputPath': "tags/函数/index.html",
     'head': null,
     'script': React.createElement(React.Fragment, null,
         React.createElement("script", { src: "https://cdn.pagic.org/react@16.13.1/umd/react.production.min.js" }),
         React.createElement("script", { src: "https://cdn.pagic.org/react-dom@16.13.1/umd/react-dom.production.min.js" }),
         React.createElement("script", { src: "/index.js", type: "module" })),
-    'title': "fetch",
+    'title': "函数",
     'content': null,
     'blog': {
         "isPost": false,
         "posts": [
             {
-                "pagePath": "posts/2019/【翻译】在 React Hooks 中如何请求数据？.md",
-                "title": "【翻译】在 React Hooks 中如何请求数据？",
-                "link": "posts/2019/【翻译】在 React Hooks 中如何请求数据？.html",
-                "date": "2019/03/25",
+                "pagePath": "posts/2021/go/go 函数与指针.md",
+                "title": "Go 函数与指针",
+                "link": "posts/2021/go/go 函数与指针.html",
+                "date": "2021/04/12",
                 "updated": null,
                 "author": "shenfq",
                 "contributors": [
                     "Shenfq"
                 ],
                 "categories": [
-                    "前端"
+                    "Go"
                 ],
                 "tags": [
-                    "前端框架",
-                    "react",
-                    "fetch",
-                    "react hooks",
-                    "翻译"
+                    "Go",
+                    "函数"
                 ],
-                "excerpt": "通过这个教程，我想告诉你在 React 中如何使用 state 和 effect 这两种 hooks 去请求数据。我们将使用总所周知的 Hacker News API 来获取一些热门文章。你将定义属于你自己的数据请求的 Hooks ，并且可以在你所有的应用中复用，...",
-                "cover": "https://file.shenfq.com/Fp4SkemaUMnmloPIN3eWDZ9o6qZd.png"
+                "excerpt": "函数 函数就是一段基本的代码块，一般用来对需要重复执行的代码进行复用。在 go 中，函数是『一等公民』，这与 js 类似，也就是可以将函数当做一个变量进行传递。 函数声明 由于是强类型语言，与 js 不同，在函数声明的过程中，...",
+                "cover": "https://file.shenfq.com/pic/20210411144315.png"
             }
         ],
         "categories": [
