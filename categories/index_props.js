@@ -9,6 +9,7 @@ export default {
             __html: '<h1>分类</h1>'
         } }),
     'head': React.createElement(React.Fragment, null,
+        React.createElement("script", { src: "/assets/hm.js" }),
         React.createElement("link", { crossOrigin: "anonymous", href: "https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css", integrity: "sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X", rel: "stylesheet" })),
     'script': React.createElement(React.Fragment, null,
         React.createElement("script", { src: "https://cdn.pagic.org/react@16.13.1/umd/react.production.min.js" }),
@@ -23,7 +24,7 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2021-04-08T07:34:34.000Z",
+    'date': "2021-04-12T03:20:15.000Z",
     'updated': null,
     'excerpt': "",
     'cover': undefined,
