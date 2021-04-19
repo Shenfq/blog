@@ -29,7 +29,8 @@ export default {
                 ],
                 "tags": [
                     "Go",
-                    "函数"
+                    "函数",
+                    "指针"
                 ],
                 "excerpt": "函数 函数就是一段基本的代码块，一般用来对需要重复执行的代码进行复用。在 go 中，函数是『一等公民』，这与 js 类似，也就是可以将函数当做一个变量进行传递。 函数声明 由于是强类型语言，与 js 不同，在函数声明的过程中，...",
                 "cover": "https://file.shenfq.com/pic/20210411144315.png"
@@ -54,7 +55,7 @@ export default {
             },
             {
                 "name": "Go",
-                "count": 4
+                "count": 5
             },
             {
                 "name": "年终总结",
@@ -135,16 +136,16 @@ export default {
                 "count": 6
             },
             {
+                "name": "Go",
+                "count": 5
+            },
+            {
                 "name": "React",
                 "count": 5
             },
             {
                 "name": "翻译",
                 "count": 5
-            },
-            {
-                "name": "Go",
-                "count": 4
             },
             {
                 "name": "机器学习",
@@ -383,6 +384,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "指针",
+                "count": 1
+            },
+            {
                 "name": "推荐系统",
                 "count": 1
             },
@@ -428,6 +433,10 @@ export default {
             },
             {
                 "name": "组件",
+                "count": 1
+            },
+            {
+                "name": "结构体",
                 "count": 1
             },
             {

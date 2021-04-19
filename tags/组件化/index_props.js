@@ -98,7 +98,7 @@ export default {
             },
             {
                 "name": "Go",
-                "count": 4
+                "count": 5
             },
             {
                 "name": "年终总结",
@@ -179,16 +179,16 @@ export default {
                 "count": 6
             },
             {
+                "name": "Go",
+                "count": 5
+            },
+            {
                 "name": "React",
                 "count": 5
             },
             {
                 "name": "翻译",
                 "count": 5
-            },
-            {
-                "name": "Go",
-                "count": 4
             },
             {
                 "name": "机器学习",
@@ -427,6 +427,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "指针",
+                "count": 1
+            },
+            {
                 "name": "推荐系统",
                 "count": 1
             },
@@ -472,6 +476,10 @@ export default {
             },
             {
                 "name": "组件",
+                "count": 1
+            },
+            {
+                "name": "结构体",
                 "count": 1
             },
             {

@@ -31,13 +31,33 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2021-04-12T08:40:40.000Z",
+    'date': "2021-04-19T11:54:54.000Z",
     'updated': null,
     'excerpt': "自我介绍 我是 shenfq ，微信名「自然醒」，互联网一线前端开发。博客除了会分享前端技术，偶尔也会分享我的生活以及读书清单。写博客也是为了强制自己有些输出，为了保证质量，更新不会特别频繁，期望能做到周更。 工作经历 -...",
     'cover': "https://file.shenfq.com/pic/20201209222204.png",
     'blog': {
         "isPost": false,
         "posts": [
+            {
+                "pagePath": "posts/2021/go/go 结构体.md",
+                "title": "Go 结构体与方法",
+                "link": "posts/2021/go/go 结构体.html",
+                "date": "2021/04/19",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "Go"
+                ],
+                "tags": [
+                    "Go",
+                    "结构体"
+                ],
+                "excerpt": "结构体 结构体是 go 语言中一个比较重要的概念，在 c 语言中也有类似的东西。由于他们没有类的概念，结构体可以简单理解成类，是一个不同类型的数据构成的一个集合。集合中不同类型的数据被称为成员，每个成员都要自己不同的类...",
+                "cover": "https://file.shenfq.com/pic/20210418162456.png"
+            },
             {
                 "pagePath": "posts/2021/go/go 函数与指针.md",
                 "title": "Go 函数与指针",
@@ -53,7 +73,8 @@ export default {
                 ],
                 "tags": [
                     "Go",
-                    "函数"
+                    "函数",
+                    "指针"
                 ],
                 "excerpt": "函数 函数就是一段基本的代码块，一般用来对需要重复执行的代码进行复用。在 go 中，函数是『一等公民』，这与 js 类似，也就是可以将函数当做一个变量进行传递。 函数声明 由于是强类型语言，与 js 不同，在函数声明的过程中，...",
                 "cover": "https://file.shenfq.com/pic/20210411144315.png"
@@ -1373,7 +1394,7 @@ export default {
             },
             {
                 "name": "Go",
-                "count": 4
+                "count": 5
             },
             {
                 "name": "年终总结",
@@ -1454,16 +1475,16 @@ export default {
                 "count": 6
             },
             {
+                "name": "Go",
+                "count": 5
+            },
+            {
                 "name": "React",
                 "count": 5
             },
             {
                 "name": "翻译",
                 "count": 5
-            },
-            {
-                "name": "Go",
-                "count": 4
             },
             {
                 "name": "机器学习",
@@ -1702,6 +1723,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "指针",
+                "count": 1
+            },
+            {
                 "name": "推荐系统",
                 "count": 1
             },
@@ -1747,6 +1772,10 @@ export default {
             },
             {
                 "name": "组件",
+                "count": 1
+            },
+            {
+                "name": "结构体",
                 "count": 1
             },
             {

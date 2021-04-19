@@ -1,0 +1,102 @@
+<!doctype html><html class="" data-reactroot=""><head><script src="/assets/hm.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous"/>
+<meta data-react-helmet="true" charset="utf-8"/><meta data-react-helmet="true" http-equiv="x-ua-compatible" content="ie=edge"/><meta data-react-helmet="true" name="description" content="前端工程师，爱折腾，擅长 JavaScript，欢迎关注我的公众号「更了不起的前端」"/><meta data-react-helmet="true" name="viewport" content="width=device-width, initial-scale=1"/>
+<title data-react-helmet="true">Go 结构体与方法 · 自然醒的博客</title>
+<link data-react-helmet="true" rel="stylesheet" href="/assets/index.css"/><link data-react-helmet="true" id="prismTheme" rel="stylesheet" href="/assets/prism.css"/>
+<script data-react-helmet="true" >
+    const shouldSetIsDark = document.cookie.includes('is_dark=1') ? true : document.cookie.includes('is_dark=0') ? false : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (shouldSetIsDark) {
+      document.documentElement.classList.add('is_dark');
+      document.getElementById('prismTheme').href = "/assets/prism_tomorrow.css";
+    }
+  </script>
+</head><body><a class="czs-menu-l show_on_mobile aside_button_open" href="#" style="background-image:url(&quot;/assets/czs-menu-l.svg&quot;)"></a><a class="show_on_mobile aside_button_text" href="/">自然醒的博客</a><aside class="hide_on_mobile"><div class="aside_card"><a class="czs-menu-l show_on_mobile aside_button_close" href="#" style="background-image:url(&quot;/assets/czs-close-l.svg&quot;)"></a><h1><a href="/">自然醒的博客</a></h1><p class="description">前端工程师，爱折腾，擅长 JavaScript，欢迎关注我的公众号「更了不起的前端」</p><ul class="social list_style_none"><li class="flex_center"><a class="czs-github-logo" href="https://github.com/Shenfq" target="_blank" style="background-image:url(&quot;/assets/czs-github-logo.svg&quot;)"></a></li><li class="flex_center"><a class="czs-message-l" href="mailto:shenfq95@foxmail.com" target="_blank" style="background-image:url(&quot;/assets/czs-message-l.svg&quot;)"></a></li><li style="flex-grow:1"></li><li class="toggle_dark flex_center"><span class="czs-sun" style="background-image:url(&quot;/assets/czs-sun.svg&quot;)"></span><span class="czs-sun-l" style="background-image:url(&quot;/assets/czs-sun-l.svg&quot;)"></span><span class="czs-moon" style="background-image:url(&quot;/assets/czs-moon.svg&quot;)"></span><span class="czs-moon-l" style="background-image:url(&quot;/assets/czs-moon-l.svg&quot;)"></span></li></ul><nav><ul class="menu list_style_none"><li><a class="flex_center" href="/"><span class="czs-home-l" style="background-image:url(&quot;/assets/czs-home-l.svg&quot;)"></span>首页</a></li><li><a class="flex_center" href="/categories/"><span class="czs-category-l" style="background-image:url(&quot;/assets/czs-category-l.svg&quot;)"></span>分类</a></li><li><a class="flex_center" href="/tags/"><span class="czs-tag-l" style="background-image:url(&quot;/assets/czs-tag-l.svg&quot;)"></span>标签</a></li><li><a class="flex_center" href="/about/"><span class="czs-about-l" style="background-image:url(&quot;/assets/czs-about-l.svg&quot;)"></span>关于</a></li><li><a class="flex_center" href="/archives/"><span class="czs-box-l" style="background-image:url(&quot;/assets/czs-box-l.svg&quot;)"></span>归档</a></li><li><a class="flex_center" href="/links/index.html"><span class="czs-link-l" style="background-image:url(&quot;/assets/czs-link-l.svg&quot;)"></span>友情链接</a></li></ul></nav></div><nav class="toc"><ol><li><a href="#%E7%BB%93%E6%9E%84%E4%BD%93">结构体</a><ol><li><a href="#%E5%A3%B0%E6%98%8E%E7%BB%93%E6%9E%84%E4%BD%93">声明结构体</a></li><li><a href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E7%BB%93%E6%9E%84%E4%BD%93">初始化结构体</a></li><li><a href="#%E5%8C%BF%E5%90%8D%E7%BB%93%E6%9E%84%E4%BD%93">匿名结构体</a></li></ol></li><li><a href="#%E6%96%B9%E6%B3%95">方法</a><ol><li><a href="#%E6%96%B9%E6%B3%95%E4%B8%AD%E7%9A%84%E6%8C%87%E9%92%88">方法中的指针</a></li></ol></li></ol></nav></aside><section class="main"><h1>Go 结构体与方法</h1><div class="main_post_meta"><time dateTime="2021/04/19">2021-04-19</time> · <!-- -->shenfq</div><article><h2 id="%E7%BB%93%E6%9E%84%E4%BD%93">结构体<a class="anchor" href="#%E7%BB%93%E6%9E%84%E4%BD%93">§</a></h2>
+<p>结构体是 go 语言中一个比较重要的概念，在 c 语言中也有类似的东西。由于他们没有类的概念，结构体可以简单理解成类，是一个不同类型的数据构成的一个集合。集合中不同类型的数据被称为成员，每个成员都要自己不同的类型，可以理解为 js 中对象的每个属性。</p>
+<h3 id="%E5%A3%B0%E6%98%8E%E7%BB%93%E6%9E%84%E4%BD%93">声明结构体<a class="anchor" href="#%E5%A3%B0%E6%98%8E%E7%BB%93%E6%9E%84%E4%BD%93">§</a></h3>
+<p>结构体通过 <code>type</code> 和 <code>struct</code> 关键字进行声明，<code>type</code> 后接结构体的名字，<code>struct</code> 后接结构体每个成员的定义。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">type</span> Person <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+  name <span class="token builtin">string</span>
+	age <span class="token builtin">int</span>
+  gender <span class="token builtin">string</span>
+  address <span class="token builtin">string</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>上面代码有点类似于其他语言中接口的定义，实际上，go 也支持定义接口，我们只需要将 <code>struct</code> 关键字替换成 <code>interface</code> 就表示定义接口。</p>
+<h3 id="%E5%88%9D%E5%A7%8B%E5%8C%96%E7%BB%93%E6%9E%84%E4%BD%93">初始化结构体<a class="anchor" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E7%BB%93%E6%9E%84%E4%BD%93">§</a></h3>
+<p>初始化结构体有两种方式，一种是通过字面量的方式，用结构体名称加上结构体各个成员值的方式进行初始化。用上面的 <code>Person</code> 结构体举例：</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">var</span> p <span class="token operator">=</span> Person<span class="token punctuation">{</span><span class="token string">"Shenfq"</span><span class="token punctuation">,</span> <span class="token number">25</span><span class="token punctuation">,</span> <span class="token string">"男"</span><span class="token punctuation">,</span> <span class="token string">"湖南长沙"</span><span class="token punctuation">}</span>
+fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"Person:"</span><span class="token punctuation">,</span> p<span class="token punctuation">)</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/20210418162456.png" alt=""></p>
+<p>这种方式需要每个值按照结构体成员定义时的顺序进行初始化，当然，也可以通过键值对的方式，打乱其顺序。这种方式可以对部分成员进行省略，省略的部分会根据其类型，取该类型的空值。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">var</span> p <span class="token operator">=</span> Person<span class="token punctuation">{</span>
+  name<span class="token punctuation">:</span> <span class="token string">"Shenfq"</span><span class="token punctuation">,</span>
+  address<span class="token punctuation">:</span> <span class="token string">"湖南长沙"</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+
+fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"Person:"</span><span class="token punctuation">,</span> p<span class="token punctuation">)</span>
+fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"Person.age:"</span><span class="token punctuation">,</span> p<span class="token punctuation">.</span>age<span class="token punctuation">)</span>
+</code></pre>
+<p>如果要访问结构体成员，可以通过 <code>.</code> 操作符，这与其他语言取对象属性的方式一致。这里我们使用 <code>p.age</code> 的方式获取了结构体 <code>p</code> 的成员 <code>age</code> 的值。</p>
+<p><img src="https://file.shenfq.com/pic/20210418162725.png" alt=""></p>
+<p>除了字面量的方式初始化，结构体还可以通过 <code>new</code> 关键字进行初始化。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">var</span> p <span class="token operator">=</span> <span class="token function">new</span><span class="token punctuation">(</span>Person<span class="token punctuation">)</span>
+</code></pre>
+<p>通过该方式初始化的结构体有两个特点：</p>
+<ul>
+<li>new 关键字返回的为结构体指针；</li>
+<li>new 关键字返回的结果每个成员都是空值；</li>
+</ul>
+<p>所以，我们通过 <code>new</code> 初始化结构体的时候，取值的时候需要加 <code>*</code> 号。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">var</span> p <span class="token operator">=</span> <span class="token function">new</span><span class="token punctuation">(</span>Person<span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token string">"Shenfq"</span>
+p<span class="token punctuation">.</span>age <span class="token operator">=</span> <span class="token number">18</span>
+p<span class="token punctuation">.</span>gender <span class="token operator">=</span> <span class="token string">"男"</span>
+p<span class="token punctuation">.</span>address <span class="token operator">=</span> <span class="token string">"湖南长沙"</span>
+
+fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"Person:"</span><span class="token punctuation">,</span> p<span class="token punctuation">)</span>
+</code></pre>
+<p>如果直接在控制台打印变量 <code>p</code>，会发现前面有个 <code>&amp;</code>，表示这是一个指针。</p>
+<p><img src="https://file.shenfq.com/pic/20210418204339.png" alt=""></p>
+<h3 id="%E5%8C%BF%E5%90%8D%E7%BB%93%E6%9E%84%E4%BD%93">匿名结构体<a class="anchor" href="#%E5%8C%BF%E5%90%8D%E7%BB%93%E6%9E%84%E4%BD%93">§</a></h3>
+<p>结构体和函数一样也可以定义一个没有名字的结构体，就是在定义结构体的同时进行初始化，并且省略 <code>type</code> 关键字和结构体名称。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">var</span> p <span class="token operator">=</span> <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+  name <span class="token builtin">string</span>
+  age <span class="token builtin">int</span>
+  gender <span class="token builtin">string</span>
+  address <span class="token builtin">string</span>
+<span class="token punctuation">}</span> <span class="token punctuation">{</span> <span class="token string">"Shenfq"</span><span class="token punctuation">,</span> <span class="token number">25</span><span class="token punctuation">,</span> <span class="token string">"男"</span><span class="token punctuation">,</span> <span class="token string">"湖南长沙"</span><span class="token punctuation">}</span>
+</code></pre>
+<h2 id="%E6%96%B9%E6%B3%95">方法<a class="anchor" href="#%E6%96%B9%E6%B3%95">§</a></h2>
+<p>结构体只能定义一个个成员，而且成员都是基础类型，想要实现类似 OOP 中类的概念，还需要为结构体提供方法。实际上，我们可以为结构体指定方法，只需要在定义函数的函数名前面加上结构体名，就能定义该函数为结构体的方法。</p>
+<p>我们为之前的 <code>Person</code> 结构体定义一个 <code>sayHello</code> 的方法。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token punctuation">(</span>p Person<span class="token punctuation">)</span> <span class="token function">sayHello</span><span class="token punctuation">(</span>name <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"Hi %s, I'm %s, How are you?\n"</span><span class="token punctuation">,</span> name<span class="token punctuation">,</span> p<span class="token punctuation">.</span>name<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+p<span class="token punctuation">.</span><span class="token function">sayHello</span><span class="token punctuation">(</span><span class="token string">"Jack"</span><span class="token punctuation">)</span>
+</code></pre>
+<p>调用结构体方法的方式，和取结构体成员的值一样，也需要通过 <code>.</code> 操作符。</p>
+<p><img src="https://file.shenfq.com/pic/20210419103247.png" alt=""></p>
+<p>在 goland 的 Structure 中，能看到 <code>Person</code> 结构体是包含 <code>sayHello</code> 方法的，说明方法的定义即使不在结构体内，这个方法也是属于该结构体的。</p>
+<p><img src="https://file.shenfq.com/pic/20210419141849.png" alt=""></p>
+<h3 id="%E6%96%B9%E6%B3%95%E4%B8%AD%E7%9A%84%E6%8C%87%E9%92%88">方法中的指针<a class="anchor" href="#%E6%96%B9%E6%B3%95%E4%B8%AD%E7%9A%84%E6%8C%87%E9%92%88">§</a></h3>
+<p>有时候，我们调用方法的同时，需要修改结构体中一些成员的值，会发现原结构体的值并没有改变。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token punctuation">(</span>p Person<span class="token punctuation">)</span> <span class="token function">growth</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	p<span class="token punctuation">.</span>age<span class="token operator">++</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">var</span> p <span class="token operator">=</span> Person<span class="token punctuation">{</span> age<span class="token punctuation">:</span> <span class="token number">25</span> <span class="token punctuation">}</span>
+p<span class="token punctuation">.</span><span class="token function">growth</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<p>上面的代码中，我们定义的 <code>growth</code> 方法，会修改传入结构体中的 <code>age</code> 值。但是实际结果和我们预期的不一样。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">var</span> p <span class="token operator">=</span> Person<span class="token punctuation">{</span> age<span class="token punctuation">:</span> <span class="token number">25</span> <span class="token punctuation">}</span>
+
+p<span class="token punctuation">.</span><span class="token function">growth</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"age:"</span><span class="token punctuation">,</span> p<span class="token punctuation">.</span>age<span class="token punctuation">)</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/20210419161602.png" alt=""></p>
+<p>这是由于，传入方法中的结构体，是原结构体复制后的值，需要修改原结构体，就需要给方法传入其指针。只需要在方法定义结构体参数时，加上 <code>*</code> 号，表示变量 <code>p</code> 为结构体指针。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token punctuation">(</span>p <span class="token operator">*</span>Person<span class="token punctuation">)</span> <span class="token function">growth</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	p<span class="token punctuation">.</span>age<span class="token operator">++</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/20210419161824.png" alt=""></p></article></section><footer>Powered by <a href="https://github.com/xcatliu/pagic" target="_blank">Pagic</a></footer><script src="https://cdn.pagic.org/react@16.13.1/umd/react.production.min.js"></script><script src="https://cdn.pagic.org/react-dom@16.13.1/umd/react-dom.production.min.js"></script><script type="module" src="/index.js"></script></body></html>
