@@ -22,7 +22,7 @@ tags:
 ```go
 type Person struct {
   name string
-	age int
+  age int
   gender string
   address string
 }
