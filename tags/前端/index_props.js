@@ -564,6 +564,10 @@ export default {
                 "count": 2
             },
             {
+                "name": "随便写写",
+                "count": 2
+            },
+            {
                 "name": "Git",
                 "count": 1
             },
@@ -581,10 +585,6 @@ export default {
             },
             {
                 "name": "读后感",
-                "count": 1
-            },
-            {
-                "name": "随便写写",
                 "count": 1
             }
         ],
@@ -902,6 +902,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "消费主义",
+                "count": 1
+            },
+            {
                 "name": "深度学习",
                 "count": 1
             },
@@ -911,6 +915,10 @@ export default {
             },
             {
                 "name": "状态管理",
+                "count": 1
+            },
+            {
+                "name": "理性消费",
                 "count": 1
             },
             {
@@ -951,6 +959,10 @@ export default {
             },
             {
                 "name": "负载均衡",
+                "count": 1
+            },
+            {
+                "name": "随便写写",
                 "count": 1
             }
         ]
