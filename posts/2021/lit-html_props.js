@@ -68,6 +68,46 @@ export default {
         "isPost": true,
         "posts": [
             {
+                "pagePath": "posts/2021/go/go 反射机制.md",
+                "title": "Go 反射机制",
+                "link": "posts/2021/go/go 反射机制.html",
+                "date": "2021/04/29",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "Go"
+                ],
+                "tags": [
+                    "Go",
+                    "反射机制"
+                ],
+                "excerpt": "因为没有强类型语言的经验，反射这个概念，之前确实没怎么接触过。在维基百科上搜了一下，具体解释如下： go 中的反射也是这种作用，可以在程序运行期间，获取变量的类型与值的信息，然后进行访问或或者修改。go 语言中，内置了...",
+                "cover": "https://file.shenfq.com/pic/20210429141331.png"
+            },
+            {
+                "pagePath": "posts/2021/go/go 错误处理.md",
+                "title": "Go 错误处理",
+                "link": "posts/2021/go/go 错误处理.html",
+                "date": "2021/04/28",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "Go"
+                ],
+                "tags": [
+                    "Go",
+                    "错误处理"
+                ],
+                "excerpt": "构造 error 在 go 语言中，有一个预定义的接口：error，该接口自带一个 Error() 方法，调用该方法会返回一个字符串。 type error interface { Error() string } 调用该方法，会返回当前错误的具体结果。一般有下面几种方式生成...",
+                "cover": "https://file.shenfq.com/pic/20210427164350.png"
+            },
+            {
                 "pagePath": "posts/2021/消费主义.md",
                 "title": "消费主义的陷阱",
                 "link": "posts/2021/消费主义.html",
@@ -1435,16 +1475,16 @@ export default {
                 "count": 8
             },
             {
+                "name": "Go",
+                "count": 7
+            },
+            {
                 "name": "前端工程",
                 "count": 7
             },
             {
                 "name": "模块化",
                 "count": 6
-            },
-            {
-                "name": "Go",
-                "count": 5
             },
             {
                 "name": "年终总结",
@@ -1501,6 +1541,10 @@ export default {
                 "count": 9
             },
             {
+                "name": "Go",
+                "count": 7
+            },
+            {
                 "name": "JavaScript",
                 "count": 7
             },
@@ -1523,10 +1567,6 @@ export default {
             {
                 "name": "感悟",
                 "count": 6
-            },
-            {
-                "name": "Go",
-                "count": 5
             },
             {
                 "name": "React",
@@ -1761,6 +1801,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "反射机制",
+                "count": 1
+            },
+            {
                 "name": "变量",
                 "count": 1
             },
@@ -1854,6 +1898,10 @@ export default {
             },
             {
                 "name": "负载均衡",
+                "count": 1
+            },
+            {
+                "name": "错误处理",
                 "count": 1
             },
             {

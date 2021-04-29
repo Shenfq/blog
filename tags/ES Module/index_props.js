@@ -48,16 +48,16 @@ export default {
                 "count": 8
             },
             {
+                "name": "Go",
+                "count": 7
+            },
+            {
                 "name": "前端工程",
                 "count": 7
             },
             {
                 "name": "模块化",
                 "count": 6
-            },
-            {
-                "name": "Go",
-                "count": 5
             },
             {
                 "name": "年终总结",
@@ -114,6 +114,10 @@ export default {
                 "count": 9
             },
             {
+                "name": "Go",
+                "count": 7
+            },
+            {
                 "name": "JavaScript",
                 "count": 7
             },
@@ -136,10 +140,6 @@ export default {
             {
                 "name": "感悟",
                 "count": 6
-            },
-            {
-                "name": "Go",
-                "count": 5
             },
             {
                 "name": "React",
@@ -374,6 +374,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "反射机制",
+                "count": 1
+            },
+            {
                 "name": "变量",
                 "count": 1
             },
@@ -467,6 +471,10 @@ export default {
             },
             {
                 "name": "负载均衡",
+                "count": 1
+            },
+            {
+                "name": "错误处理",
                 "count": 1
             },
             {

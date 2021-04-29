@@ -1,0 +1,148 @@
+<!doctype html><html class="" data-reactroot=""><head><script src="/assets/hm.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous"/>
+<meta data-react-helmet="true" charset="utf-8"/><meta data-react-helmet="true" http-equiv="x-ua-compatible" content="ie=edge"/><meta data-react-helmet="true" name="description" content="前端工程师，爱折腾，擅长 JavaScript，欢迎关注我的公众号「更了不起的前端」"/><meta data-react-helmet="true" name="viewport" content="width=device-width, initial-scale=1"/>
+<title data-react-helmet="true">Go 反射机制 · 自然醒的博客</title>
+<link data-react-helmet="true" rel="stylesheet" href="/assets/index.css"/><link data-react-helmet="true" id="prismTheme" rel="stylesheet" href="/assets/prism.css"/>
+<script data-react-helmet="true" >
+    const shouldSetIsDark = document.cookie.includes('is_dark=1') ? true : document.cookie.includes('is_dark=0') ? false : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (shouldSetIsDark) {
+      document.documentElement.classList.add('is_dark');
+      document.getElementById('prismTheme').href = "/assets/prism_tomorrow.css";
+    }
+  </script>
+</head><body><a class="czs-menu-l show_on_mobile aside_button_open" href="#" style="background-image:url(&quot;/assets/czs-menu-l.svg&quot;)"></a><a class="show_on_mobile aside_button_text" href="/">自然醒的博客</a><aside class="hide_on_mobile"><div class="aside_card"><a class="czs-menu-l show_on_mobile aside_button_close" href="#" style="background-image:url(&quot;/assets/czs-close-l.svg&quot;)"></a><h1><a href="/">自然醒的博客</a></h1><p class="description">前端工程师，爱折腾，擅长 JavaScript，欢迎关注我的公众号「更了不起的前端」</p><ul class="social list_style_none"><li class="flex_center"><a class="czs-github-logo" href="https://github.com/Shenfq" target="_blank" style="background-image:url(&quot;/assets/czs-github-logo.svg&quot;)"></a></li><li class="flex_center"><a class="czs-message-l" href="mailto:shenfq95@foxmail.com" target="_blank" style="background-image:url(&quot;/assets/czs-message-l.svg&quot;)"></a></li><li style="flex-grow:1"></li><li class="toggle_dark flex_center"><span class="czs-sun" style="background-image:url(&quot;/assets/czs-sun.svg&quot;)"></span><span class="czs-sun-l" style="background-image:url(&quot;/assets/czs-sun-l.svg&quot;)"></span><span class="czs-moon" style="background-image:url(&quot;/assets/czs-moon.svg&quot;)"></span><span class="czs-moon-l" style="background-image:url(&quot;/assets/czs-moon-l.svg&quot;)"></span></li></ul><nav><ul class="menu list_style_none"><li><a class="flex_center" href="/"><span class="czs-home-l" style="background-image:url(&quot;/assets/czs-home-l.svg&quot;)"></span>首页</a></li><li><a class="flex_center" href="/categories/"><span class="czs-category-l" style="background-image:url(&quot;/assets/czs-category-l.svg&quot;)"></span>分类</a></li><li><a class="flex_center" href="/tags/"><span class="czs-tag-l" style="background-image:url(&quot;/assets/czs-tag-l.svg&quot;)"></span>标签</a></li><li><a class="flex_center" href="/about/"><span class="czs-about-l" style="background-image:url(&quot;/assets/czs-about-l.svg&quot;)"></span>关于</a></li><li><a class="flex_center" href="/archives/"><span class="czs-box-l" style="background-image:url(&quot;/assets/czs-box-l.svg&quot;)"></span>归档</a></li><li><a class="flex_center" href="/links/index.html"><span class="czs-link-l" style="background-image:url(&quot;/assets/czs-link-l.svg&quot;)"></span>友情链接</a></li></ul></nav></div><nav class="toc"><ol><li><a href="#%E5%8F%8D%E5%B0%84%E7%B1%BB%E5%9E%8B">反射类型</a><ol><li><a href="#%E7%B1%BB%E5%9E%8B%E4%B8%8E%E7%A7%8D%E7%B1%BB">类型与种类</a></li></ol></li><li><a href="#%E5%8F%8D%E5%B0%84%E5%80%BC">反射值</a><ol><li><a href="#%E4%BF%AE%E6%94%B9%E5%80%BC">修改值</a></li><li><a href="#%E5%80%BC%E5%AF%B9%E8%B1%A1%E4%B8%8E%E7%BB%93%E6%9E%84%E4%BD%93">值对象与结构体</a><ol></ol></li></ol></li></ol></nav></aside><section class="main"><h1>Go 反射机制</h1><div class="main_post_meta"><time dateTime="2021/04/29">2021-04-29</time> · <!-- -->shenfq</div><article><p>因为没有强类型语言的经验，反射这个概念，之前确实没怎么接触过。在维基百科上搜了一下，具体解释如下：</p>
+<blockquote>
+<p>在计算机学中，反射式编程（英语：reflective programming）或反射（英语：reflection），是指计算机程序在运行时（runtime）可以访问、检测和修改它本身状态或行为的一种能力。用比喻来说，反射就是程序在运行的时候能够“观察”并且修改自己的行为。</p>
+</blockquote>
+<p>go 中的反射也是这种作用，可以在程序运行期间，获取变量的类型与值的信息，然后进行访问或或者修改。go 语言中，内置了 <code>reflect</code> 包，用来获取一个变量的类型（<code>type</code>）与值（<code>value</code>），对应的方法分别为 <code>reflect.TypeOf()</code> 和 <code>reflect.ValueOf()</code>。</p>
+<h2 id="%E5%8F%8D%E5%B0%84%E7%B1%BB%E5%9E%8B">反射类型<a class="anchor" href="#%E5%8F%8D%E5%B0%84%E7%B1%BB%E5%9E%8B">§</a></h2>
+<p><code>TypeOf</code> 方法，会返回该变量的类型对象，类型对象下可以获取到变量的类型与种类。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">import</span> <span class="token punctuation">(</span>
+	<span class="token string">"fmt"</span>
+	<span class="token string">"reflect"</span>
+<span class="token punctuation">)</span>
+
+<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token comment">// 定义一个int类型的变量</span>
+	<span class="token keyword">var</span> i <span class="token builtin">int</span> <span class="token operator">=</span> <span class="token number">1</span>
+	<span class="token comment">// 获取变量的类型对象</span>
+	<span class="token keyword">var</span> typeOfNum <span class="token operator">=</span> reflect<span class="token punctuation">.</span><span class="token function">TypeOf</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span> 
+
+  <span class="token comment">// 输出类型与种类</span>
+  typeOfNumName <span class="token operator">=</span> typeOfNum<span class="token punctuation">.</span><span class="token function">Name</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  typeOfNumKind <span class="token operator">=</span> typeOfNum<span class="token punctuation">.</span><span class="token function">Kind</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"name: %s, kind: %s"</span><span class="token punctuation">,</span> typeOfNumName<span class="token punctuation">,</span> typeOfNumKind<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>可以看到，此时的类型与种类都为 <code>int</code>。</p>
+<p><img src="https://file.shenfq.com/pic/20210429141331.png" alt=""></p>
+<h3 id="%E7%B1%BB%E5%9E%8B%E4%B8%8E%E7%A7%8D%E7%B1%BB">类型与种类<a class="anchor" href="#%E7%B1%BB%E5%9E%8B%E4%B8%8E%E7%A7%8D%E7%B1%BB">§</a></h3>
+<p>类型表示定义变量的时候指定的类型，可以反映 <code>type</code> 关键字定义的类型，而种类是变量最终归属的类型。说起来可能比较苍白，我们直接上代码。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">type</span> num <span class="token builtin">int</span>
+
+<span class="token comment">// 定义一个num类型的变量</span>
+<span class="token keyword">var</span> i num <span class="token operator">=</span> <span class="token number">1</span>
+<span class="token keyword">var</span> typeOfNum <span class="token operator">=</span> reflect<span class="token punctuation">.</span><span class="token function">TypeOf</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span> 
+</code></pre>
+<p>可以看到，此时的类型为 <code>num</code>，种类为 <code>int</code>。</p>
+<p><img src="https://file.shenfq.com/pic/20210429142610.png" alt=""></p>
+<p>对于一些引用类型的变量，比如切片、函数、结构体，<code>kind</code> 都能准确反映其底层的类型。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">printTypeOf</span><span class="token punctuation">(</span>typeOf reflect<span class="token punctuation">.</span>Type<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"name: %s, kind: %s\n"</span><span class="token punctuation">,</span> typeOf<span class="token punctuation">.</span><span class="token function">Name</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> typeOf<span class="token punctuation">.</span><span class="token function">Kind</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">type</span> Person <span class="token keyword">struct</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+<span class="token keyword">type</span> IntSlice <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">int</span>
+<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">var</span> a <span class="token operator">=</span> IntSlice<span class="token punctuation">{</span><span class="token punctuation">}</span>
+	<span class="token keyword">var</span> b <span class="token operator">=</span> Person<span class="token punctuation">{</span><span class="token punctuation">}</span>
+	<span class="token function">printTypeOf</span><span class="token punctuation">(</span>reflect<span class="token punctuation">.</span><span class="token function">TypeOf</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">)</span>
+	<span class="token function">printTypeOf</span><span class="token punctuation">(</span>reflect<span class="token punctuation">.</span><span class="token function">TypeOf</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/20210429144206.png" alt=""></p>
+<p>而面对匿名结构体或者匿名函数，其类型值会返回为空。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">var</span> a <span class="token operator">=</span> <span class="token keyword">struct</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">{</span><span class="token punctuation">}</span>
+	<span class="token function">printTypeOf</span><span class="token punctuation">(</span>reflect<span class="token punctuation">.</span><span class="token function">TypeOf</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/20210429144259.png" alt=""></p>
+<h2 id="%E5%8F%8D%E5%B0%84%E5%80%BC">反射值<a class="anchor" href="#%E5%8F%8D%E5%B0%84%E5%80%BC">§</a></h2>
+<p><code>ValueOf</code> 方法，可以获取一个变量的值。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">3.1415926</span>
+<span class="token keyword">var</span> s <span class="token operator">=</span> <span class="token string">"欢迎关注我的公众号：『自然醒的笔记本』"</span>
+
+fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span>reflect<span class="token punctuation">.</span><span class="token function">ValueOf</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">)</span>
+fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span>reflect<span class="token punctuation">.</span><span class="token function">ValueOf</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/20210429153206.png" alt=""></p>
+<p>通过反射的值对象，也能取到变量的种类，并且还能根据其种类，调用对应的方法获取变量的真实值。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">100</span>
+<span class="token keyword">var</span> v <span class="token operator">=</span> reflect<span class="token punctuation">.</span><span class="token function">ValueOf</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span>
+
+fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span>v<span class="token punctuation">.</span><span class="token function">Int</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// 如果值是 Int 类型，可以通过 Int 方法获取具体值</span>
+fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span>v<span class="token punctuation">.</span><span class="token function">Kind</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/20210429154424.png" alt=""></p>
+<h3 id="%E4%BF%AE%E6%94%B9%E5%80%BC">修改值<a class="anchor" href="#%E4%BF%AE%E6%94%B9%E5%80%BC">§</a></h3>
+<p>通过反射得到的值对象，可以对变量本身的值进行修改。首先，在获取反射值时，不能直接获取变量的反射值，而是要先取其指针的值对象。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">100</span>
+<span class="token keyword">var</span> v <span class="token operator">=</span> reflect<span class="token punctuation">.</span><span class="token function">ValueOf</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>i<span class="token punctuation">)</span> <span class="token comment">// 取出变量i的指针的值对象</span>
+
+fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span>v<span class="token punctuation">.</span><span class="token function">Kind</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> v<span class="token punctuation">)</span>
+</code></pre>
+<p>取出指针的值对象之后，不能立即赋值，因为此时拿到的是变量的地址。</p>
+<p><img src="https://file.shenfq.com/pic/20210429155741.png" alt=""></p>
+<p>要赋值的话，需要先调用 <code>Elem</code> 方法，取出具体元素，然后进行赋值。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">100</span>
+<span class="token keyword">var</span> v <span class="token operator">=</span> reflect<span class="token punctuation">.</span><span class="token function">ValueOf</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>i<span class="token punctuation">)</span> <span class="token comment">// 取出变量i的指针的值对象</span>
+
+<span class="token keyword">var</span> e <span class="token operator">=</span> v<span class="token punctuation">.</span><span class="token function">Elem</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+e<span class="token punctuation">.</span><span class="token function">SetInt</span><span class="token punctuation">(</span><span class="token number">500</span><span class="token punctuation">)</span> <span class="token comment">// 修改元素值</span>
+
+fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span><span class="token function">Kind</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> i<span class="token punctuation">)</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/20210429155959.png" alt=""></p>
+<h3 id="%E5%80%BC%E5%AF%B9%E8%B1%A1%E4%B8%8E%E7%BB%93%E6%9E%84%E4%BD%93">值对象与结构体<a class="anchor" href="#%E5%80%BC%E5%AF%B9%E8%B1%A1%E4%B8%8E%E7%BB%93%E6%9E%84%E4%BD%93">§</a></h3>
+<p>前面介绍过，通过反射可以得到变量的值，对于结构体来说，也是一样。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">type</span> Person <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+	name <span class="token builtin">string</span>
+	age <span class="token builtin">int</span>
+	gender <span class="token builtin">string</span>
+	address <span class="token builtin">string</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">var</span> p <span class="token operator">=</span> Person<span class="token punctuation">{</span><span class="token string">"Shenfq"</span><span class="token punctuation">,</span> <span class="token number">25</span><span class="token punctuation">,</span> <span class="token string">"男"</span><span class="token punctuation">,</span> <span class="token string">"湖南长沙"</span><span class="token punctuation">}</span>
+<span class="token keyword">var</span> v <span class="token operator">=</span> reflect<span class="token punctuation">.</span><span class="token function">ValueOf</span><span class="token punctuation">(</span>p<span class="token punctuation">)</span>
+
+fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span>v<span class="token punctuation">.</span><span class="token function">Kind</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> v<span class="token punctuation">)</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/20210429160303.png" alt=""></p>
+<p>反射值对象还提供了一些方法，专门用来针对结构体成员的信息获取。</p>
+<h4 id="numfield">NumField()<a class="anchor" href="#numfield">§</a></h4>
+<p><code>NumField()</code> 可以获取结构体成员的具体数量。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">var</span> p <span class="token operator">=</span> Person<span class="token punctuation">{</span><span class="token string">"Shenfq"</span><span class="token punctuation">,</span> <span class="token number">25</span><span class="token punctuation">,</span> <span class="token string">"男"</span><span class="token punctuation">,</span> <span class="token string">"湖南长沙"</span><span class="token punctuation">}</span>
+<span class="token keyword">var</span> v <span class="token operator">=</span> reflect<span class="token punctuation">.</span><span class="token function">ValueOf</span><span class="token punctuation">(</span>p<span class="token punctuation">)</span>
+
+fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"Person 结构体成员数:"</span><span class="token punctuation">,</span> v<span class="token punctuation">.</span><span class="token function">NumField</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/20210429160723.png" alt=""></p>
+<h4 id="field">Field()<a class="anchor" href="#field">§</a></h4>
+<p><code>Field()</code> 可以获取结构体指定索引位置的成员的反射值。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">var</span> p <span class="token operator">=</span> Person<span class="token punctuation">{</span><span class="token string">"Shenfq"</span><span class="token punctuation">,</span> <span class="token number">25</span><span class="token punctuation">,</span> <span class="token string">"男"</span><span class="token punctuation">,</span> <span class="token string">"湖南长沙"</span><span class="token punctuation">}</span>
+<span class="token keyword">var</span> v <span class="token operator">=</span> reflect<span class="token punctuation">.</span><span class="token function">ValueOf</span><span class="token punctuation">(</span>p<span class="token punctuation">)</span>
+<span class="token keyword">var</span> num <span class="token operator">=</span> v<span class="token punctuation">.</span><span class="token function">NumField</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> i <span class="token operator">:=</span><span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> num<span class="token punctuation">;</span> i<span class="token operator">++</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> val <span class="token operator">=</span> v<span class="token punctuation">.</span><span class="token function">Field</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span>
+  fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"Person[%d]: %s %v\n"</span><span class="token punctuation">,</span> i<span class="token punctuation">,</span> val<span class="token punctuation">.</span><span class="token function">Type</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> val<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/20210429161221.png" alt=""></p>
+<h4 id="fieldbyname">FieldByName()<a class="anchor" href="#fieldbyname">§</a></h4>
+<p><code>FieldByName()</code> 可以获取结构体指定成员名称的成员的反射值。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">var</span> p <span class="token operator">=</span> Person<span class="token punctuation">{</span><span class="token string">"Shenfq"</span><span class="token punctuation">,</span> <span class="token number">25</span><span class="token punctuation">,</span> <span class="token string">"男"</span><span class="token punctuation">,</span> <span class="token string">"湖南长沙"</span><span class="token punctuation">}</span>
+<span class="token keyword">var</span> v <span class="token operator">=</span> reflect<span class="token punctuation">.</span><span class="token function">ValueOf</span><span class="token punctuation">(</span>p<span class="token punctuation">)</span>
+<span class="token keyword">var</span> vOfName <span class="token operator">=</span> v<span class="token punctuation">.</span><span class="token function">FieldByName</span><span class="token punctuation">(</span><span class="token string">"name"</span><span class="token punctuation">)</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"Person[name]: %s %v\n"</span><span class="token punctuation">,</span> vOfName<span class="token punctuation">.</span><span class="token function">Type</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> vOfName<span class="token punctuation">)</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/20210429161530.png" alt=""></p></article></section><footer>Powered by <a href="https://github.com/xcatliu/pagic" target="_blank">Pagic</a></footer><script src="https://cdn.pagic.org/react@16.13.1/umd/react.production.min.js"></script><script src="https://cdn.pagic.org/react-dom@16.13.1/umd/react-dom.production.min.js"></script><script type="module" src="/index.js"></script></body></html>

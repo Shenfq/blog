@@ -1,0 +1,151 @@
+<!doctype html><html class="" data-reactroot=""><head><script src="/assets/hm.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous"/>
+<meta data-react-helmet="true" charset="utf-8"/><meta data-react-helmet="true" http-equiv="x-ua-compatible" content="ie=edge"/><meta data-react-helmet="true" name="description" content="前端工程师，爱折腾，擅长 JavaScript，欢迎关注我的公众号「更了不起的前端」"/><meta data-react-helmet="true" name="viewport" content="width=device-width, initial-scale=1"/>
+<title data-react-helmet="true">Go 错误处理 · 自然醒的博客</title>
+<link data-react-helmet="true" rel="stylesheet" href="/assets/index.css"/><link data-react-helmet="true" id="prismTheme" rel="stylesheet" href="/assets/prism.css"/>
+<script data-react-helmet="true" >
+    const shouldSetIsDark = document.cookie.includes('is_dark=1') ? true : document.cookie.includes('is_dark=0') ? false : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (shouldSetIsDark) {
+      document.documentElement.classList.add('is_dark');
+      document.getElementById('prismTheme').href = "/assets/prism_tomorrow.css";
+    }
+  </script>
+</head><body><a class="czs-menu-l show_on_mobile aside_button_open" href="#" style="background-image:url(&quot;/assets/czs-menu-l.svg&quot;)"></a><a class="show_on_mobile aside_button_text" href="/">自然醒的博客</a><aside class="hide_on_mobile"><div class="aside_card"><a class="czs-menu-l show_on_mobile aside_button_close" href="#" style="background-image:url(&quot;/assets/czs-close-l.svg&quot;)"></a><h1><a href="/">自然醒的博客</a></h1><p class="description">前端工程师，爱折腾，擅长 JavaScript，欢迎关注我的公众号「更了不起的前端」</p><ul class="social list_style_none"><li class="flex_center"><a class="czs-github-logo" href="https://github.com/Shenfq" target="_blank" style="background-image:url(&quot;/assets/czs-github-logo.svg&quot;)"></a></li><li class="flex_center"><a class="czs-message-l" href="mailto:shenfq95@foxmail.com" target="_blank" style="background-image:url(&quot;/assets/czs-message-l.svg&quot;)"></a></li><li style="flex-grow:1"></li><li class="toggle_dark flex_center"><span class="czs-sun" style="background-image:url(&quot;/assets/czs-sun.svg&quot;)"></span><span class="czs-sun-l" style="background-image:url(&quot;/assets/czs-sun-l.svg&quot;)"></span><span class="czs-moon" style="background-image:url(&quot;/assets/czs-moon.svg&quot;)"></span><span class="czs-moon-l" style="background-image:url(&quot;/assets/czs-moon-l.svg&quot;)"></span></li></ul><nav><ul class="menu list_style_none"><li><a class="flex_center" href="/"><span class="czs-home-l" style="background-image:url(&quot;/assets/czs-home-l.svg&quot;)"></span>首页</a></li><li><a class="flex_center" href="/categories/"><span class="czs-category-l" style="background-image:url(&quot;/assets/czs-category-l.svg&quot;)"></span>分类</a></li><li><a class="flex_center" href="/tags/"><span class="czs-tag-l" style="background-image:url(&quot;/assets/czs-tag-l.svg&quot;)"></span>标签</a></li><li><a class="flex_center" href="/about/"><span class="czs-about-l" style="background-image:url(&quot;/assets/czs-about-l.svg&quot;)"></span>关于</a></li><li><a class="flex_center" href="/archives/"><span class="czs-box-l" style="background-image:url(&quot;/assets/czs-box-l.svg&quot;)"></span>归档</a></li><li><a class="flex_center" href="/links/index.html"><span class="czs-link-l" style="background-image:url(&quot;/assets/czs-link-l.svg&quot;)"></span>友情链接</a></li></ul></nav></div><nav class="toc"><ol><li><a href="#%E6%9E%84%E9%80%A0-error">构造 error</a><ol><li><a href="#%F0%9F%9B%A0%EF%B8%8Ferrorsnew">🛠️errors.New()</a></li><li><a href="#%F0%9F%9B%A0%EF%B8%8Ffmterrorf">🛠️fmt.Errorf()</a></li></ol></li><li><a href="#panic-%E4%B8%8E-recover">panic() 与 recover()</a><ol><li><a href="#panic">panic()</a></li><li><a href="#recover">recover()</a></li></ol></li></ol></nav></aside><section class="main"><h1>Go 错误处理</h1><div class="main_post_meta"><time dateTime="2021/04/28">2021-04-28</time> · <!-- -->shenfq</div><article><h2 id="%E6%9E%84%E9%80%A0-error">构造 error<a class="anchor" href="#%E6%9E%84%E9%80%A0-error">§</a></h2>
+<p>在 go 语言中，有一个预定义的接口：<code>error</code>，该接口自带一个 <code>Error()</code> 方法，调用该方法会返回一个字符串。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">type</span> <span class="token builtin">error</span> <span class="token keyword">interface</span> <span class="token punctuation">{</span>
+  <span class="token function">Error</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token builtin">string</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>调用该方法，会返回当前错误的具体结果。一般有下面几种方式生成 error。</p>
+<ul>
+<li><code>errors.New()</code></li>
+<li><code>fmt.Errorf()</code></li>
+</ul>
+<h3 id="%F0%9F%9B%A0%EF%B8%8Ferrorsnew">🛠️errors.New()<a class="anchor" href="#%F0%9F%9B%A0%EF%B8%8Ferrorsnew">§</a></h3>
+<p>调用 <code>errors.New()</code> 会返回一个 error 类型的结构体，该结构体内部会实现一个 <code>Error()</code> 方法， 调用该方法返回的结果为调用 <code>errors.New()</code> 方法时传入的内容。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">import</span> <span class="token punctuation">(</span>
+	<span class="token string">"errors"</span>
+	<span class="token string">"fmt"</span>
+<span class="token punctuation">)</span>
+
+<span class="token keyword">func</span> <span class="token function">divide</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token builtin">error</span><span class="token punctuation">,</span> <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">if</span> b <span class="token operator">==</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 被除数为0，则构造一个 error 结构体</span>
+		<span class="token keyword">return</span> errors<span class="token punctuation">.</span><span class="token function">New</span><span class="token punctuation">(</span><span class="token string">"被除数不能为0"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0</span>
+	<span class="token punctuation">}</span>
+	<span class="token keyword">var</span> result <span class="token operator">=</span> a <span class="token operator">/</span> b
+	<span class="token keyword">return</span> <span class="token boolean">nil</span><span class="token punctuation">,</span> result
+<span class="token punctuation">}</span>
+
+<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">var</span> err <span class="token builtin">error</span> <span class="token comment">// error 类型数据的初始值为 nil，类似于 js 中的 null</span>
+	<span class="token keyword">var</span> result <span class="token builtin">int</span>
+
+	err<span class="token punctuation">,</span> result <span class="token operator">=</span> <span class="token function">divide</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span>
+
+  <span class="token keyword">if</span> err <span class="token operator">==</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 如果 err 为 nil，说明运行正常</span>
+    fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"计算结果"</span><span class="token punctuation">,</span> result<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 如果 err 不为 nil，说明运行出错</span>
+    <span class="token comment">// 调用 error 结构体的 Error 方法，输出错误原因</span>
+    fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"计算出错"</span><span class="token punctuation">,</span> err<span class="token punctuation">.</span><span class="token function">Error</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>可以看到，上面的代码中，由于调用 <code>divide</code> 除法方法时，由于传入的被除数为 0。经过判断，会抛出一个由 <code>errors.New</code> 构造的 <code>error</code> 类型的结构体。</p>
+<p>我们将调用 <code>error.Error()</code> 方法返回的结果输出到控制台，可以发现其返回的结果，就是传入 <code>New</code> 方法的值。</p>
+<p>执行结果如下：</p>
+<p><img src="https://file.shenfq.com/pic/20210427164350.png" alt=""></p>
+<h3 id="%F0%9F%9B%A0%EF%B8%8Ffmterrorf">🛠️fmt.Errorf()<a class="anchor" href="#%F0%9F%9B%A0%EF%B8%8Ffmterrorf">§</a></h3>
+<p>通过 <code>fmt.Errorf()</code> 方法构造的 error 结构体，与调用  <code>errors.New()</code> 方法的结果类似。不同的是，<code>fmt.Errorf()</code> 方法会进行一次数据的格式化。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">divide</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token builtin">error</span><span class="token punctuation">,</span> <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">if</span> b <span class="token operator">==</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 将参数进行一次格式化，格式化后的字符串放入 error 中</span>
+		<span class="token keyword">return</span> fmt<span class="token punctuation">.</span><span class="token function">Errorf</span><span class="token punctuation">(</span><span class="token string">"数据 %d 不合法"</span><span class="token punctuation">,</span> b<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0</span>
+	<span class="token punctuation">}</span>
+	<span class="token keyword">var</span> result <span class="token operator">=</span> a <span class="token operator">/</span> b
+	<span class="token keyword">return</span> <span class="token boolean">nil</span><span class="token punctuation">,</span> result
+<span class="token punctuation">}</span>
+
+err<span class="token punctuation">,</span> result <span class="token operator">:=</span> <span class="token function">divide</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span>
+fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"计算出错"</span><span class="token punctuation">,</span> err<span class="token punctuation">.</span><span class="token function">Error</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<p>执行结果如下：</p>
+<p><img src="https://file.shenfq.com/pic/20210427165114.png" alt=""></p>
+<h2 id="panic-%E4%B8%8E-recover">panic() 与 recover()<a class="anchor" href="#panic-%E4%B8%8E-recover">§</a></h2>
+<h3 id="panic">panic()<a class="anchor" href="#panic">§</a></h3>
+<p><code>panic()</code> 相当于主动停止程序运行，调用时 <code>panic()</code> 时，需要传入中断原因。调用后，会在控制台输出中断原因，以及中断时的调用堆栈。我们可以改造一下之前的代码：</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">divide</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token builtin">error</span><span class="token punctuation">,</span> <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token keyword">if</span> b <span class="token operator">==</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 如果程序出错，直接停止运行</span>
+		<span class="token function">panic</span><span class="token punctuation">(</span><span class="token string">"被除数不能为0"</span><span class="token punctuation">)</span>
+	<span class="token punctuation">}</span>
+	<span class="token keyword">var</span> result <span class="token operator">=</span> a <span class="token operator">/</span> b
+	<span class="token keyword">return</span> <span class="token boolean">nil</span><span class="token punctuation">,</span> result
+<span class="token punctuation">}</span>
+
+<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  err<span class="token punctuation">,</span> result <span class="token operator">:=</span> <span class="token function">divide</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span>
+  fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"计算出错"</span><span class="token punctuation">,</span> err<span class="token punctuation">.</span><span class="token function">Error</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>在运行到 <code>panic()</code> 处，程序直接中断，并在控制台打印出了中断原因。</p>
+<p><img src="https://file.shenfq.com/pic/20210427174701.png" alt=""></p>
+<p><code>panic()</code> 可以理解为，js 程序中的 <code>throw new Error()</code> 的操作。那么，在 go 中有没有办法终止 <code>panic()</code> ，也就是类似于 <code>try-catch</code> 的操作，让程序回到正常的运行逻辑中呢？</p>
+<h3 id="recover">recover()<a class="anchor" href="#recover">§</a></h3>
+<p>在介绍 <code>recover()</code> 方法之前，还需要介绍一个 go 语言中的另一个关键字：<code>defer</code>。</p>
+<p><code>defer</code> 后的语句会在函数进行 return 操作之前调用，常用于<code>资源释放</code>、<code>错误捕获</code>、<code>日志输出</code>。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">getData</span><span class="token punctuation">(</span>table<span class="token punctuation">,</span> sql<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">defer</span> 中断连接<span class="token punctuation">(</span><span class="token punctuation">)</span>
+  db <span class="token operator">:=</span> 建立连接<span class="token punctuation">(</span>table<span class="token punctuation">)</span>
+  data <span class="token operator">:=</span> db<span class="token punctuation">.</span><span class="token keyword">select</span><span class="token punctuation">(</span>sql<span class="token punctuation">)</span>
+  <span class="token keyword">return</span> data
+<span class="token punctuation">}</span>
+</code></pre>
+<p><code>defer</code> 后的语句会被存储在一个类似于栈的数据结构内，在函数结束的时候，被定义的语句按顺序出栈，越后面定义的语句越先被调用。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">divide</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token builtin">int</span> <span class="token punctuation">{</span>
+  <span class="token keyword">defer</span> fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"除数为"</span><span class="token punctuation">,</span> b<span class="token punctuation">)</span>
+  <span class="token keyword">defer</span> fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"被除数为"</span><span class="token punctuation">,</span> a<span class="token punctuation">)</span>
+
+  result <span class="token operator">:=</span> a <span class="token operator">/</span> b
+  fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"计算结果为"</span><span class="token punctuation">,</span> result<span class="token punctuation">)</span>
+	<span class="token keyword">return</span> result
+<span class="token punctuation">}</span>
+
+<span class="token function">divide</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
+</code></pre>
+<p>上面的代码中，我们在函数开始运行的时候，先通过 <code>defer</code> 定义了两个输出语句，先输出<code>除数</code>，后输出<code>被除数</code>。</p>
+<p><img src="https://file.shenfq.com/pic/20210428114124.png" alt=""></p>
+<p>实际的运行结果是：</p>
+<ul>
+<li>先输出计算结果；</li>
+<li>然后输出被除数；</li>
+<li>最后输出除数；</li>
+</ul>
+<p>这和前面提到的，通过 <code>defer</code> 定义的语句会在函数结束的时候，按照出栈的方式进行执行，先定义的后执行。<code>defer</code> 除了会在函数结束的时候执行，出现异常的的时候也会先走 <code>defer</code> 的逻辑，也就是说，我们在调用了 <code>panic()</code> 方法后，程序中断过程中，也会先将 <code>defer</code> 内的语句运行一遍。</p>
+<p>这里我们重新定义之前的 <code>divide</code> 函数，在执行之前加上一个 <code>defer</code> 语句，<code>defer</code> 后面为一个自执行函数，该函数内会调用 <code>recover()</code> 方法。</p>
+<p><img src="https://file.shenfq.com/pic/20210428120154.png" alt=""></p>
+<p><code>recover()</code> 方法调用后，会捕获到当前的 <code>panic()</code> 抛出的异常，并进行返回，如果没有异常，则返回 <code>nil</code>。</p>
+<pre class="language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">divide</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token builtin">int</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 中断之前，调用 defer 后定义的语句</span>
+	<span class="token keyword">defer</span> <span class="token keyword">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+		<span class="token keyword">if</span> err <span class="token operator">:=</span> <span class="token function">recover</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+			fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"捕获错误"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+		<span class="token punctuation">}</span>
+	<span class="token punctuation">}</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+	<span class="token keyword">if</span> b <span class="token operator">==</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 函数运行被中断</span>
+		<span class="token function">panic</span><span class="token punctuation">(</span><span class="token string">"被除数不能为0"</span><span class="token punctuation">)</span>
+		<span class="token keyword">return</span> <span class="token number">0</span>
+	<span class="token punctuation">}</span>
+
+	<span class="token keyword">return</span> a <span class="token operator">/</span> b
+<span class="token punctuation">}</span>
+
+result <span class="token operator">:=</span> <span class="token function">divide</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span>
+fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"计算结果"</span><span class="token punctuation">,</span> result<span class="token punctuation">)</span>
+</code></pre>
+<p>上面的代码运行后，我们发现之前调用 <code>panic()</code> 中断的程序被恢复了，而且后面的计算结果也正常进行输出了。</p>
+<p><img src="https://file.shenfq.com/pic/20210428120544.png" alt=""></p>
+<p>这就有点类似于 <code>try-catch</code> 的逻辑了，只是 <code>recover</code> 需要放在 <code>defer</code> 关键词后的语句中，更像是 <code>catch</code> 和 <code>finally</code> 的结合。</p></article></section><footer>Powered by <a href="https://github.com/xcatliu/pagic" target="_blank">Pagic</a></footer><script src="https://cdn.pagic.org/react@16.13.1/umd/react.production.min.js"></script><script src="https://cdn.pagic.org/react-dom@16.13.1/umd/react-dom.production.min.js"></script><script type="module" src="/index.js"></script></body></html>
