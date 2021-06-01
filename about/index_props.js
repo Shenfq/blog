@@ -31,13 +31,35 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2021-04-29T08:32:33.000Z",
+    'date': "2021-06-01T09:57:21.000Z",
     'updated': null,
     'excerpt': "自我介绍 我是 shenfq ，微信名「自然醒」，互联网一线前端开发。博客除了会分享前端技术，偶尔也会分享我的生活以及读书清单。写博客也是为了强制自己有些输出，为了保证质量，更新不会特别频繁，期望能做到周更。 工作经历 -...",
     'cover': "https://file.shenfq.com/pic/20201209222204.png",
     'blog': {
         "isPost": false,
         "posts": [
+            {
+                "pagePath": "posts/2021/JavaScript 异步编程史.md",
+                "title": "JavaScript 异步编程史",
+                "link": "posts/2021/JavaScript 异步编程史.html",
+                "date": "2021/06/01",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "前端"
+                ],
+                "tags": [
+                    "JavaScript",
+                    "Promise",
+                    "Generator",
+                    "async/await"
+                ],
+                "excerpt": "前言 早期的 Web 应用中，与后台进行交互时，需要进行 form 表单的提交，然后在页面刷新后给用户反馈结果。在页面刷新过程做，后台会重新返回一段 HTML 代码，这段 HTML 中的大部分内容与之前页面基本相同，这势必造成了流量的...",
+                "cover": "https://file.shenfq.com/pic/20210531113319.png"
+            },
             {
                 "pagePath": "posts/2021/go/go 反射机制.md",
                 "title": "Go 反射机制",
@@ -1439,7 +1461,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 22
+                "count": 23
             },
             {
                 "name": "Node.js",
@@ -1512,11 +1534,11 @@ export default {
                 "count": 9
             },
             {
-                "name": "Go",
-                "count": 7
+                "name": "JavaScript",
+                "count": 8
             },
             {
-                "name": "JavaScript",
+                "name": "Go",
                 "count": 7
             },
             {
@@ -1573,6 +1595,10 @@ export default {
             },
             {
                 "name": "Koa",
+                "count": 2
+            },
+            {
+                "name": "Promise",
                 "count": 2
             },
             {
@@ -1640,6 +1666,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "async/await",
+                "count": 1
+            },
+            {
                 "name": "babel",
                 "count": 1
             },
@@ -1672,6 +1702,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "Generator",
+                "count": 1
+            },
+            {
                 "name": "git",
                 "count": 1
             },
@@ -1701,10 +1735,6 @@ export default {
             },
             {
                 "name": "npm",
-                "count": 1
-            },
-            {
-                "name": "Promise",
                 "count": 1
             },
             {

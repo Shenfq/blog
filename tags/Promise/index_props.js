@@ -15,6 +15,28 @@ export default {
         "isPost": false,
         "posts": [
             {
+                "pagePath": "posts/2021/JavaScript 异步编程史.md",
+                "title": "JavaScript 异步编程史",
+                "link": "posts/2021/JavaScript 异步编程史.html",
+                "date": "2021/06/01",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "前端"
+                ],
+                "tags": [
+                    "JavaScript",
+                    "Promise",
+                    "Generator",
+                    "async/await"
+                ],
+                "excerpt": "前言 早期的 Web 应用中，与后台进行交互时，需要进行 form 表单的提交，然后在页面刷新后给用户反馈结果。在页面刷新过程做，后台会重新返回一段 HTML 代码，这段 HTML 中的大部分内容与之前页面基本相同，这势必造成了流量的...",
+                "cover": "https://file.shenfq.com/pic/20210531113319.png"
+            },
+            {
                 "pagePath": "posts/2020/手把手教你实现 Promise .md",
                 "title": "手把手教你实现 Promise",
                 "link": "posts/2020/手把手教你实现 Promise .html",
@@ -39,7 +61,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 22
+                "count": 23
             },
             {
                 "name": "Node.js",
@@ -112,11 +134,11 @@ export default {
                 "count": 9
             },
             {
-                "name": "Go",
-                "count": 7
+                "name": "JavaScript",
+                "count": 8
             },
             {
-                "name": "JavaScript",
+                "name": "Go",
                 "count": 7
             },
             {
@@ -173,6 +195,10 @@ export default {
             },
             {
                 "name": "Koa",
+                "count": 2
+            },
+            {
+                "name": "Promise",
                 "count": 2
             },
             {
@@ -240,6 +266,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "async/await",
+                "count": 1
+            },
+            {
                 "name": "babel",
                 "count": 1
             },
@@ -272,6 +302,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "Generator",
+                "count": 1
+            },
+            {
                 "name": "git",
                 "count": 1
             },
@@ -301,10 +335,6 @@ export default {
             },
             {
                 "name": "npm",
-                "count": 1
-            },
-            {
-                "name": "Promise",
                 "count": 1
             },
             {

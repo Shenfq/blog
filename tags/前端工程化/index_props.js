@@ -239,7 +239,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 22
+                "count": 23
             },
             {
                 "name": "Node.js",
@@ -312,11 +312,11 @@ export default {
                 "count": 9
             },
             {
-                "name": "Go",
-                "count": 7
+                "name": "JavaScript",
+                "count": 8
             },
             {
-                "name": "JavaScript",
+                "name": "Go",
                 "count": 7
             },
             {
@@ -373,6 +373,10 @@ export default {
             },
             {
                 "name": "Koa",
+                "count": 2
+            },
+            {
+                "name": "Promise",
                 "count": 2
             },
             {
@@ -440,6 +444,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "async/await",
+                "count": 1
+            },
+            {
                 "name": "babel",
                 "count": 1
             },
@@ -472,6 +480,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "Generator",
+                "count": 1
+            },
+            {
                 "name": "git",
                 "count": 1
             },
@@ -501,10 +513,6 @@ export default {
             },
             {
                 "name": "npm",
-                "count": 1
-            },
-            {
-                "name": "Promise",
                 "count": 1
             },
             {

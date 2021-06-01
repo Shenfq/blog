@@ -1,0 +1,188 @@
+<!doctype html><html class="" data-reactroot=""><head><script src="/assets/hm.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous"/>
+<meta data-react-helmet="true" charset="utf-8"/><meta data-react-helmet="true" http-equiv="x-ua-compatible" content="ie=edge"/><meta data-react-helmet="true" name="description" content="前端工程师，爱折腾，擅长 JavaScript，欢迎关注我的公众号「更了不起的前端」"/><meta data-react-helmet="true" name="viewport" content="width=device-width, initial-scale=1"/>
+<title data-react-helmet="true">JavaScript 异步编程史 · 自然醒的博客</title>
+<link data-react-helmet="true" rel="stylesheet" href="/assets/index.css"/><link data-react-helmet="true" id="prismTheme" rel="stylesheet" href="/assets/prism.css"/>
+<script data-react-helmet="true" >
+    const shouldSetIsDark = document.cookie.includes('is_dark=1') ? true : document.cookie.includes('is_dark=0') ? false : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (shouldSetIsDark) {
+      document.documentElement.classList.add('is_dark');
+      document.getElementById('prismTheme').href = "/assets/prism_tomorrow.css";
+    }
+  </script>
+</head><body><a class="czs-menu-l show_on_mobile aside_button_open" href="#" style="background-image:url(&quot;/assets/czs-menu-l.svg&quot;)"></a><a class="show_on_mobile aside_button_text" href="/">自然醒的博客</a><aside class="hide_on_mobile"><div class="aside_card"><a class="czs-menu-l show_on_mobile aside_button_close" href="#" style="background-image:url(&quot;/assets/czs-close-l.svg&quot;)"></a><h1><a href="/">自然醒的博客</a></h1><p class="description">前端工程师，爱折腾，擅长 JavaScript，欢迎关注我的公众号「更了不起的前端」</p><ul class="social list_style_none"><li class="flex_center"><a class="czs-github-logo" href="https://github.com/Shenfq" target="_blank" style="background-image:url(&quot;/assets/czs-github-logo.svg&quot;)"></a></li><li class="flex_center"><a class="czs-message-l" href="mailto:shenfq95@foxmail.com" target="_blank" style="background-image:url(&quot;/assets/czs-message-l.svg&quot;)"></a></li><li style="flex-grow:1"></li><li class="toggle_dark flex_center"><span class="czs-sun" style="background-image:url(&quot;/assets/czs-sun.svg&quot;)"></span><span class="czs-sun-l" style="background-image:url(&quot;/assets/czs-sun-l.svg&quot;)"></span><span class="czs-moon" style="background-image:url(&quot;/assets/czs-moon.svg&quot;)"></span><span class="czs-moon-l" style="background-image:url(&quot;/assets/czs-moon-l.svg&quot;)"></span></li></ul><nav><ul class="menu list_style_none"><li><a class="flex_center" href="/"><span class="czs-home-l" style="background-image:url(&quot;/assets/czs-home-l.svg&quot;)"></span>首页</a></li><li><a class="flex_center" href="/categories/"><span class="czs-category-l" style="background-image:url(&quot;/assets/czs-category-l.svg&quot;)"></span>分类</a></li><li><a class="flex_center" href="/tags/"><span class="czs-tag-l" style="background-image:url(&quot;/assets/czs-tag-l.svg&quot;)"></span>标签</a></li><li><a class="flex_center" href="/about/"><span class="czs-about-l" style="background-image:url(&quot;/assets/czs-about-l.svg&quot;)"></span>关于</a></li><li><a class="flex_center" href="/archives/"><span class="czs-box-l" style="background-image:url(&quot;/assets/czs-box-l.svg&quot;)"></span>归档</a></li><li><a class="flex_center" href="/links/index.html"><span class="czs-link-l" style="background-image:url(&quot;/assets/czs-link-l.svg&quot;)"></span>友情链接</a></li></ul></nav></div><nav class="toc"><ol><li><a href="#%E5%89%8D%E8%A8%80">前言</a></li><li><a href="#%E4%BA%8B%E4%BB%B6%E4%B8%8E%E5%9B%9E%E8%B0%83">事件与回调</a><ol><li><a href="#%E6%9C%AA%E6%9D%A5%E8%BF%90%E8%A1%8C">未来运行</a></li><li><a href="#%E4%BA%8B%E4%BB%B6%E9%98%9F%E5%88%97">事件队列</a></li><li><a href="#%E7%BA%BF%E7%A8%8B%E7%9A%84%E9%98%BB%E5%A1%9E">线程的阻塞</a></li></ol></li><li><a href="#promise">Promise</a></li><li><a href="#generator--co">Generator &amp; co</a></li><li><a href="#asyncawait">async/await</a></li></ol></nav></aside><section class="main"><h1>JavaScript 异步编程史</h1><div class="main_post_meta"><time dateTime="2021/06/01">2021-06-01</time> · <!-- -->shenfq</div><article><h2 id="%E5%89%8D%E8%A8%80">前言<a class="anchor" href="#%E5%89%8D%E8%A8%80">§</a></h2>
+<p>早期的 Web 应用中，与后台进行交互时，需要进行 <code>form</code> 表单的提交，然后在页面刷新后给用户反馈结果。在页面刷新过程做，后台会重新返回一段 HTML 代码，这段 HTML 中的大部分内容与之前页面基本相同，这势必造成了流量的浪费，而且一来一回也延长了页面的响应时间，总是会让人觉得 Web 应用的体验感比不上客户端应用。</p>
+<p>2004 年，<strong>AJAX</strong> 即“<strong>Asynchronous JavaScript and XML</strong>”技术横空出世，让 Web 应用的体验得到了质的提升。再到 2006 年，jQuery 问世，将 Web 应用的开发体验也提高到了新的台阶。</p>
+<p>由于 JavaScript 语言单线程的特点，不管是事件的触发还是 AJAX 都是通过回调的方式进行异步任务的触发。如果我们想要线性的处理多个异步任务，在代码中就会出现如下的情况：</p>
+<pre class="language-js"><code class="language-js"><span class="token function">getUser</span><span class="token punctuation">(</span>token<span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">user</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">getClassID</span><span class="token punctuation">(</span>user<span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">id</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">getClassName</span><span class="token punctuation">(</span>id<span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">name</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>我们经常将这种代码称为：“回调地狱”。</p>
+<h2 id="%E4%BA%8B%E4%BB%B6%E4%B8%8E%E5%9B%9E%E8%B0%83">事件与回调<a class="anchor" href="#%E4%BA%8B%E4%BB%B6%E4%B8%8E%E5%9B%9E%E8%B0%83">§</a></h2>
+<p>众所周知，JavaScript 的运行时是跑在单线程上的，是基于事件模型来进行异步任务触发的，不需要考虑共享内存加锁的问题，绑定的事件会按照顺序齐齐整整的触发。要理解 JavaScript 的异步任务，首先就要理解 JavaScript 的事件模型。</p>
+<p>由于是异步任务，我们需要组织一段代码放到未来运行（指定时间结束时或者事件触发时），这一段代码我们通常放到一个匿名函数中，通常称为回调函数。</p>
+<pre class="language-js"><code class="language-js"><span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 在指定时间结束时，触发的回调</span>
+<span class="token punctuation">}</span>， <span class="token number">800</span><span class="token punctuation">)</span>
+<span class="token dom variable">window</span><span class="token punctuation">.</span><span class="token method function property-access">addEventListener</span><span class="token punctuation">(</span><span class="token string">"resize"</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 当浏览器视窗发生变化时，触发的回调</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<h3 id="%E6%9C%AA%E6%9D%A5%E8%BF%90%E8%A1%8C">未来运行<a class="anchor" href="#%E6%9C%AA%E6%9D%A5%E8%BF%90%E8%A1%8C">§</a></h3>
+<p>前面说过回调函数的运行是在未来，这就说明回调中使用的变量并不是在回调声明阶段就固定的。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword control-flow">for</span> <span class="token punctuation">(</span><span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">3</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token string">"i ="</span><span class="token punctuation">,</span> i<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>这里连续声明了三个异步任务，<strong>100毫秒</strong> 后会输出变量 <code>i</code> 的结果，按照正常的逻辑应该会输出 <code>0、1、2</code> 这三个结果。</p>
+<p>然而，事实并非如此，这也是我们刚开始接触 JavaScript 的时候会遇到的问题，因为回调函数的实际运行时机是在未来，所以输出的 <code>i</code> 的值是循环结束时的值，三个异步任务的结果一致，会输出三个 <code>i = 3</code>。</p>
+<p><img src="https://file.shenfq.com/pic/20210531113319.png" alt=""></p>
+<p>经历过这个问题的同学，一般都知道，我们可以通过闭包的方式，或者重新声明局部变量的方式解决这个问题。</p>
+<h3 id="%E4%BA%8B%E4%BB%B6%E9%98%9F%E5%88%97">事件队列<a class="anchor" href="#%E4%BA%8B%E4%BB%B6%E9%98%9F%E5%88%97">§</a></h3>
+<p>事件绑定之后，会将所有的回调函数存储起来，然后在运行过程中，会有另外的线程对这些异步调用的回调进行调度的处理，一旦<strong>满足“触发”条件</strong>就会将回调函数放入到对应的事件队列（<code>这里只是简单的理解成一个队列，实际存在两个事件队列：宏任务、微任务</code>）中。</p>
+<p>满足触发条件一般有以下几种情况：</p>
+<ol>
+<li>DOM 相关的操作进行的事件触发，比如点击、移动、失焦等行为；</li>
+<li>IO 相关的操作，文件读取完成、网络请求结束等；</li>
+<li>时间相关的操作，到达定时任务的约定时间；</li>
+</ol>
+<p>上面的这些行为发生时，代码中之前指定的回调函数就会被放入一个任务队列中，主线程一旦空闲，就会将其中的任务按照<strong>先进先出</strong>的流程一一执行。当有新的事件被触发时，又会重新放入到回调中，如此循环🔄，所以 JavaScript 的这一机制通常被称为“事件循环机制”。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword control-flow">for</span> <span class="token punctuation">(</span><span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span> i <span class="token operator">&lt;=</span> <span class="token number">3</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> x <span class="token operator">=</span> i
+  <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">第</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>x<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">个setTimout被执行</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>可以看到，其运行顺序满足队列先进先出的特点，先声明的先被执行。</p>
+<p><img src="https://file.shenfq.com/pic/20210531164049.png" alt=""></p>
+<h3 id="%E7%BA%BF%E7%A8%8B%E7%9A%84%E9%98%BB%E5%A1%9E">线程的阻塞<a class="anchor" href="#%E7%BA%BF%E7%A8%8B%E7%9A%84%E9%98%BB%E5%A1%9E">§</a></h3>
+<p>由于 JavaScript 单线程的特点，定时器其实并不可靠，当代码遇到阻塞的情况，即使事件到达了触发的时间，也会一直等在主线程空闲才会运行。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> start <span class="token operator">=</span> <span class="token known-class-name class-name">Date</span><span class="token punctuation">.</span><span class="token method function property-access">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">实际等待时间: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token known-class-name class-name">Date</span><span class="token punctuation">.</span><span class="token method function property-access">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> start<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">ms</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">300</span><span class="token punctuation">)</span>
+
+<span class="token comment">// while循环让线程阻塞 800ms</span>
+<span class="token keyword control-flow">while</span><span class="token punctuation">(</span><span class="token known-class-name class-name">Date</span><span class="token punctuation">.</span><span class="token method function property-access">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> start <span class="token operator">&lt;</span> <span class="token number">800</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+</code></pre>
+<p>上面代码中，定时器设置了 <code>300ms</code> 后触发回调函数，如果代码没有遇到阻塞，正常情况下会 <code>300ms</code> 后，会输出等待时间。</p>
+<p>但是我们在还没加了一个 <code>while</code> 循环，这个循环会在 <code>800ms</code> 后才结束，主线程一直被这个循环阻塞在这里，导致时间到了回调函数也没有正常运行。</p>
+<p><img src="https://file.shenfq.com/pic/20210531143449.png" alt=""></p>
+<h2 id="promise">Promise<a class="anchor" href="#promise">§</a></h2>
+<p>事件回调的方式，在编码的过程中，就特别容易造成回调地狱。而 Promise 提供了一种更加线性的方式编写异步代码，有点类似于管道的机制。</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// 回调地狱</span>
+<span class="token function">getUser</span><span class="token punctuation">(</span>token<span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">user</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">getClassID</span><span class="token punctuation">(</span>user<span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">id</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">getClassName</span><span class="token punctuation">(</span>id<span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">name</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment">// Promise</span>
+<span class="token function">getUser</span><span class="token punctuation">(</span>token<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">user</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword control-flow">return</span> <span class="token function">getClassID</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">id</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword control-flow">return</span> <span class="token function">getClassName</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">name</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token keyword control-flow">catch</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">error</span><span class="token punctuation">(</span><span class="token string">'请求异常'</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>Promise 在很多语言中都有类似的实现，在 JavaScript 发展过程中，比较著名的框架 jQuery、Dojo 也都进行过类似的实现。2009 年，推出的 CommonJS 规范中，基于 <code>Dojo.Deffered</code> 的实现方式，提出 <code>Promise/A</code> 规范。也是这一年 Node.js 横空出世，Node.js 很多实现都是依照 CommonJS 规范来的，比较熟悉的就是其模块化方案。</p>
+<p>早期的 Node.js 中也实现了 Promise 对象，但是 2010 年的时候，Ry（Node.js 作者）认为 Promise 是一种比较上层的实现，而且 Node.js 的开发本来就依赖于 V8 引擎，V8 引擎原生也没有提供 Promise 的支持，所以后来 Node.js 的模块使用了 <code>error-first callback</code> 的风格（<code>cb(error, result)</code>）。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'fs'</span><span class="token punctuation">)</span>
+<span class="token comment">// 第一个参数为 Error 对象，如果不为空，则表示出现异常</span>
+fs<span class="token punctuation">.</span><span class="token method function property-access">readFile</span><span class="token punctuation">(</span><span class="token string">'./README.txt'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err<span class="token punctuation">,</span> buffer</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>err <span class="token operator">!==</span> <span class="token keyword null nil">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword control-flow">return</span>
+  <span class="token punctuation">}</span>
+  <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span>buffer<span class="token punctuation">.</span><span class="token method function property-access">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>这一决定也导致后来 Node.js 中出现了各式各样的 Promise 类库，比较出名的就是 <code>Q.js</code>、<code>Bluebird</code>。关于 Promise 的实现，之前有写过一篇文章，感兴趣可以看看：<a href="https://blog.shenfq.com/posts/2020/%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E5%AE%9E%E7%8E%B0%20Promise%20.html">《手把手教你实现 Promise》</a>。</p>
+<p>在 Node.js@8 之前，V8 原生的 Promise 实现有一些性能问题，导致原生 Promise 的性能甚至不如一些第三方的 Promise 库。</p>
+<p><img src="https://file.shenfq.com/pic/20210601151820.png" alt=""></p>
+<p>所以，低版本的 Node.js 项目中，经常会将 Promise 进行全局的替换：</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> <span class="token maybe-class-name">Bulebird</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'bluebird'</span><span class="token punctuation">)</span>
+global<span class="token punctuation">.</span><span class="token known-class-name class-name">Promise</span> <span class="token operator">=</span> <span class="token maybe-class-name">Bulebird</span>
+</code></pre>
+<h2 id="generator--co">Generator &amp; co<a class="anchor" href="#generator--co">§</a></h2>
+<p><code>Generator(生成器)</code> 是 ES6 提供的一种新的函数类型，主要是用于定义一个能自我迭代的函数。通过 <code>function *</code> 的语法能够构造一个 <code>Generator</code> 函数，函数执行后会返回一个<code>iteration(迭代器)</code>对象，该对象具有一个 <code>next()</code> 方法，每次调用 <code>next()</code> 方法就会在 <code>yield</code> 关键词前面暂停，直到再次调用 <code>next()</code> 方法。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token operator">*</span> <span class="token function">forEach</span><span class="token punctuation">(</span><span class="token parameter">array</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> len <span class="token operator">=</span> array<span class="token punctuation">.</span><span class="token property-access">length</span>
+  <span class="token keyword control-flow">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> len<span class="token punctuation">;</span> i <span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword control-flow">yield</span> i<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">const</span> it <span class="token operator">=</span> <span class="token function">forEach</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+it<span class="token punctuation">.</span><span class="token method function property-access">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// { value: 2, done: false }</span>
+it<span class="token punctuation">.</span><span class="token method function property-access">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// { value: 4, done: false }</span>
+it<span class="token punctuation">.</span><span class="token method function property-access">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// { value: 6, done: false }</span>
+it<span class="token punctuation">.</span><span class="token method function property-access">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// { value: undefined, done: true }</span>
+</code></pre>
+<p><code>next()</code> 方法会返回一个对象，对象有两个属性 <code>value</code>、<code>done</code>：</p>
+<ul>
+<li><code>value</code>：表示 <code>yield</code> 后面的值；</li>
+<li><code>done</code>：表示函数是否执行完毕；</li>
+</ul>
+<p>由于生成器函数具有中断执行的特点，将生成器函数当做一个异步操作的容器，再配合上 Promise 对象的 then 方法可以将交回异步逻辑的执行权，在每个 <code>yeild</code> 后面都加上一个 Promise 对象，就能让迭代器不停的往下执行。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token operator">*</span> <span class="token function">gen</span><span class="token punctuation">(</span><span class="token parameter">token</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> user <span class="token operator">=</span> <span class="token keyword control-flow">yield</span> <span class="token function">getUser</span><span class="token punctuation">(</span>token<span class="token punctuation">)</span>
+  <span class="token keyword">const</span> cId <span class="token operator">=</span> <span class="token keyword control-flow">yield</span> <span class="token function">getClassID</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span>
+  <span class="token keyword">const</span> name <span class="token operator">=</span> <span class="token keyword control-flow">yield</span> <span class="token function">getClassName</span><span class="token punctuation">(</span>cId<span class="token punctuation">)</span>
+  <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">const</span> g <span class="token operator">=</span> <span class="token function">gen</span><span class="token punctuation">(</span><span class="token string">'xxxx-token'</span><span class="token punctuation">)</span>
+
+<span class="token comment">// 执行 next 方法返回的 value 为一个 Promise 对象</span>
+<span class="token keyword">const</span> <span class="token punctuation">{</span> value<span class="token operator">:</span> promise1 <span class="token punctuation">}</span> <span class="token operator">=</span> g<span class="token punctuation">.</span><span class="token method function property-access">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+promise1<span class="token punctuation">.</span><span class="token method function property-access">then</span><span class="token punctuation">(</span><span class="token parameter">user</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+  <span class="token comment">// 传入第二个 next 方法的值，会被生成器中第一个 yield 关键词前面的变量接受</span>
+  <span class="token comment">// 往后推也是如此，第三个 next 方法的值，会被第二个 yield 前面的变量接受</span>
+  <span class="token comment">// 只有第一个 next 方法的值会被抛弃</span>
+  <span class="token keyword">const</span> <span class="token punctuation">{</span> value<span class="token operator">:</span> promise2 <span class="token punctuation">}</span> <span class="token operator">=</span> gen<span class="token punctuation">.</span><span class="token method function property-access">next</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token property-access">value</span>
+  promise2<span class="token punctuation">.</span><span class="token method function property-access">then</span><span class="token punctuation">(</span><span class="token parameter">cId</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> <span class="token punctuation">{</span> value<span class="token operator">:</span> promise3<span class="token punctuation">,</span> done <span class="token punctuation">}</span> <span class="token operator">=</span> gen<span class="token punctuation">.</span><span class="token method function property-access">next</span><span class="token punctuation">(</span>cId<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token property-access">value</span>
+    <span class="token comment">// 依次先后传递，直到 next 方法返回的 done 为 true</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>我们将上面的逻辑进行一下抽象，让每个 Promise 对象正常返回后，就自动调用 next，让迭代器进行自执行，直到执行完毕（也就是 <code>done</code> 为 <code>true</code>）。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">co</span><span class="token punctuation">(</span><span class="token parameter">gen<span class="token punctuation">,</span> <span class="token spread operator">...</span>args</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> g <span class="token operator">=</span> <span class="token function">gen</span><span class="token punctuation">(</span><span class="token spread operator">...</span>args<span class="token punctuation">)</span>
+  <span class="token keyword">function</span> <span class="token function">next</span><span class="token punctuation">(</span><span class="token parameter">data</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> <span class="token punctuation">{</span> value<span class="token operator">:</span> promise<span class="token punctuation">,</span> done <span class="token punctuation">}</span> <span class="token operator">=</span> g<span class="token punctuation">.</span><span class="token method function property-access">next</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span>
+    <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>done<span class="token punctuation">)</span> <span class="token keyword control-flow">return</span> promise
+    promise<span class="token punctuation">.</span><span class="token method function property-access">then</span><span class="token punctuation">(</span><span class="token parameter">res</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+      <span class="token function">next</span><span class="token punctuation">(</span>res<span class="token punctuation">)</span> <span class="token comment">// 将 promise 的结果传入下一个 yield</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+  
+  <span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// 开始自执行</span>
+<span class="token punctuation">}</span>
+
+<span class="token function">co</span><span class="token punctuation">(</span>gen<span class="token punctuation">,</span> <span class="token string">'xxxx-token'</span><span class="token punctuation">)</span>
+</code></pre>
+<p>这也就是 <code>koa</code> 早期的核心库 <code>co</code> 的实现逻辑，只是 <code>co</code> 进行了一些参数校验与错误处理。通过 generator 加上 co 能够让异步流程更加的简单易读，对开发者而言肯定是阶段欢喜的一件事。</p>
+<h2 id="asyncawait">async/await<a class="anchor" href="#asyncawait">§</a></h2>
+<p><code>async/await</code> 可以说是 JavaScript 异步变成的解决方案，其实本质上就是 Generator &amp; co 的一个语法糖，只需要在异步的生成器函数前加上 <code>async</code>，然后将生成器函数内的 <code>yield</code> 替换为 <code>await</code>。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">fun</span><span class="token punctuation">(</span><span class="token parameter">token</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> user <span class="token operator">=</span> <span class="token keyword control-flow">await</span> <span class="token function">getUser</span><span class="token punctuation">(</span>token<span class="token punctuation">)</span>
+  <span class="token keyword">const</span> cId <span class="token operator">=</span> <span class="token keyword control-flow">await</span> <span class="token function">getClassID</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span>
+  <span class="token keyword">const</span> name <span class="token operator">=</span> <span class="token keyword control-flow">await</span> <span class="token function">getClassName</span><span class="token punctuation">(</span>cId<span class="token punctuation">)</span>
+  <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+<span class="token function">fun</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<p><code>async</code> 函数将自执行器进行了内置，同时 <code>await</code> 后不限制为 Promise 对象，可以为任意值，而且 <code>async/await</code> 在语义上比起生成器的 yield 更加清楚，一眼就能明白这是一个异步操作。</p></article></section><footer>Powered by <a href="https://github.com/xcatliu/pagic" target="_blank">Pagic</a></footer><script src="https://cdn.pagic.org/react@16.13.1/umd/react.production.min.js"></script><script src="https://cdn.pagic.org/react-dom@16.13.1/umd/react-dom.production.min.js"></script><script type="module" src="/index.js"></script></body></html>
