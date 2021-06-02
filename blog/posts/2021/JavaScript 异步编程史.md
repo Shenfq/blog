@@ -14,7 +14,7 @@ tags:
 # JavaScript 异步编程史
 ## 前言
 
-早期的 Web 应用中，与后台进行交互时，需要进行 `form` 表单的提交，然后在页面刷新后给用户反馈结果。在页面刷新过程做，后台会重新返回一段 HTML 代码，这段 HTML 中的大部分内容与之前页面基本相同，这势必造成了流量的浪费，而且一来一回也延长了页面的响应时间，总是会让人觉得 Web 应用的体验感比不上客户端应用。
+早期的 Web 应用中，与后台进行交互时，需要进行 `form` 表单的提交，然后在页面刷新后给用户反馈结果。在页面刷新过程中，后台会重新返回一段 HTML 代码，这段 HTML 中的大部分内容与之前页面基本相同，这势必造成了流量的浪费，而且一来一回也延长了页面的响应时间，总是会让人觉得 Web 应用的体验感比不上客户端应用。
 
 2004 年，**AJAX** 即“**Asynchronous JavaScript and XML**”技术横空出世，让 Web 应用的体验得到了质的提升。再到 2006 年，jQuery 问世，将 Web 应用的开发体验也提高到了新的台阶。
 
@@ -238,7 +238,7 @@ co(gen, 'xxxx-token')
 
 ## async/await
 
-`async/await` 可以说是 JavaScript 异步变成的解决方案，其实本质上就是 Generator & co 的一个语法糖，只需要在异步的生成器函数前加上 `async`，然后将生成器函数内的 `yield` 替换为 `await`。
+`async/await` 可以说是 JavaScript 异步编程的终极解决方案，其实本质上就是 Generator & co 的一个语法糖，只需要在异步的生成器函数前加上 `async`，然后将生成器函数内的 `yield` 替换为 `await`。
 
 ```js
 async function fun(token) {

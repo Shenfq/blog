@@ -3,7 +3,7 @@ import { React } from 'https://deno.land/x/pagic@v1.2.1/mod.ts';
 export default {
   theme: 'blog',
   title: '自然醒的博客',
-  description: '前端工程师，爱折腾，擅长 JavaScript，欢迎关注我的公众号「更了不起的前端」',
+  description: '前端工程师，爱折腾，擅长 JavaScript，欢迎关注我的公众号「自然醒的笔记本」',
   srcDir: 'blog',
   plugins: ['blog'],
   head: <script src="/assets/hm.js" />,
