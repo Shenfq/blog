@@ -266,11 +266,11 @@ export default {
                 "count": 3
             },
             {
-                "name": "微信小程序",
-                "count": 2
+                "name": "随便写写",
+                "count": 3
             },
             {
-                "name": "随便写写",
+                "name": "微信小程序",
                 "count": 2
             },
             {
@@ -329,7 +329,7 @@ export default {
             },
             {
                 "name": "工作",
-                "count": 6
+                "count": 7
             },
             {
                 "name": "总结",
@@ -516,6 +516,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "offer",
+                "count": 1
+            },
+            {
                 "name": "react hooks",
                 "count": 1
             },
@@ -553,6 +557,10 @@ export default {
             },
             {
                 "name": "中间件",
+                "count": 1
+            },
+            {
+                "name": "二线",
                 "count": 1
             },
             {
@@ -660,6 +668,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "置业",
+                "count": 1
+            },
+            {
                 "name": "自动化测试",
                 "count": 1
             },
@@ -681,6 +693,10 @@ export default {
             },
             {
                 "name": "错误处理",
+                "count": 1
+            },
+            {
+                "name": "长沙",
                 "count": 1
             },
             {

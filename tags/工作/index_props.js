@@ -15,6 +15,29 @@ export default {
         "isPost": false,
         "posts": [
             {
+                "pagePath": "posts/2021/我回长沙了.md",
+                "title": "我回长沙了",
+                "link": "posts/2021/我回长沙了.html",
+                "date": "2021/06/08",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "随便写写"
+                ],
+                "tags": [
+                    "长沙",
+                    "二线",
+                    "置业",
+                    "工作",
+                    "offer"
+                ],
+                "excerpt": "为什么想回来？ 2017年，大学毕业后去到了深圳，那时候一心就想去大城市看看，让自己的青春不留遗憾。 刚到深圳的时候，加入了一家实习公司，管理层会通过各种方式让大家留下来加班，即使是我一个刚刚加入手头上没什么事情的实...",
+                "cover": "https://file.shenfq.com/pic/20210607174247.png"
+            },
+            {
                 "pagePath": "posts/2021/读《贫穷的本质》.md",
                 "title": "读《贫穷的本质》引发的一些思考",
                 "link": "posts/2021/读《贫穷的本质》.html",
@@ -172,11 +195,11 @@ export default {
                 "count": 3
             },
             {
-                "name": "微信小程序",
-                "count": 2
+                "name": "随便写写",
+                "count": 3
             },
             {
-                "name": "随便写写",
+                "name": "微信小程序",
                 "count": 2
             },
             {
@@ -235,7 +258,7 @@ export default {
             },
             {
                 "name": "工作",
-                "count": 6
+                "count": 7
             },
             {
                 "name": "总结",
@@ -422,6 +445,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "offer",
+                "count": 1
+            },
+            {
                 "name": "react hooks",
                 "count": 1
             },
@@ -459,6 +486,10 @@ export default {
             },
             {
                 "name": "中间件",
+                "count": 1
+            },
+            {
+                "name": "二线",
                 "count": 1
             },
             {
@@ -566,6 +597,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "置业",
+                "count": 1
+            },
+            {
                 "name": "自动化测试",
                 "count": 1
             },
@@ -587,6 +622,10 @@ export default {
             },
             {
                 "name": "错误处理",
+                "count": 1
+            },
+            {
+                "name": "长沙",
                 "count": 1
             },
             {

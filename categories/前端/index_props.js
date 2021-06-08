@@ -33,7 +33,7 @@ export default {
                     "Generator",
                     "async/await"
                 ],
-                "excerpt": "前言 早期的 Web 应用中，与后台进行交互时，需要进行 form 表单的提交，然后在页面刷新后给用户反馈结果。在页面刷新过程做，后台会重新返回一段 HTML 代码，这段 HTML 中的大部分内容与之前页面基本相同，这势必造成了流量的...",
+                "excerpt": "前言 早期的 Web 应用中，与后台进行交互时，需要进行 form 表单的提交，然后在页面刷新后给用户反馈结果。在页面刷新过程中，后台会重新返回一段 HTML 代码，这段 HTML 中的大部分内容与之前页面基本相同，这势必造成了流量的...",
                 "cover": "https://file.shenfq.com/pic/20210531113319.png"
             },
             {
@@ -534,11 +534,11 @@ export default {
                 "count": 3
             },
             {
-                "name": "微信小程序",
-                "count": 2
+                "name": "随便写写",
+                "count": 3
             },
             {
-                "name": "随便写写",
+                "name": "微信小程序",
                 "count": 2
             },
             {
@@ -597,7 +597,7 @@ export default {
             },
             {
                 "name": "工作",
-                "count": 6
+                "count": 7
             },
             {
                 "name": "总结",
@@ -784,6 +784,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "offer",
+                "count": 1
+            },
+            {
                 "name": "react hooks",
                 "count": 1
             },
@@ -821,6 +825,10 @@ export default {
             },
             {
                 "name": "中间件",
+                "count": 1
+            },
+            {
+                "name": "二线",
                 "count": 1
             },
             {
@@ -928,6 +936,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "置业",
+                "count": 1
+            },
+            {
                 "name": "自动化测试",
                 "count": 1
             },
@@ -949,6 +961,10 @@ export default {
             },
             {
                 "name": "错误处理",
+                "count": 1
+            },
+            {
+                "name": "长沙",
                 "count": 1
             },
             {

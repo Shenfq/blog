@@ -6,7 +6,7 @@ export default {
     'outputPath': "about/index.html",
     'title': "关于",
     'content': React.createElement("article", { dangerouslySetInnerHTML: {
-            __html: '<h1>关于</h1>\n<h2 id="%E8%87%AA%E6%88%91%E4%BB%8B%E7%BB%8D">自我介绍<a class="anchor" href="#%E8%87%AA%E6%88%91%E4%BB%8B%E7%BB%8D">§</a></h2>\n<p>我是 shenfq ，微信名「自然醒」，互联网一线前端开发。博客除了会分享前端技术，偶尔也会分享我的生活以及读书清单。写博客也是为了强制自己有些输出，为了保证质量，更新不会特别频繁，期望能做到周更。</p>\n<h2 id="%E5%B7%A5%E4%BD%9C%E7%BB%8F%E5%8E%86">工作经历<a class="anchor" href="#%E5%B7%A5%E4%BD%9C%E7%BB%8F%E5%8E%86">§</a></h2>\n<ul>\n<li>拼多多-广州（ 2019.9 ~ 至今 ）</li>\n<li>腾讯-深圳（ 2018.2 ~ 2019.9 ）</li>\n<li>小鹅通-深圳（ 2017.3 ~ 2018.2 ）</li>\n</ul>\n<h2 id="%E8%AE%A4%E8%AF%86%E5%8D%9A%E4%B8%BB">认识博主<a class="anchor" href="#%E8%AE%A4%E8%AF%86%E5%8D%9A%E4%B8%BB">§</a></h2>\n<p><img src="https://file.shenfq.com/pic/20201209222204.png" alt=""></p>'
+            __html: '<h1>关于</h1>\n<h2 id="%E8%87%AA%E6%88%91%E4%BB%8B%E7%BB%8D">自我介绍<a class="anchor" href="#%E8%87%AA%E6%88%91%E4%BB%8B%E7%BB%8D">§</a></h2>\n<p>我是 shenfq ，微信名「自然醒」，互联网一线前端开发。博客除了会分享前端技术，偶尔也会分享我的生活以及读书清单。写博客也是为了强制自己有些输出，为了保证质量，更新不会特别频繁，期望能做到周更。</p>\n<h2 id="%E5%B7%A5%E4%BD%9C%E7%BB%8F%E5%8E%86">工作经历<a class="anchor" href="#%E5%B7%A5%E4%BD%9C%E7%BB%8F%E5%8E%86">§</a></h2>\n<ul>\n<li>拼多多-广州（ 2019.9 ~ 2021.5 ）</li>\n<li>腾讯-深圳（ 2018.2 ~ 2019.9 ）</li>\n<li>小鹅通-深圳（ 2017.3 ~ 2018.2 ）</li>\n</ul>\n<h2 id="%E8%AE%A4%E8%AF%86%E5%8D%9A%E4%B8%BB">认识博主<a class="anchor" href="#%E8%AE%A4%E8%AF%86%E5%8D%9A%E4%B8%BB">§</a></h2>\n<p><img src="https://file.shenfq.com/pic/20201209222204.png" alt=""></p>'
         } }),
     'head': React.createElement(React.Fragment, null,
         React.createElement("script", { src: "/assets/hm.js" }),
@@ -17,7 +17,7 @@ export default {
         React.createElement("script", { src: "/index.js", type: "module" })),
     'contentTitle': React.createElement("h1", { key: "0" }, "\u5173\u4E8E"),
     'contentBody': React.createElement("article", { dangerouslySetInnerHTML: {
-            __html: '<h2 id="%E8%87%AA%E6%88%91%E4%BB%8B%E7%BB%8D">自我介绍<a class="anchor" href="#%E8%87%AA%E6%88%91%E4%BB%8B%E7%BB%8D">§</a></h2>\n<p>我是 shenfq ，微信名「自然醒」，互联网一线前端开发。博客除了会分享前端技术，偶尔也会分享我的生活以及读书清单。写博客也是为了强制自己有些输出，为了保证质量，更新不会特别频繁，期望能做到周更。</p>\n<h2 id="%E5%B7%A5%E4%BD%9C%E7%BB%8F%E5%8E%86">工作经历<a class="anchor" href="#%E5%B7%A5%E4%BD%9C%E7%BB%8F%E5%8E%86">§</a></h2>\n<ul>\n<li>拼多多-广州（ 2019.9 ~ 至今 ）</li>\n<li>腾讯-深圳（ 2018.2 ~ 2019.9 ）</li>\n<li>小鹅通-深圳（ 2017.3 ~ 2018.2 ）</li>\n</ul>\n<h2 id="%E8%AE%A4%E8%AF%86%E5%8D%9A%E4%B8%BB">认识博主<a class="anchor" href="#%E8%AE%A4%E8%AF%86%E5%8D%9A%E4%B8%BB">§</a></h2>\n<p><img src="https://file.shenfq.com/pic/20201209222204.png" alt=""></p>'
+            __html: '<h2 id="%E8%87%AA%E6%88%91%E4%BB%8B%E7%BB%8D">自我介绍<a class="anchor" href="#%E8%87%AA%E6%88%91%E4%BB%8B%E7%BB%8D">§</a></h2>\n<p>我是 shenfq ，微信名「自然醒」，互联网一线前端开发。博客除了会分享前端技术，偶尔也会分享我的生活以及读书清单。写博客也是为了强制自己有些输出，为了保证质量，更新不会特别频繁，期望能做到周更。</p>\n<h2 id="%E5%B7%A5%E4%BD%9C%E7%BB%8F%E5%8E%86">工作经历<a class="anchor" href="#%E5%B7%A5%E4%BD%9C%E7%BB%8F%E5%8E%86">§</a></h2>\n<ul>\n<li>拼多多-广州（ 2019.9 ~ 2021.5 ）</li>\n<li>腾讯-深圳（ 2018.2 ~ 2019.9 ）</li>\n<li>小鹅通-深圳（ 2017.3 ~ 2018.2 ）</li>\n</ul>\n<h2 id="%E8%AE%A4%E8%AF%86%E5%8D%9A%E4%B8%BB">认识博主<a class="anchor" href="#%E8%AE%A4%E8%AF%86%E5%8D%9A%E4%B8%BB">§</a></h2>\n<p><img src="https://file.shenfq.com/pic/20201209222204.png" alt=""></p>'
         } }),
     'toc': React.createElement("nav", { key: "0", className: "toc" },
         React.createElement("ol", null,
@@ -31,13 +31,36 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2021-06-01T09:57:21.000Z",
+    'date': "2021-06-08T13:48:12.000Z",
     'updated': null,
     'excerpt': "自我介绍 我是 shenfq ，微信名「自然醒」，互联网一线前端开发。博客除了会分享前端技术，偶尔也会分享我的生活以及读书清单。写博客也是为了强制自己有些输出，为了保证质量，更新不会特别频繁，期望能做到周更。 工作经历 -...",
     'cover': "https://file.shenfq.com/pic/20201209222204.png",
     'blog': {
         "isPost": false,
         "posts": [
+            {
+                "pagePath": "posts/2021/我回长沙了.md",
+                "title": "我回长沙了",
+                "link": "posts/2021/我回长沙了.html",
+                "date": "2021/06/08",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "随便写写"
+                ],
+                "tags": [
+                    "长沙",
+                    "二线",
+                    "置业",
+                    "工作",
+                    "offer"
+                ],
+                "excerpt": "为什么想回来？ 2017年，大学毕业后去到了深圳，那时候一心就想去大城市看看，让自己的青春不留遗憾。 刚到深圳的时候，加入了一家实习公司，管理层会通过各种方式让大家留下来加班，即使是我一个刚刚加入手头上没什么事情的实...",
+                "cover": "https://file.shenfq.com/pic/20210607174247.png"
+            },
             {
                 "pagePath": "posts/2021/JavaScript 异步编程史.md",
                 "title": "JavaScript 异步编程史",
@@ -57,7 +80,7 @@ export default {
                     "Generator",
                     "async/await"
                 ],
-                "excerpt": "前言 早期的 Web 应用中，与后台进行交互时，需要进行 form 表单的提交，然后在页面刷新后给用户反馈结果。在页面刷新过程做，后台会重新返回一段 HTML 代码，这段 HTML 中的大部分内容与之前页面基本相同，这势必造成了流量的...",
+                "excerpt": "前言 早期的 Web 应用中，与后台进行交互时，需要进行 form 表单的提交，然后在页面刷新后给用户反馈结果。在页面刷新过程中，后台会重新返回一段 HTML 代码，这段 HTML 中的大部分内容与之前页面基本相同，这势必造成了流量的...",
                 "cover": "https://file.shenfq.com/pic/20210531113319.png"
             },
             {
@@ -1488,11 +1511,11 @@ export default {
                 "count": 3
             },
             {
-                "name": "微信小程序",
-                "count": 2
+                "name": "随便写写",
+                "count": 3
             },
             {
-                "name": "随便写写",
+                "name": "微信小程序",
                 "count": 2
             },
             {
@@ -1551,7 +1574,7 @@ export default {
             },
             {
                 "name": "工作",
-                "count": 6
+                "count": 7
             },
             {
                 "name": "总结",
@@ -1738,6 +1761,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "offer",
+                "count": 1
+            },
+            {
                 "name": "react hooks",
                 "count": 1
             },
@@ -1775,6 +1802,10 @@ export default {
             },
             {
                 "name": "中间件",
+                "count": 1
+            },
+            {
+                "name": "二线",
                 "count": 1
             },
             {
@@ -1882,6 +1913,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "置业",
+                "count": 1
+            },
+            {
                 "name": "自动化测试",
                 "count": 1
             },
@@ -1903,6 +1938,10 @@ export default {
             },
             {
                 "name": "错误处理",
+                "count": 1
+            },
+            {
+                "name": "长沙",
                 "count": 1
             },
             {
