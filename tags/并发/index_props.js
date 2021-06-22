@@ -1,82 +1,38 @@
 import projectConfig from '/pagic.config.js';
 export default {
     config: { "root": "/", ...projectConfig, branch: 'main' },
-    'pagePath': "tags/组件化/",
+    'pagePath': "tags/并发/",
     'layoutPath': "archives/_layout.tsx",
-    'outputPath': "tags/组件化/index.html",
+    'outputPath': "tags/并发/index.html",
     'head': null,
     'script': React.createElement(React.Fragment, null,
         React.createElement("script", { src: "https://cdn.pagic.org/react@16.13.1/umd/react.production.min.js" }),
         React.createElement("script", { src: "https://cdn.pagic.org/react-dom@16.13.1/umd/react-dom.production.min.js" }),
         React.createElement("script", { src: "/index.js", type: "module" })),
-    'title': "组件化",
+    'title': "并发",
     'content': null,
     'blog': {
         "isPost": false,
         "posts": [
             {
-                "pagePath": "posts/2021/介绍两种 CSS 方法论.md",
-                "title": "介绍两种 CSS 方法论",
-                "link": "posts/2021/介绍两种 CSS 方法论.html",
-                "date": "2021/01/05",
+                "pagePath": "posts/2021/go/go 并发.md",
+                "title": "Go 并发",
+                "link": "posts/2021/go/go 并发.html",
+                "date": "2021/06/22",
                 "updated": null,
                 "author": "shenfq",
                 "contributors": [
                     "Shenfq"
                 ],
                 "categories": [
-                    "前端"
+                    "Go"
                 ],
                 "tags": [
-                    "CSS",
-                    "前端",
-                    "样式",
-                    "组件化",
-                    "工程化"
+                    "Go",
+                    "并发"
                 ],
-                "excerpt": "前言 说起 CSS 命名规范，大家应该都很熟悉，或者应该听说过 BEM 。BEM 是由 Yandex 团队提出的一种 CSS Class 命名方法，旨在帮助开发人员创建更好的且结构一致的 CSS 模块。 BEM 将页面的类名分为块（Block）、元素（Element...",
-                "cover": "https://file.shenfq.com/pic/20210103214204.png"
-            },
-            {
-                "pagePath": "posts/2018/前端业务组件化实践.md",
-                "title": "前端业务组件化实践",
-                "link": "posts/2018/前端业务组件化实践.html",
-                "date": "2018/10/23",
-                "updated": null,
-                "author": "shenfq",
-                "contributors": [
-                    "Shenfq"
-                ],
-                "categories": [
-                    "前端"
-                ],
-                "tags": [
-                    "前端",
-                    "组件化"
-                ],
-                "excerpt": "最近一直在做管理端相关的需求，管理端不比h5每天都有高流量，需要不断地做性能上的优化，以及适配不同设备兼容性。但是管理端也面临着自己的挑战，因为项目越来越大，可配置化的东西就越来越多，管理端的页面也就越多，同时面...",
-                "cover": "https://file.shenfq.com/18-12-19/84472576.jpg"
-            },
-            {
-                "pagePath": "posts/2018/ElementUI的构建流程.md",
-                "title": "ElementUI的构建流程",
-                "link": "posts/2018/ElementUI的构建流程.html",
-                "date": "2018/09/17",
-                "updated": null,
-                "author": "shenfq",
-                "contributors": [
-                    "Shenfq"
-                ],
-                "categories": [
-                    "前端"
-                ],
-                "tags": [
-                    "前端",
-                    "组件化",
-                    "工程化"
-                ],
-                "excerpt": "背景 最近一直在着手做一个与业务强相关的组件库，一直在思考要从哪里下手，怎么来设计这个组件库，因为业务上一直在使用ElementUI（以下简称Element），于是想参考了一下Element组件库的设计，看看Element构建方式，并且总结成...",
-                "cover": "https://file.shenfq.com/18-9-14/48784910.jpg"
+                "excerpt": "前言 在学习 Go 的并发之前，先复习一下操作系统的基础知识。 并发与并行 先来理一理并发与并行的区别。 可是明确的是并发≠并行，但是只要 CPU 运行足够快，每个时间片划分足够小，就会给人们造成一种假象，认为计算机在同一时...",
+                "cover": "https://file.shenfq.com/pic/20210621105313.png"
             }
         ],
         "categories": [

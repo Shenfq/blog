@@ -31,13 +31,33 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2021-06-08T13:48:12.000Z",
+    'date': "2021-06-22T13:19:31.000Z",
     'updated': null,
     'excerpt': "自我介绍 我是 shenfq ，微信名「自然醒」，互联网一线前端开发。博客除了会分享前端技术，偶尔也会分享我的生活以及读书清单。写博客也是为了强制自己有些输出，为了保证质量，更新不会特别频繁，期望能做到周更。 工作经历 -...",
     'cover': "https://file.shenfq.com/pic/20201209222204.png",
     'blog': {
         "isPost": false,
         "posts": [
+            {
+                "pagePath": "posts/2021/go/go 并发.md",
+                "title": "Go 并发",
+                "link": "posts/2021/go/go 并发.html",
+                "date": "2021/06/22",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "Go"
+                ],
+                "tags": [
+                    "Go",
+                    "并发"
+                ],
+                "excerpt": "前言 在学习 Go 的并发之前，先复习一下操作系统的基础知识。 并发与并行 先来理一理并发与并行的区别。 可是明确的是并发≠并行，但是只要 CPU 运行足够快，每个时间片划分足够小，就会给人们造成一种假象，认为计算机在同一时...",
+                "cover": "https://file.shenfq.com/pic/20210621105313.png"
+            },
             {
                 "pagePath": "posts/2021/我回长沙了.md",
                 "title": "我回长沙了",
@@ -1487,12 +1507,12 @@ export default {
                 "count": 23
             },
             {
-                "name": "Node.js",
+                "name": "Go",
                 "count": 8
             },
             {
-                "name": "Go",
-                "count": 7
+                "name": "Node.js",
+                "count": 8
             },
             {
                 "name": "前端工程",
@@ -1557,12 +1577,12 @@ export default {
                 "count": 9
             },
             {
-                "name": "JavaScript",
+                "name": "Go",
                 "count": 8
             },
             {
-                "name": "Go",
-                "count": 7
+                "name": "JavaScript",
+                "count": 8
             },
             {
                 "name": "Node",
@@ -1846,6 +1866,10 @@ export default {
             },
             {
                 "name": "常量",
+                "count": 1
+            },
+            {
+                "name": "并发",
                 "count": 1
             },
             {

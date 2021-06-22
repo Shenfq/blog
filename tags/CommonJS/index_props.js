@@ -68,12 +68,12 @@ export default {
                 "count": 23
             },
             {
-                "name": "Node.js",
+                "name": "Go",
                 "count": 8
             },
             {
-                "name": "Go",
-                "count": 7
+                "name": "Node.js",
+                "count": 8
             },
             {
                 "name": "前端工程",
@@ -138,12 +138,12 @@ export default {
                 "count": 9
             },
             {
-                "name": "JavaScript",
+                "name": "Go",
                 "count": 8
             },
             {
-                "name": "Go",
-                "count": 7
+                "name": "JavaScript",
+                "count": 8
             },
             {
                 "name": "Node",
@@ -427,6 +427,10 @@ export default {
             },
             {
                 "name": "常量",
+                "count": 1
+            },
+            {
+                "name": "并发",
                 "count": 1
             },
             {
