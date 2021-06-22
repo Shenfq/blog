@@ -10,6 +10,8 @@ tags:
 ---
 
 # Go 并发
+# 并发
+
 
 ## 前言
 
@@ -165,7 +167,10 @@ fatal error: all goroutines are asleep - deadlock!
 表明当前的 goroutine 处于挂起状态，并且后续不会有响应，只能直接中断程序。因为这里创建的是无缓存通道，发送数据后通道不会将数据缓存在通道中，导致后面要找通道要数据的时候无法正常从通道中获取数据。我们可以将通道的缓存设置为 1，让通道可以缓存一个数据在里面。
 
 ```go
-ch := make(chan string, 1)ch <- "hello world" // 发送一个字符串msg := <- ch // 接收之前发送的字符串fmt.Println(msg)
+ch := make(chan string, 1)
+ch <- "hello world" // 发送一个字符串
+msg := <- ch // 接收之前发送的字符串
+fmt.Println(msg)
 ```
 
 ![](https://file.shenfq.com/pic/20210622153815.png)
@@ -173,11 +178,20 @@ ch := make(chan string, 1)ch <- "hello world" // 发送一个字符串msg := <- 
 但是如果发送的数据超出了缓存数量，或者接受数据时，缓存里面已经没有数据了，依然会报错。
 
 ```go
-ch := make(chan string, 1)ch <- "hello world"ch <- "hello world"// fatal error: all goroutines are asleep - deadlock!
+ch := make(chan string, 1)
+ch <- "hello world"
+ch <- "hello world"
+
+// fatal error: all goroutines are asleep - deadlock!
 ```
 
 ```go
-ch := make(chan string, 1)ch <- "hello world"<- ch<- ch// fatal error: all goroutines are asleep - deadlock!
+ch := make(chan string, 1)
+ch <- "hello world"
+<- ch
+<- ch
+
+// fatal error: all goroutines are asleep - deadlock!
 ```
 
 ### 协程中使用通道
@@ -187,7 +201,18 @@ ch := make(chan string, 1)ch <- "hello world"<- ch<- ch// fatal error: all gorou
 无缓存的通道在收发数据时，由于一次只能同步的发送一个数据，会在两个 goroutine 间反复横跳，通道在接受数据时，会阻塞当前 goroutine，直到通道在另一个 goroutine 发送了数据。
 
 ```go
-ch := make(chan string) // 创建一个无缓存通道temp := "我在地球"go func () {  // 接收一个字符串  ch <- "hello world"  temp = "进入了异次元"}()// 运行到这里会被阻塞// 直到通道在另一个 goroutine 发送了数据msg := <- chfmt.Println(msg)fmt.Println("temp =>", temp)
+ch := make(chan string) // 创建一个无缓存通道
+temp := "我在地球"
+go func () {  
+	// 接收一个字符串
+	ch <- "hello world"
+	temp = "进入了异次元"
+}()
+// 运行到这里会被阻塞
+// 直到通道在另一个 goroutine 发送了数据
+msg := <- ch
+fmt.Println(msg)
+fmt.Println("temp =>", temp)
 ```
 
 为了证明通道在接收数据时会被阻塞，我们可以在前面加上一个 `temp` 变量，然后在另外的 goroutine 中修改这个变量，看最后输出的值是否被修改，以此证明通道在接受数据时是否发生了阻塞。
@@ -363,4 +388,3 @@ func main() {
 	}
 }
 ```
-
