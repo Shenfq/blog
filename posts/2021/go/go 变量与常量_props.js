@@ -62,6 +62,27 @@ export default {
         "isPost": true,
         "posts": [
             {
+                "pagePath": "posts/2021/我不知道的 position.md",
+                "title": "我不知道的CSS - position",
+                "link": "posts/2021/我不知道的 position.html",
+                "date": "2021/07/13",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "前端"
+                ],
+                "tags": [
+                    "CSS",
+                    "Sticky",
+                    "Postion"
+                ],
+                "excerpt": "熟悉我的小伙伴可能知道，我最近回长沙工作了，由于之前大部分时间在做工具，Node.js 的开发比较多。but，现在又重新开始写了一些业务代码，发现 CSS 有很多博大精深的东西，所以，今天的文章复习一下 CSS 定位相关的东西。 定...",
+                "cover": "https://file.shenfq.com/pic/20210706111122.png"
+            },
+            {
                 "pagePath": "posts/2021/go/go 并发.md",
                 "title": "Go 并发",
                 "link": "posts/2021/go/go 并发.html",
@@ -1527,7 +1548,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 23
+                "count": 24
             },
             {
                 "name": "Go",
@@ -1652,6 +1673,10 @@ export default {
                 "count": 2
             },
             {
+                "name": "CSS",
+                "count": 2
+            },
+            {
                 "name": "es6",
                 "count": 2
             },
@@ -1752,10 +1777,6 @@ export default {
                 "count": 1
             },
             {
-                "name": "CSS",
-                "count": 1
-            },
-            {
                 "name": "ES Module",
                 "count": 1
             },
@@ -1808,11 +1829,19 @@ export default {
                 "count": 1
             },
             {
+                "name": "Postion",
+                "count": 1
+            },
+            {
                 "name": "react hooks",
                 "count": 1
             },
             {
                 "name": "Snabbdom",
+                "count": 1
+            },
+            {
+                "name": "Sticky",
                 "count": 1
             },
             {

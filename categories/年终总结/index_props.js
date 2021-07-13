@@ -102,7 +102,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 23
+                "count": 24
             },
             {
                 "name": "Go",
@@ -227,6 +227,10 @@ export default {
                 "count": 2
             },
             {
+                "name": "CSS",
+                "count": 2
+            },
+            {
                 "name": "es6",
                 "count": 2
             },
@@ -327,10 +331,6 @@ export default {
                 "count": 1
             },
             {
-                "name": "CSS",
-                "count": 1
-            },
-            {
                 "name": "ES Module",
                 "count": 1
             },
@@ -383,11 +383,19 @@ export default {
                 "count": 1
             },
             {
+                "name": "Postion",
+                "count": 1
+            },
+            {
                 "name": "react hooks",
                 "count": 1
             },
             {
                 "name": "Snabbdom",
+                "count": 1
+            },
+            {
+                "name": "Sticky",
                 "count": 1
             },
             {
