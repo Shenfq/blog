@@ -31,13 +31,35 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2021-07-13T09:51:48.000Z",
+    'date': "2021-07-21T08:44:53.000Z",
     'updated': null,
     'excerpt': "自我介绍 我是 shenfq ，微信名「自然醒」，互联网一线前端开发。博客除了会分享前端技术，偶尔也会分享我的生活以及读书清单。写博客也是为了强制自己有些输出，为了保证质量，更新不会特别频繁，期望能做到周更。 工作经历 -...",
     'cover': "https://file.shenfq.com/pic/20201209222204.png",
     'blog': {
         "isPost": false,
         "posts": [
+            {
+                "pagePath": "posts/2021/Webpack 热更新原理.md",
+                "title": "Webpack 热更新原理",
+                "link": "posts/2021/Webpack 热更新原理.html",
+                "date": "2021/07/21",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "前端工程"
+                ],
+                "tags": [
+                    "前端",
+                    "模块化",
+                    "前端工程化",
+                    "webpack"
+                ],
+                "excerpt": "用过 webpack 的同学应该都知道，有一个特别好用的『热更新』，在不刷新页面的情况下，就能将代码推到浏览器。 今天的文章将会探寻一下 webpack 热更新的秘密。 如何配置热更新 我们先安装一些我们需要的包： npm i webpack we...",
+                "cover": "https://file.shenfq.com/pic/20210718124656.gif"
+            },
             {
                 "pagePath": "posts/2021/我不知道的 position.md",
                 "title": "我不知道的CSS - position",
@@ -1537,7 +1559,7 @@ export default {
             },
             {
                 "name": "前端工程",
-                "count": 7
+                "count": 8
             },
             {
                 "name": "模块化",
@@ -1583,19 +1605,19 @@ export default {
         "tags": [
             {
                 "name": "前端",
-                "count": 24
+                "count": 25
+            },
+            {
+                "name": "前端工程化",
+                "count": 11
             },
             {
                 "name": "前端框架",
                 "count": 11
             },
             {
-                "name": "前端工程化",
-                "count": 10
-            },
-            {
                 "name": "模块化",
-                "count": 9
+                "count": 10
             },
             {
                 "name": "Go",
@@ -1632,6 +1654,10 @@ export default {
             {
                 "name": "翻译",
                 "count": 5
+            },
+            {
+                "name": "webpack",
+                "count": 3
             },
             {
                 "name": "机器学习",
@@ -1679,10 +1705,6 @@ export default {
             },
             {
                 "name": "Web Components",
-                "count": 2
-            },
-            {
-                "name": "webpack",
                 "count": 2
             },
             {

@@ -182,7 +182,7 @@ export default {
             },
             {
                 "name": "前端工程",
-                "count": 7
+                "count": 8
             },
             {
                 "name": "模块化",
@@ -228,19 +228,19 @@ export default {
         "tags": [
             {
                 "name": "前端",
-                "count": 24
+                "count": 25
+            },
+            {
+                "name": "前端工程化",
+                "count": 11
             },
             {
                 "name": "前端框架",
                 "count": 11
             },
             {
-                "name": "前端工程化",
-                "count": 10
-            },
-            {
                 "name": "模块化",
-                "count": 9
+                "count": 10
             },
             {
                 "name": "Go",
@@ -277,6 +277,10 @@ export default {
             {
                 "name": "翻译",
                 "count": 5
+            },
+            {
+                "name": "webpack",
+                "count": 3
             },
             {
                 "name": "机器学习",
@@ -324,10 +328,6 @@ export default {
             },
             {
                 "name": "Web Components",
-                "count": 2
-            },
-            {
-                "name": "webpack",
                 "count": 2
             },
             {
