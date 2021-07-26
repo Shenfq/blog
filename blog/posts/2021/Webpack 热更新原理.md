@@ -206,7 +206,7 @@ exports.setNum = (num) => {
 }
 ```
 
-我们都知道，webpack 本质是一个打包工具，会把多个 js 文件打包成一个 js 文件。下面的代码 webpack 打包出的代码，通过精简后的部分：
+我们都知道，webpack 本质是一个打包工具，会把多个 js 文件打包成一个 js 文件。下面的代码是 webpack 打包后的代码：
 
 ```js
 // webpackBootstrap
@@ -423,7 +423,7 @@ const require = function(url) {
 require('src/index.js')
 ```
 
-webpack 打包除了将所有 js 模块打包到一个文件外，引入 `html-webpack-plugin` 还会将生成的 output 自动插入到 html 中。
+webpack 打包除了将所有 js 模块打包到一个文件外，引入 `html-webpack-plugin` 插件，还会将生成的 output 自动插入到 html 中。
 
 ```js
 new HtmlWebpackPlugin({
@@ -449,7 +449,7 @@ module.exports = class Build {
 }
 ```
 
-要完成热更新，必备的就是需要在 webpack 自己启动的服务内。我们利用 koa 启动一个简单的服务。
+要完成热更新，webpack 还需要自己启动一个服务，完成静态文件的传输。我们利用 koa 启动一个简单的服务。
 
 ```js
 // index.js
@@ -498,7 +498,7 @@ node index.js --entry ./src/index.js --output main.js
 
 ### 热更新的实现
 
-webpack 在热更新模式下，启动服务后，服务端会与客户端建立一个长链接。文件修改后，服务端会会通过长链接向客户端推送一条消息，客户端收到后，会重新请求一个 js 文件，返回的 js 文件会调用 `webpackHotUpdatehmr` 方法，用于替换掉 `__webpack_modules__` 中的部分代码。
+webpack 在热更新模式下，启动服务后，服务端会与客户端建立一个长链接。文件修改后，服务端会通过长链接向客户端推送一条消息，客户端收到后，会重新请求一个 js 文件，返回的 js 文件会调用 `webpackHotUpdatehmr` 方法，用于替换掉 `__webpack_modules__` 中的部分代码。
 
 ![](https://file.shenfq.com/pic/20210721151932.gif)
 
