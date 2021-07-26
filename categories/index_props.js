@@ -24,7 +24,7 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2021-07-21T08:44:53.000Z",
+    'date': "2021-07-26T14:10:07.000Z",
     'updated': null,
     'excerpt': "",
     'cover': undefined,
