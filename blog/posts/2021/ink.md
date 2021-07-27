@@ -1,3 +1,5 @@
+# 在命令行里也能用 React
+
 用过 React 的同学都知道，React 作为一个视图库，在进行 Web 开发的时候需要安装两个模块。
 
 ```bash
@@ -51,22 +53,14 @@ $ npx create-ink-app --typescript
 生成的代码如下：
 
 ```jsx
+// src/cli.js
 #!/usr/bin/env node
-
 const ink = require('ink')
 const meow = require('meow')
 const React = require('react')
 const importJsx = require('import-jsx')
 
-const component = (props) => (
-  <Text>
-    Hello, <Text color = "green">
-  		{ props.name || 'UserName' }
-  	</Text>
-  </Text>
-)
-
-const ui = importJsx(component)
+const ui = importJsx('./ui')
 
 const cli = meow(`
 	Usage
@@ -76,6 +70,19 @@ const cli = meow(`
 `)
 
 ink.render(React.createElement(ui, cli.flags))
+```
+
+```jsx
+// src/ui.js
+const App = (props) => (
+  <Text>
+    Hello, <Text color = "green">
+  		{ props.name || 'UserName' }
+  	</Text>
+  </Text>
+)
+
+module.exports = App;
 ```
 
 除了 `ink` 和 `react`，脚手架项目还引入了 `meow`、`import-jsx` 两个库。
@@ -98,8 +105,7 @@ console.log('flags: ', cli.flags)
 另一个 `import-jsx` 的主要作用，就是将 `jsx` 字符串转化为 `createElement` 方法的形式。
 
 ```js
-const importJsx = require('import-jsx')
-
+// ui.js
 const component = (props) => (
   <Text>
     Hello, <Text color = "green">
@@ -108,7 +114,9 @@ const component = (props) => (
   </Text>
 )
 
-const ui = importJsx(component)
+// cli.js
+const importJsx = require('import-jsx')
+const ui = importJsx('./ui')
 
 console.log(ui.toString()) // 输出转化后的结果
 ```
@@ -130,13 +138,290 @@ props => /*#__PURE__*/React.createElement(
 
 这一步的工作一般由  babel 完成，如果我们没有通过 babel 转义 jsx，使用 `import-jsx` 就相当于是运行时转义，对性能会有损耗。但是，在 CLI 项目中，本身对性能要求也没那么高，通过这种方式，也能更快速的进行项目搭建。
 
+## 内置组件
+
+由于是非浏览器的运行环境，`ink` 与 `react-native` 一样提供了内置的一些组件，用于渲染终端中的特定元素。
+
+### \<Text\>
+
+`<Text>` 组件用于在终端渲染文字，可以为文字指定特定的颜色、加粗、斜体、下划线、删除线等等。
+
+DEMO:
+
+```jsx
+// ui.js
+const React = require('react')
+const { Text } = require('ink')
+moudle.exports = () => (<>
+  <Text>I am text</Text>
+  <Text bold>I am bold</Text>
+  <Text italic>I am italic</Text>
+  <Text underline>I am underline</Text>
+  <Text strikethrough>I am strikethrough</Text>
+  <Text color="green">I am green</Text>
+  <Text color="blue" backgroundColor="gray">I am blue on gray</Text>
+</>)
+
+// cli.js
+const React = require('react')
+const importJsx = require('import-jsx')
+const { render } = require('ink')
+
+const ui = importJsx('./ui')
+render(React.createElement(ui))
+```
+
+其主要作用就是设置渲染到终端上的文本样式，有点类似于 HTML 中的 `<font>` 标签。
+
+![](https://file.shenfq.com/pic/20210727113553.png)
+
+除了这种常见的 HTML 相关的文本属性，还支持比较特殊的 `wrap` 属性，用于将溢出的文本进行截断。
+
+长文本在超出终端的长度时，默认会进行换行处理。
+
+```jsx
+<Text>loooooooooooooooooooooooooooooooooooooooong text</Text>
+```
+
+![](https://file.shenfq.com/pic/20210727141017.png)
+
+如果加上 `wrap` 属性，会对长文本进行截断。
+
+```jsx
+<Text wrap="truncate">
+  loooooooooooooooooooooooooooooooooooooooong text
+</Text>
+```
+
+![](https://file.shenfq.com/pic/20210727141152.png)
+
+除了从尾部截断文本，还支持从文本中间和文本开始处进行截断。
+
+```jsx
+<Text wrap="truncate">
+  loooooooooooooooooooooooooooooooooooooooong text
+</Text>
+<Text wrap="truncate-middle">
+  loooooooooooooooooooooooooooooooooooooooong text
+</Text>
+<Text wrap="truncate-start">
+  loooooooooooooooooooooooooooooooooooooooong text
+</Text>
+```
+
+![](https://file.shenfq.com/pic/20210727141403.png)
+
+### \<Box\>
+
+`<Box>` 组件用于布局，除了支持类似 CSS 中 `margin`、`padding`、`border`  属性外，还能支持 `flex` 布局，可以将 `<Box>` 理解为 HTML 中设置了 flex 布局的 div （ `<div style="display: flex;">`）。
+
+下面我们先给一个 `<Box>` 组件设置高度为 10，然后主轴方向让元素两端对齐，交叉轴方向让元素位于底部对齐。
+
+然后在给内部的两个 `<Box>` 组件设置一个 `padding` 和一个不同样式的边框。
+
+```jsx
+const App = () => <Box
+  height={10}
+  alignItems="flex-end"
+  justifyContent="space-between"
+>
+	<Box borderStyle="double" borderColor="blue" padding={1} >
+    <Text>Hello</Text>
+  </Box>
+	<Box borderStyle="classic"  borderColor="red" padding={1} >
+	  <Text>World</Text>
+  </Box>
+</Box>
+```
+
+最终效果如下：
+
+![](https://file.shenfq.com/pic/20210727142547.png)
+
+比较特殊的属性是边框的样式： `borderStyle`，和 CSS 提供的边框样式有点出入。
+
+```jsx
+<Box borderStyle="single">
+  <Text>single</Text>
+</Box>
+<Box borderStyle="double">
+  <Text>double</Text>
+</Box>
+<Box borderStyle="round">
+  <Text>round</Text>
+</Box>
+<Box borderStyle="bold">
+  <Text>bold</Text>
+</Box>
+<Box borderStyle="singleDouble">
+  <Text>singleDouble</Text>
+</Box>
+<Box borderStyle="doubleSingle">
+  <Text>doubleSingle</Text>
+</Box>
+<Box borderStyle="classic">
+  <Text>classic</Text>
+</Box>
+```
+
+![](https://file.shenfq.com/pic/20210727144335.png)
+
+`<Box>` 组件提供的其他属性和原生的 CSS 基本一致，详细介绍可以查阅其文档：
+
+> 🔗 ink#Box：[https://www.npmjs.com/package/ink#box](https://www.npmjs.com/package/ink#box)
+
+### \<Newline\>
+
+`<NewLine>` 组件相当于直接在终端中添加一个 `\n` 字符，用于换行（PS：只支持插入在 `<Text>` 元素之间）；
+
+```jsx
+const App = () => (<>
+  <Text>Hello</Text>
+  <Text>World</Text>
+</>)
+```
+
+![](https://file.shenfq.com/pic/20210727145447.png)
+
+```jsx
+const App = () => (<>
+  <Text>Hello</Text>
+  <Newline />
+  <Text>World</Text>
+</>)
+```
+
+![](https://file.shenfq.com/pic/20210727145619.png)
+
+### \<Spacer\>
+
+`<Spacer>` 组件用于隔开两个元素，使用后，会将间隔开两个元素隔开到终端的两边，效果有点类似于 flex 布局的两端对齐（`justify-content: space-between;`）
+
+```jsx
+const App1 = () => <Box>
+  <Text>Left</Text>
+  <Spacer />
+  <Text>Right</Text>
+</Box>;
+
+const App2 = () => <Box justifyContent="space-between">
+  <Text>Left</Text>
+  <Text>Right</Text>
+</Box>;
+```
+
+上面两段代码的表现形式一致：
+
+![](https://file.shenfq.com/pic/20210727152636.png)
+
+## 内置 Hooks
+
+`ink` 除了提供一些布局用的组件，还提供了一些 Hooks。
+
+### useInput
+
+可用于监听用户的输入，`useInput` 接受一个回调函数，用户每次按下键盘的按键，都会调用 `useInput` 传入的回调，并传入两个参数。
+
+```ts
+useInput((input: string, key: Object) => void)
+```
+
+第一个参数：input ，表示按下按键对应的字符。第二个参数： key ，为一个对象，对应按下的一些功能键。
+
+- 如果按下回车，`key.return = true`；
+- 如果按下删除键，`key.delete = true`；
+- 如果按下esc键，`key.escape = true`；
+
+具体支持哪些功能按键，可以参考官方文档：
+
+> 🔗ink#useInput：[https://www.npmjs.com/package/ink#useinputinputhandler-options](https://www.npmjs.com/package/ink#useinputinputhandler-options)
+
+下面通过一个 DEMO，展示其具体的使用方式，在终端上记录用户的所有输出，如果按下的是删除键，则删除最近记录的一个字符。
+
+```jsx
+const React = require('react')
+const { useInput, Text } = require('ink')
+
+const { useState } = React
+module.exports = () => {
+  const [char, setChar] = useState('')
+  useInput((input, key) => {
+    if (key.delete) {
+      // 按下删除键，删除一个字符
+      setChar(char.slice(0, -1))
+      return
+    }
+    // 追加最新按下的字符
+    setChar(char + input)
+  })
+  return <Text>input char: {char}</Text>
+}
+```
+
+![](https://file.shenfq.com/pic/20210727164014.gif)
+
+### useApp
+
+对外暴露一个 `exit` 方法，用于退出终端。
+
+```jsx
+const React = require('react')
+import { useApp } from 'ink'
+
+const { useEffect } = React
+const App = () => {
+  const { exit } = useApp()
+
+	// 3s 后退出终端
+	useEffect(() => {
+		setTimeout(() => {
+			exit();
+		}, 3000);
+	}, []);
+
+	return <Text color="red">3s 后退出终端……</Text>
+}
+```
+
+![](https://file.shenfq.com/pic/20210727173717.gif)
+
+### useStdin
+
+用于获取命令行的输入流。这里用一个简单的案例，模拟用户登录
+
+```jsx
+const React = require('react')
+import { useStdin } from 'ink'
+
+const { useState, useEffect } = React
+module.exports = () => {
+  const [pwd, setPwd] = useState('')
+  const { stdin } = useStdin()
+  
+  useEffect(() => {
+    // 设置密码后，终止输入
+    if (pwd) stdin.pause()
+	}, [pwd])
+  
+  stdin.on('data', (data) => {
+    // 提取 data，设置到 pwd 变量中
+    const value = data.toString().trim()
+    setPwd(value)
+  })
+  // pwd 为空时，提示用户输入密码
+  if (!pwd) {
+    return <Text backgroundColor="blue">password:</Text>
+  }
+
+  return pwd === 'hk01810'
+    ? <Text color="green">登录成功</Text>
+    : <Text color="red">有内鬼，终止交易</Text>
+}
+```
+
+![](https://file.shenfq.com/pic/20210727182117.gif)
 
 
 
-
-
-
-
-
-
+### useStdout
 
