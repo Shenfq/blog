@@ -46,7 +46,7 @@ ReactDOM.render(
 
 ![Ink](https://file.shenfq.com/pic/20210726142859.png)
 
-内部使用 facebook 基于 C++ 开发的一款跨平台渲染引擎 [`yoga`](https://yogalayout.com/)，支持 Flex 布局，功能十分强大。另外，React Native 内部使用了该引擎。
+`ink` 内部使用 facebook 基于 C++ 开发的一款跨平台渲染引擎 [`yoga`](https://yogalayout.com/)，支持 Flex 布局，功能十分强大。另外，React Native 内部使用了该引擎。
 
 ## 初始化
 
@@ -485,11 +485,11 @@ module.exports = () => {
 ink 属于 React 生态，自然能够支持 React 官方提供的调试工具 `React Devtools`。
 
 ```bash
-npm install react-devtools # 安装调试工具
+$ npm install react-devtools # 安装调试工具
 ```
 
 ```bash
-npx react-devtools # 启动调试工具
+$ npx react-devtools # 启动调试工具
 ```
 
 然后，在启动应用时，在前面设置 `DEV` 全局变量。
