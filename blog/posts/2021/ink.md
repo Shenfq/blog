@@ -1,3 +1,17 @@
+---
+title: 在命令行里也能用 React
+author: shenfq
+date: 2021/07/28
+categories:
+- 前端
+tags:
+- 命令行
+- 前端框架
+- JavaScript
+- React
+---
+
+
 # 在命令行里也能用 React
 
 用过 React 的同学都知道，React 作为一个视图库，在进行 Web 开发的时候需要安装两个模块。
@@ -32,7 +46,7 @@ ReactDOM.render(
 
 ![Ink](https://file.shenfq.com/pic/20210726142859.png)
 
-
+内部使用 facebook 基于 C++ 开发的一款跨平台渲染引擎 [`yoga`](https://yogalayout.com/)，支持 Flex 布局，功能十分强大。另外，React Native 内部使用了该引擎。
 
 ## 初始化
 
@@ -366,7 +380,7 @@ module.exports = () => {
 
 ```jsx
 const React = require('react')
-import { useApp } from 'ink'
+const { useApp } = require('ink')
 
 const { useEffect } = React
 const App = () => {
@@ -387,12 +401,11 @@ const App = () => {
 
 ### useStdin
 
-用于获取命令行的输入流。这里用一个简单的案例，模拟用户登录
+用于获取命令行的输入流。这里用一个简单的案例，来模拟用户登录。
 
 ```jsx
 const React = require('react')
-import { useStdin } from 'ink'
-
+const { useStdin } = require('ink')
 const { useState, useEffect } = React
 module.exports = () => {
   const [pwd, setPwd] = useState('')
@@ -421,7 +434,80 @@ module.exports = () => {
 
 ![](https://file.shenfq.com/pic/20210727182117.gif)
 
-
-
 ### useStdout
 
+用于获取命令行的输出流。会暴露 `stdout` 的写入流，还会暴露一个 `write` 方法，用于在终端进行输入。
+
+```jsx
+const React = require('react')
+const { useStdout } = require('ink')
+const { useEffect } = React
+module.exports = () => {
+  const { write } = useStdout()
+  useEffect(() => {
+    // 在终端进行写入
+		write('Hello from Ink to stdout')
+	}, [])
+  return null
+}
+```
+
+![](https://file.shenfq.com/pic/20210728102652.png)
+
+## 第三方组件
+
+除了内置的这些组件和 Hooks 外，还有丰富的[第三方生态](https://www.npmjs.com/package/ink#useful-components)。比如：Loading组件、超链接组件、表格组件、高亮组件、多选组件、图片组件……
+
+> 🔗 ink#第三方组件：[https://www.npmjs.com/package/ink#useful-components](https://www.npmjs.com/package/ink#useful-components)
+
+#### ink-spinner
+
+![](https://file.shenfq.com/pic/20210728142515.gif)
+
+#### ink-link
+
+![](https://file.shenfq.com/pic/20210728143000.gif)
+
+#### ink-table
+
+![](https://file.shenfq.com/pic/20210728143224.png)
+
+#### ink-syntax-highlight
+
+![](https://file.shenfq.com/pic/20210728143551.png)
+
+#### ink-muti-select
+
+![](https://file.shenfq.com/pic/20210728144429.gif)
+
+## 调试工具
+
+ink 属于 React 生态，自然能够支持 React 官方提供的调试工具 `React Devtools`。
+
+```bash
+npm install react-devtools # 安装调试工具
+```
+
+```bash
+npx react-devtools # 启动调试工具
+```
+
+然后，在启动应用时，在前面设置 `DEV` 全局变量。
+
+```bash
+DEV=true node src/cli
+```
+
+运行后的效果如下：
+
+![](https://file.shenfq.com/pic/20210728145302.gif)
+
+
+
+## 总结
+
+React 确实是视图开发的一把利器，再加上 Hooks 的加持，其抽象能力得到了进一步的提升，统一的 DSL 加上 虚拟 DOM，照理来说，是可以在任何平台进行渲染的。甚至，微软官方都开发了一个  `React Native for Windows`，关键是这个东西不仅仅能开发 Windows 的桌面软件，还可以开发 mac 的桌面软件。
+
+![](https://file.shenfq.com/pic/20210728145805.png)
+
+有点跑题，说回 `ink`，大家熟知的 `Gatsby` 的命令行工具也是通过 `ink` 进行开发的。如果大家后续有本地的 CLI 工具需要实现，可以考虑这款工具，至少不必烦恼如何在命令行进行文本对齐。
