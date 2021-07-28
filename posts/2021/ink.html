@@ -34,7 +34,7 @@
 <p>🔗 npm ink: <a href="https://www.npmjs.com/package/react-dom">https://www.npmjs.com/package/react-dom</a></p>
 </blockquote>
 <p><img src="https://file.shenfq.com/pic/20210726142859.png" alt="Ink"></p>
-<p>内部使用 facebook 基于 C++ 开发的一款跨平台渲染引擎 <a href="https://yogalayout.com/"><code>yoga</code></a>，支持 Flex 布局，功能十分强大。另外，React Native 内部使用了该引擎。</p>
+<p><code>ink</code> 内部使用 facebook 基于 C++ 开发的一款跨平台渲染引擎 <a href="https://yogalayout.com/"><code>yoga</code></a>，支持 Flex 布局，功能十分强大。另外，React Native 内部使用了该引擎。</p>
 <h2 id="%E5%88%9D%E5%A7%8B%E5%8C%96">初始化<a class="anchor" href="#%E5%88%9D%E5%A7%8B%E5%8C%96">§</a></h2>
 <p>这里有一个官方提供的脚手架，我们可以直接通过这个脚手架来创建一个项目。</p>
 <pre class="language-bash"><code class="language-bash">$ <span class="token function">mkdir</span> ink-app
@@ -362,9 +362,9 @@ module<span class="token punctuation">.</span><span class="token method-variable
 <p><img src="https://file.shenfq.com/pic/20210728144429.gif" alt=""></p>
 <h2 id="%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7">调试工具<a class="anchor" href="#%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7">§</a></h2>
 <p>ink 属于 React 生态，自然能够支持 React 官方提供的调试工具 <code>React Devtools</code>。</p>
-<pre class="language-bash"><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> react-devtools <span class="token comment"># 安装调试工具</span>
+<pre class="language-bash"><code class="language-bash">$ <span class="token function">npm</span> <span class="token function">install</span> react-devtools <span class="token comment"># 安装调试工具</span>
 </code></pre>
-<pre class="language-bash"><code class="language-bash">npx react-devtools <span class="token comment"># 启动调试工具</span>
+<pre class="language-bash"><code class="language-bash">$ npx react-devtools <span class="token comment"># 启动调试工具</span>
 </code></pre>
 <p>然后，在启动应用时，在前面设置 <code>DEV</code> 全局变量。</p>
 <pre class="language-bash"><code class="language-bash"><span class="token assign-left variable">DEV</span><span class="token operator">=</span>true node src/cli
