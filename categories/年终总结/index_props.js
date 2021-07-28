@@ -102,7 +102,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 24
+                "count": 25
             },
             {
                 "name": "Go",
@@ -163,11 +163,11 @@ export default {
                 "count": 25
             },
             {
-                "name": "前端工程化",
-                "count": 11
+                "name": "前端框架",
+                "count": 12
             },
             {
-                "name": "前端框架",
+                "name": "前端工程化",
                 "count": 11
             },
             {
@@ -175,11 +175,11 @@ export default {
                 "count": 10
             },
             {
-                "name": "Go",
-                "count": 8
+                "name": "JavaScript",
+                "count": 9
             },
             {
-                "name": "JavaScript",
+                "name": "Go",
                 "count": 8
             },
             {
@@ -195,16 +195,16 @@ export default {
                 "count": 7
             },
             {
+                "name": "React",
+                "count": 6
+            },
+            {
                 "name": "总结",
                 "count": 6
             },
             {
                 "name": "感悟",
                 "count": 6
-            },
-            {
-                "name": "React",
-                "count": 5
             },
             {
                 "name": "翻译",
@@ -464,6 +464,10 @@ export default {
             },
             {
                 "name": "变量",
+                "count": 1
+            },
+            {
+                "name": "命令行",
                 "count": 1
             },
             {

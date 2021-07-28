@@ -40,6 +40,28 @@ export default {
         "isPost": true,
         "posts": [
             {
+                "pagePath": "posts/2021/ink.md",
+                "title": "在命令行里也能用 React",
+                "link": "posts/2021/ink.html",
+                "date": "2021/07/28",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "前端"
+                ],
+                "tags": [
+                    "命令行",
+                    "前端框架",
+                    "JavaScript",
+                    "React"
+                ],
+                "excerpt": "用过 React 的同学都知道，React 作为一个视图库，在进行 Web 开发的时候需要安装两个模块。 npm install react --save npm install react-dom --save react 模块主要提供了组件的生命周期、虚拟 DOM Diff、Hooks 等能力，以及...",
+                "cover": "https://file.shenfq.com/pic/20210726142859.png"
+            },
+            {
                 "pagePath": "posts/2021/Webpack 热更新原理.md",
                 "title": "Webpack 热更新原理",
                 "link": "posts/2021/Webpack 热更新原理.html",
@@ -1548,7 +1570,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 24
+                "count": 25
             },
             {
                 "name": "Go",
@@ -1609,11 +1631,11 @@ export default {
                 "count": 25
             },
             {
-                "name": "前端工程化",
-                "count": 11
+                "name": "前端框架",
+                "count": 12
             },
             {
-                "name": "前端框架",
+                "name": "前端工程化",
                 "count": 11
             },
             {
@@ -1621,11 +1643,11 @@ export default {
                 "count": 10
             },
             {
-                "name": "Go",
-                "count": 8
+                "name": "JavaScript",
+                "count": 9
             },
             {
-                "name": "JavaScript",
+                "name": "Go",
                 "count": 8
             },
             {
@@ -1641,16 +1663,16 @@ export default {
                 "count": 7
             },
             {
+                "name": "React",
+                "count": 6
+            },
+            {
                 "name": "总结",
                 "count": 6
             },
             {
                 "name": "感悟",
                 "count": 6
-            },
-            {
-                "name": "React",
-                "count": 5
             },
             {
                 "name": "翻译",
@@ -1910,6 +1932,10 @@ export default {
             },
             {
                 "name": "变量",
+                "count": 1
+            },
+            {
+                "name": "命令行",
                 "count": 1
             },
             {
