@@ -170,7 +170,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 25
+                "count": 26
             },
             {
                 "name": "Go",
@@ -232,19 +232,19 @@ export default {
             },
             {
                 "name": "前端框架",
-                "count": 12
+                "count": 13
             },
             {
                 "name": "前端工程化",
                 "count": 11
             },
             {
-                "name": "模块化",
+                "name": "JavaScript",
                 "count": 10
             },
             {
-                "name": "JavaScript",
-                "count": 9
+                "name": "模块化",
+                "count": 10
             },
             {
                 "name": "Go",
@@ -255,16 +255,16 @@ export default {
                 "count": 7
             },
             {
+                "name": "React",
+                "count": 7
+            },
+            {
                 "name": "Vue.js",
                 "count": 7
             },
             {
                 "name": "工作",
                 "count": 7
-            },
-            {
-                "name": "React",
-                "count": 6
             },
             {
                 "name": "总结",
@@ -648,6 +648,10 @@ export default {
             },
             {
                 "name": "随便写写",
+                "count": 1
+            },
+            {
+                "name": "面试",
                 "count": 1
             }
         ]

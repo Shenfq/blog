@@ -31,13 +31,35 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2021-07-28T10:12:17.000Z",
+    'date': "2021-08-02T03:55:59.000Z",
     'updated': null,
     'excerpt': "自我介绍 我是 shenfq ，微信名「自然醒」，互联网一线前端开发。博客除了会分享前端技术，偶尔也会分享我的生活以及读书清单。写博客也是为了强制自己有些输出，为了保证质量，更新不会特别频繁，期望能做到周更。 工作经历 -...",
     'cover': "https://file.shenfq.com/pic/20201209222204.png",
     'blog': {
         "isPost": false,
         "posts": [
+            {
+                "pagePath": "posts/2021/setState.md",
+                "title": "React 中 setState 是一个宏任务还是微任务？",
+                "link": "posts/2021/setState.html",
+                "date": "2021/08/02",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "前端"
+                ],
+                "tags": [
+                    "前端框架",
+                    "JavaScript",
+                    "React",
+                    "面试"
+                ],
+                "excerpt": "最近有个朋友面试，面试官问了个奇葩的问题，也就是我写在标题上的这个问题。 能问出这个问题，面试官应该对 React 不是很了解，也是可能是看到面试者简历里面有写过自己熟悉 React，面试官想通过这个问题来判断面试者是不是真...",
+                "cover": "https://file.shenfq.com/pic/20210729112816.png"
+            },
             {
                 "pagePath": "posts/2021/ink.md",
                 "title": "在命令行里也能用 React",
@@ -1569,7 +1591,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 25
+                "count": 26
             },
             {
                 "name": "Go",
@@ -1631,19 +1653,19 @@ export default {
             },
             {
                 "name": "前端框架",
-                "count": 12
+                "count": 13
             },
             {
                 "name": "前端工程化",
                 "count": 11
             },
             {
-                "name": "模块化",
+                "name": "JavaScript",
                 "count": 10
             },
             {
-                "name": "JavaScript",
-                "count": 9
+                "name": "模块化",
+                "count": 10
             },
             {
                 "name": "Go",
@@ -1654,16 +1676,16 @@ export default {
                 "count": 7
             },
             {
+                "name": "React",
+                "count": 7
+            },
+            {
                 "name": "Vue.js",
                 "count": 7
             },
             {
                 "name": "工作",
                 "count": 7
-            },
-            {
-                "name": "React",
-                "count": 6
             },
             {
                 "name": "总结",
@@ -2047,6 +2069,10 @@ export default {
             },
             {
                 "name": "随便写写",
+                "count": 1
+            },
+            {
+                "name": "面试",
                 "count": 1
             }
         ]
