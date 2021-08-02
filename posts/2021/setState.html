@@ -106,7 +106,7 @@
 <p>先回顾之前的代码，在这两个操作中，我们分别在 Performance 中记录一次调用栈，看看两者的调用栈有何区别。</p>
 <p><img src="https://file.shenfq.com/pic/20210730143435.png" alt="正常操作"></p>
 <p><img src="https://file.shenfq.com/pic/20210730143455.png" alt="脱离 React 控制的操作"></p>
-<p>在调用栈中，可以看到 <code>Component.setState</code> 方法最终会调用<code>enqueueSetState</code> 方法 ，而 <code>enqueueSetState</code> 方法内部会调用 <code>scheduleUpdateOnFiber</code> 方法，区别就在于正常调用的时候，<code>scheduleUpdateOnFiber</code> 方法内只会调用 <code>ensureRootIsScheduled</code> ，而脱离 React 事件流的时候，<code>scheduleUpdateOnFiber</code> 内在 <code>ensureRootIsScheduled</code> 调用结束后，会直接调用 <code>flushSyncCallbackQueue</code> 方法，这个方法就是用来更新 state 并重新进行 render。</p>
+<p>在调用栈中，可以看到 <code>Component.setState</code> 方法最终会调用<code>enqueueSetState</code> 方法 ，而 <code>enqueueSetState</code> 方法内部会调用 <code>scheduleUpdateOnFiber</code> 方法，区别就在于正常调用的时候，<code>scheduleUpdateOnFiber</code> 方法内只会调用 <code>ensureRootIsScheduled</code> ，而脱离 React 事件流的时候，<code>scheduleUpdateOnFiber</code> 在 <code>ensureRootIsScheduled</code> 调用结束后，会直接调用 <code>flushSyncCallbackQueue</code> 方法，这个方法就是用来更新 state 并重新进行 render。</p>
 <p><img src="https://file.shenfq.com/pic/20210730144641.png" alt=""></p>
 <p><img src="https://file.shenfq.com/pic/20210730144810.png" alt=""></p>
 <pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">scheduleUpdateOnFiber</span><span class="token punctuation">(</span><span class="token parameter">fiber<span class="token punctuation">,</span> lane<span class="token punctuation">,</span> eventTime</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
