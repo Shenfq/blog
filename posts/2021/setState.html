@@ -124,6 +124,8 @@
 <span class="token punctuation">}</span>
 </code></pre>
 <p>上述代码可以简单描述这个过程，主要是判断了 <code>executionContext</code> 是否等于 <code>NoContext</code> 来确定当前更新流程是否在 React 事件流中。</p>
+<p>众所周知，React 在绑定事件时，会对事件进行合成，统一绑定到 <code>document</code> 上（ <code>react@17</code> 有所改变，变成成了 <code>render</code> 时指定的那个 DOM 元素），最后由 React 来派发。</p>
+<p>所有的事件在触发的时候，都会先调用 <code>batchedEventUpdates$1</code> 这个方法，在这里就会修改 <code>executionContext</code> 的值，React 就知道此时的 <code>setState</code> 在自己的掌控中。</p>
 <pre class="language-js"><code class="language-js"><span class="token comment">// executionContext 的默认状态</span>
 <span class="token keyword">var</span> executionContext <span class="token operator">=</span> <span class="token maybe-class-name">NoContext</span><span class="token punctuation">;</span>
 <span class="token keyword">function</span> <span class="token function">batchedEventUpdates$1</span><span class="token punctuation">(</span><span class="token parameter">fn<span class="token punctuation">,</span> a</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -140,9 +142,7 @@
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<p>众所周知，React 在绑定事件时，会对事件进行合成，统一绑定到 <code>document</code> 上（ <code>react@17</code> 有所改变，变成成了 <code>render</code> 时指定的那个 DOM 元素），最后由 React 来派发。</p>
-<p>所有的事件在触发的时候，都会调用 <code>batchedEventUpdates$1</code> 这个方法，在这里就会修改 <code>executionContext</code> 的值，React 就知道此时的 <code>setState</code> 在自己的掌控中。</p>
-<p><img src="https://file.shenfq.com/pic/20210801171209.png" alt="image-20210801171209583"></p>
+<p><img src="https://file.shenfq.com/pic/20210801171209.png" alt=""></p>
 <p>所以，不管是直接调用 <code>flushSyncCallbackQueue</code> ，还是推迟调用，这里本质上都是同步的，只是有个先后顺序的问题。</p>
 <h2 id="%E6%9C%AA%E6%9D%A5%E4%BC%9A%E6%9C%89%E5%BC%82%E6%AD%A5%E7%9A%84-setstate">未来会有异步的 setState<a class="anchor" href="#%E6%9C%AA%E6%9D%A5%E4%BC%9A%E6%9C%89%E5%BC%82%E6%AD%A5%E7%9A%84-setstate">§</a></h2>
 <p>如果你有认真看上面的代码，你会发现在 <code>scheduleUpdateOnFiber</code> 方法内，会判断 <code>lane</code> 是否为同步，那么是不是存在异步的情况？</p>
