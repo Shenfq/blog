@@ -139,7 +139,7 @@ handleClick = () => {
 
 ![脱离 React 控制的操作](https://file.shenfq.com/pic/20210730143455.png)
 
-在调用栈中，可以看到 `Component.setState` 方法最终会调用`enqueueSetState` 方法 ，而 `enqueueSetState` 方法内部会调用 `scheduleUpdateOnFiber` 方法，区别就在于正常调用的时候，`scheduleUpdateOnFiber` 方法内只会调用 `ensureRootIsScheduled` ，而脱离 React 事件流的时候，`scheduleUpdateOnFiber` 内在 `ensureRootIsScheduled` 调用结束后，会直接调用 `flushSyncCallbackQueue` 方法，这个方法就是用来更新 state 并重新进行 render。
+在调用栈中，可以看到 `Component.setState` 方法最终会调用`enqueueSetState` 方法 ，而 `enqueueSetState` 方法内部会调用 `scheduleUpdateOnFiber` 方法，区别就在于正常调用的时候，`scheduleUpdateOnFiber` 方法内只会调用 `ensureRootIsScheduled` ，而脱离 React 事件流的时候，`scheduleUpdateOnFiber` 在 `ensureRootIsScheduled` 调用结束后，会直接调用 `flushSyncCallbackQueue` 方法，这个方法就是用来更新 state 并重新进行 render。
 
 ![](https://file.shenfq.com/pic/20210730144641.png)
 
