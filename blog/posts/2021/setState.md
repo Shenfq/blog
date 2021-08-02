@@ -163,6 +163,10 @@ function scheduleUpdateOnFiber(fiber, lane, eventTime) {
 
 上述代码可以简单描述这个过程，主要是判断了 `executionContext` 是否等于 `NoContext` 来确定当前更新流程是否在 React 事件流中。 
 
+众所周知，React 在绑定事件时，会对事件进行合成，统一绑定到 `document` 上（ `react@17` 有所改变，变成成了 `render` 时指定的那个 DOM 元素），最后由 React 来派发。
+
+所有的事件在触发的时候，都会先调用 `batchedEventUpdates$1` 这个方法，在这里就会修改 `executionContext` 的值，React 就知道此时的 `setState` 在自己的掌控中。
+
 ```js
 // executionContext 的默认状态
 var executionContext = NoContext;
@@ -181,11 +185,7 @@ function batchedEventUpdates$1(fn, a) {
 }
 ```
 
-众所周知，React 在绑定事件时，会对事件进行合成，统一绑定到 `document` 上（ `react@17` 有所改变，变成成了 `render` 时指定的那个 DOM 元素），最后由 React 来派发。
-
-所有的事件在触发的时候，都会调用 `batchedEventUpdates$1` 这个方法，在这里就会修改 `executionContext` 的值，React 就知道此时的 `setState` 在自己的掌控中。
-
-![image-20210801171209583](https://file.shenfq.com/pic/20210801171209.png)
+![](https://file.shenfq.com/pic/20210801171209.png)
 
 所以，不管是直接调用 `flushSyncCallbackQueue` ，还是推迟调用，这里本质上都是同步的，只是有个先后顺序的问题。
 
