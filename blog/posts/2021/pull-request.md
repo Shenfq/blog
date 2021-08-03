@@ -106,3 +106,14 @@ $ git commit -m "feat: add options.fix"
 $ git push --set-upstream origin feature/add-fix-option
 ```
 
+#### 新建 PR
+
+在自己的 GitHub 仓库中找到对应项目，打开 `Pull requests` Tab，点击 `New pull request` 按钮，新建一个 PR。
+
+![](https://file.shenfq.com/pic/20210803215832.png)
+
+然后，在下面的界面中，选择刚刚提交的分支，最后点击 `Create pull request` 即可。
+
+![](https://file.shenfq.com/pic/20210803220329.png)
+
+点击之后，就会在对应的项目中新建一个 PR 了。
