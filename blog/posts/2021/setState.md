@@ -21,7 +21,7 @@ tags:
 
 ## 面试官的问法是否正确？
 
-面试官的问题是，`setState` 是一个宏认为还是微任务，那么在他的认知里，`setState` 肯定是一个异步操作。为了判断 `setState` 到底是不是异步操作，可以先做一个实验，通过 CRA 新建一个 React 项目，在项目中，编辑如下代码：
+面试官的问题是，`setState` 是一个宏任务还是微任务，那么在他的认知里，`setState` 肯定是一个异步操作。为了判断 `setState` 到底是不是异步操作，可以先做一个实验，通过 CRA 新建一个 React 项目，在项目中，编辑如下代码：
 
 ```jsx
 import React from 'react';
@@ -139,7 +139,7 @@ handleClick = () => {
 
 ![脱离 React 控制的操作](https://file.shenfq.com/pic/20210730143455.png)
 
-在调用栈中，可以看到 `Component.setState` 方法最终会调用`enqueueSetState` 方法 ，而 `enqueueSetState` 方法内部会调用 `scheduleUpdateOnFiber` 方法，区别就在于正常调用的时候，`scheduleUpdateOnFiber` 方法内只会调用 `ensureRootIsScheduled` ，而脱离 React 事件流的时候，`scheduleUpdateOnFiber` 在 `ensureRootIsScheduled` 调用结束后，会直接调用 `flushSyncCallbackQueue` 方法，这个方法就是用来更新 state 并重新进行 render。
+在调用栈中，可以看到 `Component.setState` 方法最终会调用`enqueueSetState` 方法 ，而 `enqueueSetState` 方法内部会调用 `scheduleUpdateOnFiber` 方法，区别就在于正常调用的时候，`scheduleUpdateOnFiber` 方法内只会调用 `ensureRootIsScheduled` ，在事件方法结束后，才会调用 `flushSyncCallbackQueue` 方法​。而脱离 React 事件流的时候，`scheduleUpdateOnFiber` 在 `ensureRootIsScheduled` 调用结束后，会直接调用 `flushSyncCallbackQueue` 方法，这个方法就是用来更新 state 并重新进行 render。
 
 ![](https://file.shenfq.com/pic/20210730144641.png)
 
@@ -163,7 +163,7 @@ function scheduleUpdateOnFiber(fiber, lane, eventTime) {
 
 上述代码可以简单描述这个过程，主要是判断了 `executionContext` 是否等于 `NoContext` 来确定当前更新流程是否在 React 事件流中。 
 
-众所周知，React 在绑定事件时，会对事件进行合成，统一绑定到 `document` 上（ `react@17` 有所改变，变成成了 `render` 时指定的那个 DOM 元素），最后由 React 来派发。
+众所周知，React 在绑定事件时，会对事件进行合成，统一绑定到 `document` 上（ `react@17` 有所改变，变成了绑定事件到 `render` 时指定的那个 DOM 元素），最后由 React 来派发。
 
 所有的事件在触发的时候，都会先调用 `batchedEventUpdates$1` 这个方法，在这里就会修改 `executionContext` 的值，React 就知道此时的 `setState` 在自己的掌控中。
 
