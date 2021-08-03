@@ -13,7 +13,7 @@
 <p><img src="https://file.shenfq.com/pic/20210729112816.png" alt=""></p>
 <p>能问出这个问题，面试官应该对 React 不是很了解，也是可能是看到面试者简历里面有写过自己熟悉 React，面试官想通过这个问题来判断面试者是不是真的熟悉 React 🤣。</p>
 <h2 id="%E9%9D%A2%E8%AF%95%E5%AE%98%E7%9A%84%E9%97%AE%E6%B3%95%E6%98%AF%E5%90%A6%E6%AD%A3%E7%A1%AE">面试官的问法是否正确？<a class="anchor" href="#%E9%9D%A2%E8%AF%95%E5%AE%98%E7%9A%84%E9%97%AE%E6%B3%95%E6%98%AF%E5%90%A6%E6%AD%A3%E7%A1%AE">§</a></h2>
-<p>面试官的问题是，<code>setState</code> 是一个宏认为还是微任务，那么在他的认知里，<code>setState</code> 肯定是一个异步操作。为了判断 <code>setState</code> 到底是不是异步操作，可以先做一个实验，通过 CRA 新建一个 React 项目，在项目中，编辑如下代码：</p>
+<p>面试官的问题是，<code>setState</code> 是一个宏任务还是微任务，那么在他的认知里，<code>setState</code> 肯定是一个异步操作。为了判断 <code>setState</code> 到底是不是异步操作，可以先做一个实验，通过 CRA 新建一个 React 项目，在项目中，编辑如下代码：</p>
 <pre class="language-jsx"><code class="language-jsx"><span class="token keyword module">import</span> <span class="token imports"><span class="token maybe-class-name">React</span></span> <span class="token keyword module">from</span> <span class="token string">'react'</span><span class="token punctuation">;</span>
 <span class="token keyword module">import</span> <span class="token imports">logo</span> <span class="token keyword module">from</span> <span class="token string">'./logo.svg'</span><span class="token punctuation">;</span>
 <span class="token keyword module">import</span> <span class="token string">'./App.css'</span><span class="token punctuation">;</span>
@@ -106,7 +106,7 @@
 <p>先回顾之前的代码，在这两个操作中，我们分别在 Performance 中记录一次调用栈，看看两者的调用栈有何区别。</p>
 <p><img src="https://file.shenfq.com/pic/20210730143435.png" alt="正常操作"></p>
 <p><img src="https://file.shenfq.com/pic/20210730143455.png" alt="脱离 React 控制的操作"></p>
-<p>在调用栈中，可以看到 <code>Component.setState</code> 方法最终会调用<code>enqueueSetState</code> 方法 ，而 <code>enqueueSetState</code> 方法内部会调用 <code>scheduleUpdateOnFiber</code> 方法，区别就在于正常调用的时候，<code>scheduleUpdateOnFiber</code> 方法内只会调用 <code>ensureRootIsScheduled</code> ，而脱离 React 事件流的时候，<code>scheduleUpdateOnFiber</code> 在 <code>ensureRootIsScheduled</code> 调用结束后，会直接调用 <code>flushSyncCallbackQueue</code> 方法，这个方法就是用来更新 state 并重新进行 render。</p>
+<p>在调用栈中，可以看到 <code>Component.setState</code> 方法最终会调用<code>enqueueSetState</code> 方法 ，而 <code>enqueueSetState</code> 方法内部会调用 <code>scheduleUpdateOnFiber</code> 方法，区别就在于正常调用的时候，<code>scheduleUpdateOnFiber</code> 方法内只会调用 <code>ensureRootIsScheduled</code> ，在事件方法结束后，才会调用 <code>flushSyncCallbackQueue</code> 方法​。而脱离 React 事件流的时候，<code>scheduleUpdateOnFiber</code> 在 <code>ensureRootIsScheduled</code> 调用结束后，会直接调用 <code>flushSyncCallbackQueue</code> 方法，这个方法就是用来更新 state 并重新进行 render。</p>
 <p><img src="https://file.shenfq.com/pic/20210730144641.png" alt=""></p>
 <p><img src="https://file.shenfq.com/pic/20210730144810.png" alt=""></p>
 <pre class="language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">scheduleUpdateOnFiber</span><span class="token punctuation">(</span><span class="token parameter">fiber<span class="token punctuation">,</span> lane<span class="token punctuation">,</span> eventTime</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -124,7 +124,7 @@
 <span class="token punctuation">}</span>
 </code></pre>
 <p>上述代码可以简单描述这个过程，主要是判断了 <code>executionContext</code> 是否等于 <code>NoContext</code> 来确定当前更新流程是否在 React 事件流中。</p>
-<p>众所周知，React 在绑定事件时，会对事件进行合成，统一绑定到 <code>document</code> 上（ <code>react@17</code> 有所改变，变成成了 <code>render</code> 时指定的那个 DOM 元素），最后由 React 来派发。</p>
+<p>众所周知，React 在绑定事件时，会对事件进行合成，统一绑定到 <code>document</code> 上（ <code>react@17</code> 有所改变，变成了绑定事件到 <code>render</code> 时指定的那个 DOM 元素），最后由 React 来派发。</p>
 <p>所有的事件在触发的时候，都会先调用 <code>batchedEventUpdates$1</code> 这个方法，在这里就会修改 <code>executionContext</code> 的值，React 就知道此时的 <code>setState</code> 在自己的掌控中。</p>
 <pre class="language-js"><code class="language-js"><span class="token comment">// executionContext 的默认状态</span>
 <span class="token keyword">var</span> executionContext <span class="token operator">=</span> <span class="token maybe-class-name">NoContext</span><span class="token punctuation">;</span>
