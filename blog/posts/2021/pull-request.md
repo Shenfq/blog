@@ -116,4 +116,5 @@ $ git push --set-upstream origin feature/add-fix-option
 
 ![](https://file.shenfq.com/pic/20210803220329.png)
 
-点击之后，就会在对应的项目中新建一个 PR 了。
+点击之后，就在对应的项目中提交了一个属于你的 PR 了。如果顺利的话，你就能『混』 到一个开源项目贡献者的头衔。
+
