@@ -1,3 +1,16 @@
+---
+title: 你给开源框架提过 PR 吗？
+author: shenfq
+date: 2021/08/04
+categories:
+- 前端
+tags:
+- 感悟
+- GitHub
+- Pull Request
+---
+
+
 # 你给开源框架提过 PR 吗？
 
 你有给开源的库或者框架提过 PR 吗？
