@@ -55,6 +55,27 @@ export default {
         "isPost": true,
         "posts": [
             {
+                "pagePath": "posts/2021/pull-request.md",
+                "title": "你给开源框架提过 PR 吗？",
+                "link": "posts/2021/pull-request.html",
+                "date": "2021/08/04",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "前端"
+                ],
+                "tags": [
+                    "感悟",
+                    "GitHub",
+                    "Pull Request"
+                ],
+                "excerpt": "你有给开源的库或者框架提过 PR 吗？ 如果没有，那么今天的文章会教你怎么给开源库提 PR。 为什么要给开源框架提 PR？ 这件事还得从好几年前（2019年）说起，那时候在折腾一个虚拟 DOM 的玩具（参考之前的文章：🔗虚拟DOM到底...",
+                "cover": "https://file.shenfq.com/pic/20210803211333"
+            },
+            {
                 "pagePath": "posts/2021/setState.md",
                 "title": "React 中 setState 是一个宏任务还是微任务？",
                 "link": "posts/2021/setState.html",
@@ -1607,7 +1628,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 26
+                "count": 27
             },
             {
                 "name": "Go",
@@ -1704,11 +1725,11 @@ export default {
                 "count": 7
             },
             {
-                "name": "总结",
-                "count": 6
+                "name": "感悟",
+                "count": 7
             },
             {
-                "name": "感悟",
+                "name": "总结",
                 "count": 6
             },
             {
@@ -1856,6 +1877,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "GitHub",
+                "count": 1
+            },
+            {
                 "name": "gulp",
                 "count": 1
             },
@@ -1889,6 +1914,10 @@ export default {
             },
             {
                 "name": "Postion",
+                "count": 1
+            },
+            {
+                "name": "Pull Request",
                 "count": 1
             },
             {

@@ -191,7 +191,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 26
+                "count": 27
             },
             {
                 "name": "Go",
@@ -288,11 +288,11 @@ export default {
                 "count": 7
             },
             {
-                "name": "总结",
-                "count": 6
+                "name": "感悟",
+                "count": 7
             },
             {
-                "name": "感悟",
+                "name": "总结",
                 "count": 6
             },
             {
@@ -440,6 +440,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "GitHub",
+                "count": 1
+            },
+            {
                 "name": "gulp",
                 "count": 1
             },
@@ -473,6 +477,10 @@ export default {
             },
             {
                 "name": "Postion",
+                "count": 1
+            },
+            {
+                "name": "Pull Request",
                 "count": 1
             },
             {
