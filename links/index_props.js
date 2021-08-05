@@ -24,7 +24,7 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2021-08-04T01:50:28.000Z",
+    'date': "2021-08-05T04:46:11.000Z",
     'updated': null,
     'excerpt': " - 童欧巴 —— 你远道而来这世间，想必也是因为热爱吧 - 悲伤日记 —— 一个有温度的野生前端猿人 - 少年民仔 —— 愿你出走半生，归来仍是少年",
     'cover': undefined,
@@ -33,7 +33,7 @@ export default {
         "posts": [
             {
                 "pagePath": "posts/2021/pull-request.md",
-                "title": "你给开源框架提过 PR 吗？",
+                "title": "你给开源项目提过 PR 吗？",
                 "link": "posts/2021/pull-request.html",
                 "date": "2021/08/04",
                 "updated": null,
@@ -49,8 +49,8 @@ export default {
                     "GitHub",
                     "Pull Request"
                 ],
-                "excerpt": "你有给开源的库或者框架提过 PR 吗？ 如果没有，那么今天的文章会教你怎么给开源库提 PR。 为什么要给开源框架提 PR？ 这件事还得从好几年前（2019年）说起，那时候在折腾一个虚拟 DOM 的玩具（参考之前的文章：🔗虚拟DOM到底...",
-                "cover": "https://file.shenfq.com/pic/20210803211333"
+                "excerpt": "你有给开源的库或者框架提过 PR 吗？ 如果没有，那么今天的文章会教你怎么给开源库提 PR。 为什么要给开源项目提 PR？ 这件事还得从好几年前（2019年）说起，那时候在折腾一个虚拟 DOM 的玩具（参考之前的文章：🔗虚拟DOM到底...",
+                "cover": "https://file.shenfq.com/pic/20210804130741.jpeg"
             },
             {
                 "pagePath": "posts/2021/setState.md",

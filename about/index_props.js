@@ -31,7 +31,7 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2021-08-04T01:50:28.000Z",
+    'date': "2021-08-05T04:46:11.000Z",
     'updated': null,
     'excerpt': "自我介绍 我是 shenfq ，微信名「自然醒」，互联网一线前端开发。博客除了会分享前端技术，偶尔也会分享我的生活以及读书清单。写博客也是为了强制自己有些输出，为了保证质量，更新不会特别频繁，期望能做到周更。 工作经历 -...",
     'cover': "https://file.shenfq.com/pic/20201209222204.png",
@@ -40,7 +40,7 @@ export default {
         "posts": [
             {
                 "pagePath": "posts/2021/pull-request.md",
-                "title": "你给开源框架提过 PR 吗？",
+                "title": "你给开源项目提过 PR 吗？",
                 "link": "posts/2021/pull-request.html",
                 "date": "2021/08/04",
                 "updated": null,
@@ -56,8 +56,8 @@ export default {
                     "GitHub",
                     "Pull Request"
                 ],
-                "excerpt": "你有给开源的库或者框架提过 PR 吗？ 如果没有，那么今天的文章会教你怎么给开源库提 PR。 为什么要给开源框架提 PR？ 这件事还得从好几年前（2019年）说起，那时候在折腾一个虚拟 DOM 的玩具（参考之前的文章：🔗虚拟DOM到底...",
-                "cover": "https://file.shenfq.com/pic/20210803211333"
+                "excerpt": "你有给开源的库或者框架提过 PR 吗？ 如果没有，那么今天的文章会教你怎么给开源库提 PR。 为什么要给开源项目提 PR？ 这件事还得从好几年前（2019年）说起，那时候在折腾一个虚拟 DOM 的玩具（参考之前的文章：🔗虚拟DOM到底...",
+                "cover": "https://file.shenfq.com/pic/20210804130741.jpeg"
             },
             {
                 "pagePath": "posts/2021/setState.md",

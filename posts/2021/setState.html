@@ -85,7 +85,7 @@
 <span class="token punctuation">}</span>
 </code></pre>
 <p><img src="https://file.shenfq.com/pic/20210730110005.gif" alt=""></p>
-<p>所以，<code>setState</code> 就是一次同步行为，根本不存在面试官的问题。</p>
+<p>由此可见，<code>setState</code> 本质上还是在一个事件循环中，并没有切换到另外宏任务或者微任务中，在运行上是基于同步代码实现，只是行为上看起来像异步。所以，根本不存在面试官的问题。</p>
 <h2 id="react-%E6%98%AF%E5%A6%82%E4%BD%95%E6%8E%A7%E5%88%B6-setstate-%E7%9A%84-">React 是如何控制 setState 的 ？<a class="anchor" href="#react-%E6%98%AF%E5%A6%82%E4%BD%95%E6%8E%A7%E5%88%B6-setstate-%E7%9A%84-">§</a></h2>
 <p>前面的案例中，<code>setState</code> 只有在 <code>setTimeout</code> 中才会变得像一个同步方法，这是怎么做到的？</p>
 <pre class="language-js"><code class="language-js"><span class="token function-variable function">handleClick</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
