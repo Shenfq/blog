@@ -6,6 +6,9 @@ export default {
   description: '前端工程师，爱折腾，擅长 JavaScript，欢迎关注我的公众号「自然醒的笔记本」',
   srcDir: 'blog',
   plugins: ['blog'],
+  exclude: [
+    '**/2021/GTD.md'
+  ],
   head: <script src="/assets/hm.js" />,
   blog: {
     root: '/posts/',
