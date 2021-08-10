@@ -56,6 +56,29 @@ export default {
         "isPost": true,
         "posts": [
             {
+                "pagePath": "posts/2021/GTD.md",
+                "title": "使用 GTD 优化自己的工作和生活",
+                "link": "posts/2021/GTD.html",
+                "date": "2021/08/10",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "随便写写"
+                ],
+                "tags": [
+                    "GTD",
+                    "方法论",
+                    "提醒事项",
+                    "滴答清单",
+                    "随便写写"
+                ],
+                "excerpt": "算起来工作已经四个年头了，刚开始工作就在使用 TODO 工具，比如 OneNote、奇妙清单（现在叫：微软 TODO）、滴答清单。但是，在用的过程中很多 TODO 直到项目结束了，依然是 TODO。 直到最近遇到了 GTD，简直是打开了新世界的大...",
+                "cover": "https://file.shenfq.com/pic/20210810152004.png"
+            },
+            {
                 "pagePath": "posts/2021/pull-request.md",
                 "title": "你给开源项目提过 PR 吗？",
                 "link": "posts/2021/pull-request.html",
@@ -1652,11 +1675,11 @@ export default {
                 "count": 4
             },
             {
-                "name": "机器学习",
-                "count": 3
+                "name": "随便写写",
+                "count": 4
             },
             {
-                "name": "随便写写",
+                "name": "机器学习",
                 "count": 3
             },
             {
@@ -1834,6 +1857,10 @@ export default {
                 "count": 2
             },
             {
+                "name": "随便写写",
+                "count": 2
+            },
+            {
                 "name": "AMD",
                 "count": 1
             },
@@ -1879,6 +1906,10 @@ export default {
             },
             {
                 "name": "GitHub",
+                "count": 1
+            },
+            {
+                "name": "GTD",
                 "count": 1
             },
             {
@@ -2026,7 +2057,15 @@ export default {
                 "count": 1
             },
             {
+                "name": "提醒事项",
+                "count": 1
+            },
+            {
                 "name": "数组",
+                "count": 1
+            },
+            {
+                "name": "方法论",
                 "count": 1
             },
             {
@@ -2047,6 +2086,10 @@ export default {
             },
             {
                 "name": "深度学习",
+                "count": 1
+            },
+            {
+                "name": "滴答清单",
                 "count": 1
             },
             {
@@ -2111,10 +2154,6 @@ export default {
             },
             {
                 "name": "长沙",
-                "count": 1
-            },
-            {
-                "name": "随便写写",
                 "count": 1
             },
             {

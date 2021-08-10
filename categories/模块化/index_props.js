@@ -170,11 +170,11 @@ export default {
                 "count": 4
             },
             {
-                "name": "机器学习",
-                "count": 3
+                "name": "随便写写",
+                "count": 4
             },
             {
-                "name": "随便写写",
+                "name": "机器学习",
                 "count": 3
             },
             {
@@ -352,6 +352,10 @@ export default {
                 "count": 2
             },
             {
+                "name": "随便写写",
+                "count": 2
+            },
+            {
                 "name": "AMD",
                 "count": 1
             },
@@ -397,6 +401,10 @@ export default {
             },
             {
                 "name": "GitHub",
+                "count": 1
+            },
+            {
+                "name": "GTD",
                 "count": 1
             },
             {
@@ -544,7 +552,15 @@ export default {
                 "count": 1
             },
             {
+                "name": "提醒事项",
+                "count": 1
+            },
+            {
                 "name": "数组",
+                "count": 1
+            },
+            {
+                "name": "方法论",
                 "count": 1
             },
             {
@@ -565,6 +581,10 @@ export default {
             },
             {
                 "name": "深度学习",
+                "count": 1
+            },
+            {
+                "name": "滴答清单",
                 "count": 1
             },
             {
@@ -629,10 +649,6 @@ export default {
             },
             {
                 "name": "长沙",
-                "count": 1
-            },
-            {
-                "name": "随便写写",
                 "count": 1
             },
             {
