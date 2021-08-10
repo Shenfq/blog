@@ -7,7 +7,7 @@ export default {
   srcDir: 'blog',
   plugins: ['blog'],
   exclude: [
-    '**/2021/GTD.md'
+    // '**/2021/GTD.md'
   ],
   head: <script src="/assets/hm.js" />,
   blog: {
