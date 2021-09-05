@@ -51,7 +51,7 @@ export default {
                 "pagePath": "posts/2021/sudoku.md",
                 "title": "用 JavaScript 做数独",
                 "link": "posts/2021/sudoku.html",
-                "date": "2021-09-05T12:48:39.000Z",
+                "date": "2021-09-05T13:05:11.000Z",
                 "updated": null,
                 "author": "Shenfq",
                 "contributors": [
