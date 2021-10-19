@@ -191,7 +191,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 27
+                "count": 29
             },
             {
                 "name": "Go",
@@ -249,19 +249,19 @@ export default {
         "tags": [
             {
                 "name": "前端",
-                "count": 25
+                "count": 26
             },
             {
                 "name": "前端框架",
                 "count": 13
             },
             {
-                "name": "前端工程化",
+                "name": "JavaScript",
                 "count": 11
             },
             {
-                "name": "JavaScript",
-                "count": 10
+                "name": "前端工程化",
+                "count": 11
             },
             {
                 "name": "模块化",
@@ -272,11 +272,11 @@ export default {
                 "count": 8
             },
             {
-                "name": "Node",
-                "count": 7
+                "name": "React",
+                "count": 8
             },
             {
-                "name": "React",
+                "name": "Node",
                 "count": 7
             },
             {
@@ -329,6 +329,10 @@ export default {
             },
             {
                 "name": "ESLint",
+                "count": 2
+            },
+            {
+                "name": "fetch",
                 "count": 2
             },
             {
@@ -408,6 +412,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "axios",
+                "count": 1
+            },
+            {
                 "name": "babel",
                 "count": 1
             },
@@ -429,10 +437,6 @@ export default {
             },
             {
                 "name": "fastify",
-                "count": 1
-            },
-            {
-                "name": "fetch",
                 "count": 1
             },
             {
@@ -496,6 +500,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "request",
+                "count": 1
+            },
+            {
                 "name": "Snabbdom",
                 "count": 1
             },
@@ -508,11 +516,19 @@ export default {
                 "count": 1
             },
             {
+                "name": "sudoku",
+                "count": 1
+            },
+            {
                 "name": "this",
                 "count": 1
             },
             {
                 "name": "TypeScript",
+                "count": 1
+            },
+            {
+                "name": "undici",
                 "count": 1
             },
             {

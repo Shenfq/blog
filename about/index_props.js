@@ -31,7 +31,7 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2021-09-05T13:05:11.000Z",
+    'date': "2021-10-19T10:51:10.000Z",
     'updated': null,
     'excerpt': "自我介绍 我是 shenfq ，微信名「自然醒」，互联网一线前端开发。博客除了会分享前端技术，偶尔也会分享我的生活以及读书清单。写博客也是为了强制自己有些输出，为了保证质量，更新不会特别频繁，期望能做到周更。 工作经历 -...",
     'cover': "https://file.shenfq.com/pic/20201209222204.png",
@@ -39,14 +39,45 @@ export default {
         "isPost": false,
         "posts": [
             {
+                "pagePath": "posts/2021/Undici.md",
+                "title": "介绍一个请求库 — Undici",
+                "link": "posts/2021/Undici.html",
+                "date": "2021/10/19",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "前端"
+                ],
+                "tags": [
+                    "前端",
+                    "axios",
+                    "fetch",
+                    "undici",
+                    "request"
+                ],
+                "excerpt": "前言 在浏览器中，如果想发起一个请求，我们经常会使用 xhr，当然也有更现代化的 fetch api。不过这些底层 api，往往调用方式比较简陋，也不支持一些全局性的配置，在实际的使用过程中，我们可能会用到 axios 请求库，来进行一...",
+                "cover": "https://file.shenfq.com/pic/202110081517709.png"
+            },
+            {
                 "pagePath": "posts/2021/sudoku.md",
                 "title": "用 JavaScript 做数独",
                 "link": "posts/2021/sudoku.html",
-                "date": "2021-09-05T13:05:11.000Z",
+                "date": "2021/09/05",
                 "updated": null,
-                "author": "Shenfq",
+                "author": "shenfq",
                 "contributors": [
                     "Shenfq"
+                ],
+                "categories": [
+                    "前端"
+                ],
+                "tags": [
+                    "React",
+                    "sudoku",
+                    "JavaScript"
                 ],
                 "excerpt": "最近看到老婆天天在手机上玩数独，突然想起 N 年前刷 LeetCode 的时候，有个类似的算法题（37.解数独），是不是可以把这个算法进行可视化。 说干就干，经过一个小时的实践，最终效果如下： 怎么解数独 解数独之前，我们先了解一...",
                 "cover": "https://file.shenfq.com/pic/20210816103453.gif"
@@ -1648,7 +1679,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 27
+                "count": 29
             },
             {
                 "name": "Go",
@@ -1706,19 +1737,19 @@ export default {
         "tags": [
             {
                 "name": "前端",
-                "count": 25
+                "count": 26
             },
             {
                 "name": "前端框架",
                 "count": 13
             },
             {
-                "name": "前端工程化",
+                "name": "JavaScript",
                 "count": 11
             },
             {
-                "name": "JavaScript",
-                "count": 10
+                "name": "前端工程化",
+                "count": 11
             },
             {
                 "name": "模块化",
@@ -1729,11 +1760,11 @@ export default {
                 "count": 8
             },
             {
-                "name": "Node",
-                "count": 7
+                "name": "React",
+                "count": 8
             },
             {
-                "name": "React",
+                "name": "Node",
                 "count": 7
             },
             {
@@ -1786,6 +1817,10 @@ export default {
             },
             {
                 "name": "ESLint",
+                "count": 2
+            },
+            {
+                "name": "fetch",
                 "count": 2
             },
             {
@@ -1865,6 +1900,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "axios",
+                "count": 1
+            },
+            {
                 "name": "babel",
                 "count": 1
             },
@@ -1886,10 +1925,6 @@ export default {
             },
             {
                 "name": "fastify",
-                "count": 1
-            },
-            {
-                "name": "fetch",
                 "count": 1
             },
             {
@@ -1953,6 +1988,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "request",
+                "count": 1
+            },
+            {
                 "name": "Snabbdom",
                 "count": 1
             },
@@ -1965,11 +2004,19 @@ export default {
                 "count": 1
             },
             {
+                "name": "sudoku",
+                "count": 1
+            },
+            {
                 "name": "this",
                 "count": 1
             },
             {
                 "name": "TypeScript",
+                "count": 1
+            },
+            {
+                "name": "undici",
                 "count": 1
             },
             {

@@ -15,6 +15,27 @@ export default {
         "isPost": false,
         "posts": [
             {
+                "pagePath": "posts/2021/sudoku.md",
+                "title": "用 JavaScript 做数独",
+                "link": "posts/2021/sudoku.html",
+                "date": "2021/09/05",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "前端"
+                ],
+                "tags": [
+                    "React",
+                    "sudoku",
+                    "JavaScript"
+                ],
+                "excerpt": "最近看到老婆天天在手机上玩数独，突然想起 N 年前刷 LeetCode 的时候，有个类似的算法题（37.解数独），是不是可以把这个算法进行可视化。 说干就干，经过一个小时的实践，最终效果如下： 怎么解数独 解数独之前，我们先了解一...",
+                "cover": "https://file.shenfq.com/pic/20210816103453.gif"
+            },
+            {
                 "pagePath": "posts/2021/setState.md",
                 "title": "React 中 setState 是一个宏任务还是微任务？",
                 "link": "posts/2021/setState.html",
@@ -234,7 +255,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 27
+                "count": 29
             },
             {
                 "name": "Go",
@@ -292,19 +313,19 @@ export default {
         "tags": [
             {
                 "name": "前端",
-                "count": 25
+                "count": 26
             },
             {
                 "name": "前端框架",
                 "count": 13
             },
             {
-                "name": "前端工程化",
+                "name": "JavaScript",
                 "count": 11
             },
             {
-                "name": "JavaScript",
-                "count": 10
+                "name": "前端工程化",
+                "count": 11
             },
             {
                 "name": "模块化",
@@ -315,11 +336,11 @@ export default {
                 "count": 8
             },
             {
-                "name": "Node",
-                "count": 7
+                "name": "React",
+                "count": 8
             },
             {
-                "name": "React",
+                "name": "Node",
                 "count": 7
             },
             {
@@ -372,6 +393,10 @@ export default {
             },
             {
                 "name": "ESLint",
+                "count": 2
+            },
+            {
+                "name": "fetch",
                 "count": 2
             },
             {
@@ -451,6 +476,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "axios",
+                "count": 1
+            },
+            {
                 "name": "babel",
                 "count": 1
             },
@@ -472,10 +501,6 @@ export default {
             },
             {
                 "name": "fastify",
-                "count": 1
-            },
-            {
-                "name": "fetch",
                 "count": 1
             },
             {
@@ -539,6 +564,10 @@ export default {
                 "count": 1
             },
             {
+                "name": "request",
+                "count": 1
+            },
+            {
                 "name": "Snabbdom",
                 "count": 1
             },
@@ -551,11 +580,19 @@ export default {
                 "count": 1
             },
             {
+                "name": "sudoku",
+                "count": 1
+            },
+            {
                 "name": "this",
                 "count": 1
             },
             {
                 "name": "TypeScript",
+                "count": 1
+            },
+            {
+                "name": "undici",
                 "count": 1
             },
             {
