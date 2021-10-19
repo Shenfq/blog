@@ -1,3 +1,16 @@
+---
+title: 用 JavaScript 做数独
+author: shenfq
+date: 2021/09/05
+categories:
+- 前端
+tags:
+- React
+- sudoku
+- JavaScript
+---
+
+
 # 用 JavaScript 做数独
 
 最近看到老婆天天在手机上玩数独，突然想起 N 年前刷 LeetCode 的时候，有个类似的算法题（[37.解数独](https://leetcode-cn.com/problems/sudoku-solver/)），是不是可以把这个算法进行可视化。
