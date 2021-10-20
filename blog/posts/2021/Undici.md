@@ -14,21 +14,21 @@ tags:
 
 ## 前言
 
-在浏览器中，如果想发起一个请求，我们经常会使用 `xhr`，当然也有更现代化的 `fetch api`。不过这些底层 api，往往调用方式比较简陋，也不支持一些全局性的配置，在实际的使用过程中，我们可能会用到 `axios` 请求库，来进行一些请求。
+在浏览器中，如果想发起一个请求，我们以前会使用到 `xhr`，不过这种底层 api，往往调用方式比较简陋。为了提高开发效率， jQuery 的 `$.ajax` 可能是最好的选择，好在后来出现了更加现代化的 `fetch` api 。
 
-那在 Node.js 中，几乎都会通过 `request` 这个库，来进行请求。遗憾的是，`request` 在两年前就停止维护了，在 Node.js 中需要找到一个能够替代的库还挺不容易的。
+但是考虑到 `fetch` 的兼容性，而且它也不支持一些全局性的配置，以及请求中断，在实际的使用过程中，我们可能会用到 `axios` 请求库，来进行一些请求。到了 Node.js 中，几乎都会通过 `request` 这个库，来进行请求。遗憾的是，`request` 在两年前就停止维护了，在 Node.js 中需要找到一个能够替代的库还挺不容易的。
 
 ![](https://file.shenfq.com/pic/202110081517709.png)
 
 在 request 的 [issues](https://github.com/request/request/issues/3143) 中，有一个表格推荐了一些在 Node.js 中常用的请求库：
 
-| 包名                                                         | 包大小                                                       | API风格               | 简介                                                         |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | --------------------- | ------------------------------------------------------------ |
-| [node-fetch](https://www.npmjs.com/package/node-fetch)       | [0.4kb](https://bundlephobia.com/result?p=node-fetch@2.3.0)  | promise / stream      | A light-weight module that brings window.fetch to Node.js    |
-| [got](https://www.npmjs.com/package/got)                     | [48.4kb](https://bundlephobia.com/result?p=got@9.6.0)        | promise / stream      | Simplified HTTP requests                                     |
-| [axios](https://www.npmjs.com/package/axios)                 | [11.9kb](https://bundlephobia.com/result?p=axios@0.18.0)     | promise / stream      | Promise based HTTP client for the browser and node.js        |
-| [superagent](https://www.npmjs.com/package/superagent)       | [18kb](https://bundlephobia.com/result?p=superagent@5.0.2)   | chaining / promise    | Small progressive client-side HTTP request library, and Node.js module with the same API, sporting many high-level HTTP client features |
-| [urllib](https://www.npmjs.com/package/urllib)               | [816kb](https://bundlephobia.com/result?p=urllib@2.33.2)     | callback / promise    | Help in opening URLs (mostly HTTP) in a complex world — basic and digest authentication, redirections, cookies and more. |
+| 包名                                                   | 包大小 | API风格            | 简介                                                         |
+| ------------------------------------------------------ | ------ | ------------------ | ------------------------------------------------------------ |
+| [node-fetch](https://www.npmjs.com/package/node-fetch) | 0.4kb  | promise / stream   | A light-weight module that brings window.fetch to Node.js    |
+| [got](https://www.npmjs.com/package/got)               | 48.4kb | promise / stream   | Simplified HTTP requests                                     |
+| [axios](https://www.npmjs.com/package/axios)           | 11.9kb | promise / stream   | Promise based HTTP client for the browser and node.js        |
+| [superagent](https://www.npmjs.com/package/superagent) | 18kb   | chaining / promise | Small progressive client-side HTTP request library, and Node.js module with the same API, sporting many high-level HTTP client features |
+| [urllib](https://www.npmjs.com/package/urllib)         | 816kb  | callback / promise | Help in opening URLs (mostly HTTP) in a complex world — basic and digest authentication, redirections, cookies and more. |
 
 浏览器中使用比较多的 `axios`，在 Node.js 中并不好用，特别是要进行文件上传的时候，会有很多意想不到的问题。
 
@@ -155,6 +155,57 @@ bootstrap()
 
 只是返回结果有点不一样，`request` 方法返回的 http 响应结果在 `body` 属性中，而且该属性也支持同 `fetch` 类似的 `.json()`/`.text()` 等方法。
 
+#### 中断请求
+
+安装 `abort-controller` 库，然后实例化 `abort-controller`，将中断信号传入 request 配置中。
+
+```
+npm i abort-controller
+```
+
+```js
+const undici = require('undici')
+const AbortController = require('abort-controller')
+
+// 实例化 abort-controller
+const abortController = new AbortController()
+undici.request('http://127.0.0.1:3100', {
+  method: 'GET',
+  // 传入中断信号量
+  signal: abortController.signal,
+}).then(({ statusCode, body }) => {
+  body.on('data', (data) => {
+    console.log(statusCode, data.toString())
+  })
+})
+```
+
+![](https://file.shenfq.com/pic/202110200948095.png)
+
+我们运行代码，发现是可以请求成功的，是因为我们没有主动调用中断方法。
+
+```js
+undici.request('http://127.0.0.1:3100', {
+  method: 'GET',
+  signal: abortController.signal,
+}).then(({ statusCode, body }) => {
+  console.log('请求成功')
+  body.on('data', (data) => {
+    console.log(statusCode, data.toString())
+  })
+}).catch(error => {
+  // 捕获由于中断触发的错误
+  console.log('error', error.name)
+})
+
+// 调用中断
+abortController.abort()
+```
+
+![](https://file.shenfq.com/pic/202110200949519.png)
+
+现在运行代码会发现，并没有输出 `请求成功` 的日志，进入了 `catch` 逻辑，成功的进行了请求的中断。
+
 ### undici.steam
 
 `undici.steam` 方法可以用来进行文件下载，或者接口代理。
@@ -171,7 +222,7 @@ const url = 'https://img.dpm.org.cn/Uploads/Picture/dc/cegift/cegift6389.jpg'
 stream(url, { opaque: out }, ({ opaque }) => opaque)
 ```
 
- ![](https://file.shenfq.com/pic/202110191821042.gif)
+![](https://file.shenfq.com/pic/202110200915916.gif)
 
 #### 接口代理
 
@@ -194,7 +245,7 @@ http.createServer((req, res) => {
 
 ## 总结
 
-本文只是介绍了 `undici` 几个 api 的使用方式，看起来 `undici` 上手难道还是比较低的。但是兼容性不还行，比如，`fetch` 只支持 `node@v16.5` 以上的版本。
+本文只是介绍了 `undici` 几个 api 的使用方式，看起来 `undici` 上手难道还是比较低的。但是兼容性还不太行，比如，`fetch` 只支持 `node@v16.5.0` 以上的版本。
 
-对于这种比较新的库，个人还是建议多观望一段时间，虽然 `request` 已经废弃了，我们还是使用一些经过较长时间考验过的库，比如，egg 框架中使用的 [urllib](https://www.npmjs.com/package/urllib)，还有一个 [node-fetch](https://www.npmjs.com/package/node-fetch)，上手难道也比较低，浏览器中的 fetch api 使用方式一致。
+对于这种比较新的库，个人还是建议多观望一段时间，虽然 `request` 已经废弃了，我们还是使用一些经过较长时间考验过的库，比如，egg 框架中使用的 [urllib](https://www.npmjs.com/package/urllib)，还有一个 [node-fetch](https://www.npmjs.com/package/node-fetch)，上手难道也比较低，与浏览器中的 `fetch` api 使用方式一致。
 
