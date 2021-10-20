@@ -72,7 +72,7 @@ export default {
                     "undici",
                     "request"
                 ],
-                "excerpt": "前言 在浏览器中，如果想发起一个请求，我们经常会使用 xhr，当然也有更现代化的 fetch api。不过这些底层 api，往往调用方式比较简陋，也不支持一些全局性的配置，在实际的使用过程中，我们可能会用到 axios 请求库，来进行一...",
+                "excerpt": "前言 在浏览器中，如果想发起一个请求，我们以前会使用到 xhr，不过这种底层 api，往往调用方式比较简陋。为了提高开发效率， jQuery 的 $.ajax 可能是最好的选择，好在后来出现了更加现代化的 fetch api 。 但是考虑到 fetch ...",
                 "cover": "https://file.shenfq.com/pic/202110081517709.png"
             },
             {

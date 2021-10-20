@@ -9,9 +9,9 @@
       document.getElementById('prismTheme').href = "/assets/prism_tomorrow.css";
     }
   </script>
-</head><body><a class="czs-menu-l show_on_mobile aside_button_open" href="#" style="background-image:url(&quot;/assets/czs-menu-l.svg&quot;)"></a><a class="show_on_mobile aside_button_text" href="/">自然醒的博客</a><aside class="hide_on_mobile"><div class="aside_card"><a class="czs-menu-l show_on_mobile aside_button_close" href="#" style="background-image:url(&quot;/assets/czs-close-l.svg&quot;)"></a><h1><a href="/">自然醒的博客</a></h1><p class="description">前端工程师，爱折腾，擅长 JavaScript，欢迎关注我的公众号「自然醒的笔记本」</p><ul class="social list_style_none"><li class="flex_center"><a class="czs-github-logo" href="https://github.com/Shenfq" target="_blank" style="background-image:url(&quot;/assets/czs-github-logo.svg&quot;)"></a></li><li class="flex_center"><a class="czs-message-l" href="mailto:shenfq95@foxmail.com" target="_blank" style="background-image:url(&quot;/assets/czs-message-l.svg&quot;)"></a></li><li style="flex-grow:1"></li><li class="toggle_dark flex_center"><span class="czs-sun" style="background-image:url(&quot;/assets/czs-sun.svg&quot;)"></span><span class="czs-sun-l" style="background-image:url(&quot;/assets/czs-sun-l.svg&quot;)"></span><span class="czs-moon" style="background-image:url(&quot;/assets/czs-moon.svg&quot;)"></span><span class="czs-moon-l" style="background-image:url(&quot;/assets/czs-moon-l.svg&quot;)"></span></li></ul><nav><ul class="menu list_style_none"><li><a class="flex_center" href="/"><span class="czs-home-l" style="background-image:url(&quot;/assets/czs-home-l.svg&quot;)"></span>首页</a></li><li><a class="flex_center" href="/categories/"><span class="czs-category-l" style="background-image:url(&quot;/assets/czs-category-l.svg&quot;)"></span>分类</a></li><li><a class="flex_center" href="/tags/"><span class="czs-tag-l" style="background-image:url(&quot;/assets/czs-tag-l.svg&quot;)"></span>标签</a></li><li><a class="flex_center" href="/about/"><span class="czs-about-l" style="background-image:url(&quot;/assets/czs-about-l.svg&quot;)"></span>关于</a></li><li><a class="flex_center" href="/archives/"><span class="czs-box-l" style="background-image:url(&quot;/assets/czs-box-l.svg&quot;)"></span>归档</a></li><li><a class="flex_center" href="/links/index.html"><span class="czs-link-l" style="background-image:url(&quot;/assets/czs-link-l.svg&quot;)"></span>友情链接</a></li></ul></nav></div><nav class="toc"><ol><li><a href="#%E5%89%8D%E8%A8%80">前言</a></li><li><a href="#%E4%B8%8A%E6%89%8B">上手</a><ol><li><a href="#undicifetch">undici.fetch</a></li><li><a href="#undicirequest">undici.request</a></li><li><a href="#undicisteam">undici.steam</a><ol></ol></li></ol></li><li><a href="#%E6%80%BB%E7%BB%93">总结</a></li></ol></nav></aside><section class="main"><div class="main_post_meta"><time dateTime="2021/10/19">2021-10-19</time> · <!-- -->shenfq</div><article><h2 id="%E5%89%8D%E8%A8%80">前言<a class="anchor" href="#%E5%89%8D%E8%A8%80">§</a></h2>
-<p>在浏览器中，如果想发起一个请求，我们经常会使用 <code>xhr</code>，当然也有更现代化的 <code>fetch api</code>。不过这些底层 api，往往调用方式比较简陋，也不支持一些全局性的配置，在实际的使用过程中，我们可能会用到 <code>axios</code> 请求库，来进行一些请求。</p>
-<p>那在 Node.js 中，几乎都会通过 <code>request</code> 这个库，来进行请求。遗憾的是，<code>request</code> 在两年前就停止维护了，在 Node.js 中需要找到一个能够替代的库还挺不容易的。</p>
+</head><body><a class="czs-menu-l show_on_mobile aside_button_open" href="#" style="background-image:url(&quot;/assets/czs-menu-l.svg&quot;)"></a><a class="show_on_mobile aside_button_text" href="/">自然醒的博客</a><aside class="hide_on_mobile"><div class="aside_card"><a class="czs-menu-l show_on_mobile aside_button_close" href="#" style="background-image:url(&quot;/assets/czs-close-l.svg&quot;)"></a><h1><a href="/">自然醒的博客</a></h1><p class="description">前端工程师，爱折腾，擅长 JavaScript，欢迎关注我的公众号「自然醒的笔记本」</p><ul class="social list_style_none"><li class="flex_center"><a class="czs-github-logo" href="https://github.com/Shenfq" target="_blank" style="background-image:url(&quot;/assets/czs-github-logo.svg&quot;)"></a></li><li class="flex_center"><a class="czs-message-l" href="mailto:shenfq95@foxmail.com" target="_blank" style="background-image:url(&quot;/assets/czs-message-l.svg&quot;)"></a></li><li style="flex-grow:1"></li><li class="toggle_dark flex_center"><span class="czs-sun" style="background-image:url(&quot;/assets/czs-sun.svg&quot;)"></span><span class="czs-sun-l" style="background-image:url(&quot;/assets/czs-sun-l.svg&quot;)"></span><span class="czs-moon" style="background-image:url(&quot;/assets/czs-moon.svg&quot;)"></span><span class="czs-moon-l" style="background-image:url(&quot;/assets/czs-moon-l.svg&quot;)"></span></li></ul><nav><ul class="menu list_style_none"><li><a class="flex_center" href="/"><span class="czs-home-l" style="background-image:url(&quot;/assets/czs-home-l.svg&quot;)"></span>首页</a></li><li><a class="flex_center" href="/categories/"><span class="czs-category-l" style="background-image:url(&quot;/assets/czs-category-l.svg&quot;)"></span>分类</a></li><li><a class="flex_center" href="/tags/"><span class="czs-tag-l" style="background-image:url(&quot;/assets/czs-tag-l.svg&quot;)"></span>标签</a></li><li><a class="flex_center" href="/about/"><span class="czs-about-l" style="background-image:url(&quot;/assets/czs-about-l.svg&quot;)"></span>关于</a></li><li><a class="flex_center" href="/archives/"><span class="czs-box-l" style="background-image:url(&quot;/assets/czs-box-l.svg&quot;)"></span>归档</a></li><li><a class="flex_center" href="/links/index.html"><span class="czs-link-l" style="background-image:url(&quot;/assets/czs-link-l.svg&quot;)"></span>友情链接</a></li></ul></nav></div><nav class="toc"><ol><li><a href="#%E5%89%8D%E8%A8%80">前言</a></li><li><a href="#%E4%B8%8A%E6%89%8B">上手</a><ol><li><a href="#undicifetch">undici.fetch</a></li><li><a href="#undicirequest">undici.request</a><ol></ol></li><li><a href="#undicisteam">undici.steam</a><ol></ol></li></ol></li><li><a href="#%E6%80%BB%E7%BB%93">总结</a></li></ol></nav></aside><section class="main"><div class="main_post_meta"><time dateTime="2021/10/19">2021-10-19</time> · <!-- -->shenfq</div><article><h2 id="%E5%89%8D%E8%A8%80">前言<a class="anchor" href="#%E5%89%8D%E8%A8%80">§</a></h2>
+<p>在浏览器中，如果想发起一个请求，我们以前会使用到 <code>xhr</code>，不过这种底层 api，往往调用方式比较简陋。为了提高开发效率， jQuery 的 <code>$.ajax</code> 可能是最好的选择，好在后来出现了更加现代化的 <code>fetch</code> api 。</p>
+<p>但是考虑到 <code>fetch</code> 的兼容性，而且它也不支持一些全局性的配置，以及请求中断，在实际的使用过程中，我们可能会用到 <code>axios</code> 请求库，来进行一些请求。到了 Node.js 中，几乎都会通过 <code>request</code> 这个库，来进行请求。遗憾的是，<code>request</code> 在两年前就停止维护了，在 Node.js 中需要找到一个能够替代的库还挺不容易的。</p>
 <p><img src="https://file.shenfq.com/pic/202110081517709.png" alt=""></p>
 <p>在 request 的 <a href="https://github.com/request/request/issues/3143">issues</a> 中，有一个表格推荐了一些在 Node.js 中常用的请求库：</p>
 <div class="table_wrapper"><table>
@@ -26,31 +26,31 @@
 <tbody>
 <tr>
 <td><a href="https://www.npmjs.com/package/node-fetch">node-fetch</a></td>
-<td><a href="https://bundlephobia.com/result?p=node-fetch@2.3.0">0.4kb</a></td>
+<td>0.4kb</td>
 <td>promise / stream</td>
 <td>A light-weight module that brings window.fetch to Node.js</td>
 </tr>
 <tr>
 <td><a href="https://www.npmjs.com/package/got">got</a></td>
-<td><a href="https://bundlephobia.com/result?p=got@9.6.0">48.4kb</a></td>
+<td>48.4kb</td>
 <td>promise / stream</td>
 <td>Simplified HTTP requests</td>
 </tr>
 <tr>
 <td><a href="https://www.npmjs.com/package/axios">axios</a></td>
-<td><a href="https://bundlephobia.com/result?p=axios@0.18.0">11.9kb</a></td>
+<td>11.9kb</td>
 <td>promise / stream</td>
 <td>Promise based HTTP client for the browser and node.js</td>
 </tr>
 <tr>
 <td><a href="https://www.npmjs.com/package/superagent">superagent</a></td>
-<td><a href="https://bundlephobia.com/result?p=superagent@5.0.2">18kb</a></td>
+<td>18kb</td>
 <td>chaining / promise</td>
 <td>Small progressive client-side HTTP request library, and Node.js module with the same API, sporting many high-level HTTP client features</td>
 </tr>
 <tr>
 <td><a href="https://www.npmjs.com/package/urllib">urllib</a></td>
-<td><a href="https://bundlephobia.com/result?p=urllib@2.33.2">816kb</a></td>
+<td>816kb</td>
 <td>callback / promise</td>
 <td>Help in opening URLs (mostly HTTP) in a complex world — basic and digest authentication, redirections, cookies and more.</td>
 </tr>
@@ -158,6 +158,45 @@ app<span class="token punctuation">.</span><span class="token method function pr
 </code></pre>
 <p><img src="https://file.shenfq.com/pic/202110161704543.png" alt=""></p>
 <p>只是返回结果有点不一样，<code>request</code> 方法返回的 http 响应结果在 <code>body</code> 属性中，而且该属性也支持同 <code>fetch</code> 类似的 <code>.json()</code>/<code>.text()</code> 等方法。</p>
+<h4 id="%E4%B8%AD%E6%96%AD%E8%AF%B7%E6%B1%82">中断请求<a class="anchor" href="#%E4%B8%AD%E6%96%AD%E8%AF%B7%E6%B1%82">§</a></h4>
+<p>安装 <code>abort-controller</code> 库，然后实例化 <code>abort-controller</code>，将中断信号传入 request 配置中。</p>
+<pre class="language-autoit"><code class="language-autoit">npm i abort<span class="token operator">-</span>controller
+</code></pre>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> undici <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'undici'</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> <span class="token maybe-class-name">AbortController</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'abort-controller'</span><span class="token punctuation">)</span>
+
+<span class="token comment">// 实例化 abort-controller</span>
+<span class="token keyword">const</span> abortController <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">AbortController</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+undici<span class="token punctuation">.</span><span class="token method function property-access">request</span><span class="token punctuation">(</span><span class="token string">'<a class="token url-link" href="http://127.0.0.1:3100">http://127.0.0.1:3100</a>'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  method<span class="token operator">:</span> <span class="token string">'GET'</span><span class="token punctuation">,</span>
+  <span class="token comment">// 传入中断信号量</span>
+  signal<span class="token operator">:</span> abortController<span class="token punctuation">.</span><span class="token property-access">signal</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> statusCode<span class="token punctuation">,</span> body <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+  body<span class="token punctuation">.</span><span class="token method function property-access">on</span><span class="token punctuation">(</span><span class="token string">'data'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">data</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+    <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span>statusCode<span class="token punctuation">,</span> data<span class="token punctuation">.</span><span class="token method function property-access">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/202110200948095.png" alt=""></p>
+<p>我们运行代码，发现是可以请求成功的，是因为我们没有主动调用中断方法。</p>
+<pre class="language-js"><code class="language-js">undici<span class="token punctuation">.</span><span class="token method function property-access">request</span><span class="token punctuation">(</span><span class="token string">'<a class="token url-link" href="http://127.0.0.1:3100">http://127.0.0.1:3100</a>'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  method<span class="token operator">:</span> <span class="token string">'GET'</span><span class="token punctuation">,</span>
+  signal<span class="token operator">:</span> abortController<span class="token punctuation">.</span><span class="token property-access">signal</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> statusCode<span class="token punctuation">,</span> body <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+  <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token string">'请求成功'</span><span class="token punctuation">)</span>
+  body<span class="token punctuation">.</span><span class="token method function property-access">on</span><span class="token punctuation">(</span><span class="token string">'data'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">data</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+    <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span>statusCode<span class="token punctuation">,</span> data<span class="token punctuation">.</span><span class="token method function property-access">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token keyword control-flow">catch</span><span class="token punctuation">(</span><span class="token parameter">error</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+  <span class="token comment">// 捕获由于中断触发的错误</span>
+  <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token string">'error'</span><span class="token punctuation">,</span> error<span class="token punctuation">.</span><span class="token property-access">name</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment">// 调用中断</span>
+abortController<span class="token punctuation">.</span><span class="token method function property-access">abort</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/202110200949519.png" alt=""></p>
+<p>现在运行代码会发现，并没有输出 <code>请求成功</code> 的日志，进入了 <code>catch</code> 逻辑，成功的进行了请求的中断。</p>
 <h3 id="undicisteam">undici.steam<a class="anchor" href="#undicisteam">§</a></h3>
 <p><code>undici.steam</code> 方法可以用来进行文件下载，或者接口代理。</p>
 <h4 id="%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD">文件下载<a class="anchor" href="#%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD">§</a></h4>
@@ -169,7 +208,7 @@ app<span class="token punctuation">.</span><span class="token method function pr
 
 <span class="token function">stream</span><span class="token punctuation">(</span>url<span class="token punctuation">,</span> <span class="token punctuation">{</span> opaque<span class="token operator">:</span> out <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> opaque <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> opaque<span class="token punctuation">)</span>
 </code></pre>
-<p><img src="https://file.shenfq.com/pic/202110191821042.gif" alt=""></p>
+<p><img src="https://file.shenfq.com/pic/202110200915916.gif" alt=""></p>
 <h4 id="%E6%8E%A5%E5%8F%A3%E4%BB%A3%E7%90%86">接口代理<a class="anchor" href="#%E6%8E%A5%E5%8F%A3%E4%BB%A3%E7%90%86">§</a></h4>
 <pre class="language-js"><code class="language-js"><span class="token keyword">const</span> http <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'http'</span><span class="token punctuation">)</span>
 <span class="token keyword">const</span> undici <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'undici'</span><span class="token punctuation">)</span>
@@ -186,5 +225,5 @@ http<span class="token punctuation">.</span><span class="token method function p
 </code></pre>
 <p><img src="https://file.shenfq.com/pic/202110191823111.png" alt="image-20211019182335058"></p>
 <h2 id="%E6%80%BB%E7%BB%93">总结<a class="anchor" href="#%E6%80%BB%E7%BB%93">§</a></h2>
-<p>本文只是介绍了 <code>undici</code> 几个 api 的使用方式，看起来 <code>undici</code> 上手难道还是比较低的。但是兼容性不还行，比如，<code>fetch</code> 只支持 <code>node@v16.5</code> 以上的版本。</p>
-<p>对于这种比较新的库，个人还是建议多观望一段时间，虽然 <code>request</code> 已经废弃了，我们还是使用一些经过较长时间考验过的库，比如，egg 框架中使用的 <a href="https://www.npmjs.com/package/urllib">urllib</a>，还有一个 <a href="https://www.npmjs.com/package/node-fetch">node-fetch</a>，上手难道也比较低，浏览器中的 fetch api 使用方式一致。</p></article></section><footer>Powered by <a href="https://github.com/xcatliu/pagic" target="_blank">Pagic</a></footer><script src="https://cdn.pagic.org/react@16.13.1/umd/react.production.min.js"></script><script src="https://cdn.pagic.org/react-dom@16.13.1/umd/react-dom.production.min.js"></script><script type="module" src="/index.js"></script></body></html>
+<p>本文只是介绍了 <code>undici</code> 几个 api 的使用方式，看起来 <code>undici</code> 上手难道还是比较低的。但是兼容性还不太行，比如，<code>fetch</code> 只支持 <code>node@v16.5.0</code> 以上的版本。</p>
+<p>对于这种比较新的库，个人还是建议多观望一段时间，虽然 <code>request</code> 已经废弃了，我们还是使用一些经过较长时间考验过的库，比如，egg 框架中使用的 <a href="https://www.npmjs.com/package/urllib">urllib</a>，还有一个 <a href="https://www.npmjs.com/package/node-fetch">node-fetch</a>，上手难道也比较低，与浏览器中的 <code>fetch</code> api 使用方式一致。</p></article></section><footer>Powered by <a href="https://github.com/xcatliu/pagic" target="_blank">Pagic</a></footer><script src="https://cdn.pagic.org/react@16.13.1/umd/react.production.min.js"></script><script src="https://cdn.pagic.org/react-dom@16.13.1/umd/react-dom.production.min.js"></script><script type="module" src="/index.js"></script></body></html>
