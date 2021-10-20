@@ -241,7 +241,7 @@ http.createServer((req, res) => {
 }).listen(3100)
 ```
 
-![image-20211019182335058](https://file.shenfq.com/pic/202110191823111.png)
+![](https://file.shenfq.com/pic/202110191823111.png)
 
 ## 总结
 
