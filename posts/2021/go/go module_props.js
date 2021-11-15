@@ -58,6 +58,19 @@ export default {
         "isPost": true,
         "posts": [
             {
+                "pagePath": "posts/2021/node-util.md",
+                "title": "你不知道的 Node.js Util",
+                "link": "posts/2021/node-util.html",
+                "date": "2021-11-15T07:22:25.000Z",
+                "updated": null,
+                "author": "Shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "excerpt": "从类型判断说起 在 JavaScript 中，进行变量的类型校验是一个非常令人头疼的事，如果只是简单的使用 typeof 会到各种各样的问题。 举几个简单的🌰： console.log(typeof null) // 'object' console.log(typeof new Array) //...",
+                "cover": "https://file.shenfq.com/pic/202111150955411.png"
+            },
+            {
                 "pagePath": "posts/2021/Undici.md",
                 "title": "介绍一个请求库 — Undici",
                 "link": "posts/2021/Undici.html",

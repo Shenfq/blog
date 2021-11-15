@@ -1,0 +1,236 @@
+<!doctype html><html class="" data-reactroot=""><head><script src="/assets/hm.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous"/>
+<meta data-react-helmet="true" charset="utf-8"/><meta data-react-helmet="true" http-equiv="x-ua-compatible" content="ie=edge"/><meta data-react-helmet="true" name="description" content="前端工程师，爱折腾，擅长 JavaScript，欢迎关注我的公众号「自然醒的笔记本」"/><meta data-react-helmet="true" name="viewport" content="width=device-width, initial-scale=1"/>
+<title data-react-helmet="true">你不知道的 Node.js Util · 自然醒的博客</title>
+<link data-react-helmet="true" rel="stylesheet" href="/assets/index.css"/><link data-react-helmet="true" id="prismTheme" rel="stylesheet" href="/assets/prism.css"/>
+<script data-react-helmet="true" >
+    const shouldSetIsDark = document.cookie.includes('is_dark=1') ? true : document.cookie.includes('is_dark=0') ? false : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (shouldSetIsDark) {
+      document.documentElement.classList.add('is_dark');
+      document.getElementById('prismTheme').href = "/assets/prism_tomorrow.css";
+    }
+  </script>
+</head><body><a class="czs-menu-l show_on_mobile aside_button_open" href="#" style="background-image:url(&quot;/assets/czs-menu-l.svg&quot;)"></a><a class="show_on_mobile aside_button_text" href="/">自然醒的博客</a><aside class="hide_on_mobile"><div class="aside_card"><a class="czs-menu-l show_on_mobile aside_button_close" href="#" style="background-image:url(&quot;/assets/czs-close-l.svg&quot;)"></a><h1><a href="/">自然醒的博客</a></h1><p class="description">前端工程师，爱折腾，擅长 JavaScript，欢迎关注我的公众号「自然醒的笔记本」</p><ul class="social list_style_none"><li class="flex_center"><a class="czs-github-logo" href="https://github.com/Shenfq" target="_blank" style="background-image:url(&quot;/assets/czs-github-logo.svg&quot;)"></a></li><li class="flex_center"><a class="czs-message-l" href="mailto:shenfq95@foxmail.com" target="_blank" style="background-image:url(&quot;/assets/czs-message-l.svg&quot;)"></a></li><li style="flex-grow:1"></li><li class="toggle_dark flex_center"><span class="czs-sun" style="background-image:url(&quot;/assets/czs-sun.svg&quot;)"></span><span class="czs-sun-l" style="background-image:url(&quot;/assets/czs-sun-l.svg&quot;)"></span><span class="czs-moon" style="background-image:url(&quot;/assets/czs-moon.svg&quot;)"></span><span class="czs-moon-l" style="background-image:url(&quot;/assets/czs-moon-l.svg&quot;)"></span></li></ul><nav><ul class="menu list_style_none"><li><a class="flex_center" href="/"><span class="czs-home-l" style="background-image:url(&quot;/assets/czs-home-l.svg&quot;)"></span>首页</a></li><li><a class="flex_center" href="/categories/"><span class="czs-category-l" style="background-image:url(&quot;/assets/czs-category-l.svg&quot;)"></span>分类</a></li><li><a class="flex_center" href="/tags/"><span class="czs-tag-l" style="background-image:url(&quot;/assets/czs-tag-l.svg&quot;)"></span>标签</a></li><li><a class="flex_center" href="/about/"><span class="czs-about-l" style="background-image:url(&quot;/assets/czs-about-l.svg&quot;)"></span>关于</a></li><li><a class="flex_center" href="/archives/"><span class="czs-box-l" style="background-image:url(&quot;/assets/czs-box-l.svg&quot;)"></span>归档</a></li><li><a class="flex_center" href="/links/index.html"><span class="czs-link-l" style="background-image:url(&quot;/assets/czs-link-l.svg&quot;)"></span>友情链接</a></li></ul></nav></div><nav class="toc"><ol><li><a href="#%E4%BB%8E%E7%B1%BB%E5%9E%8B%E5%88%A4%E6%96%AD%E8%AF%B4%E8%B5%B7">从类型判断说起</a><ol><li><a href="#%E4%B8%A5%E6%A0%BC%E7%9B%B8%E7%AD%89">严格相等</a></li></ol></li><li><a href="#error-first--promise">Error First &amp; Promise</a></li><li><a href="#%E8%B0%83%E8%AF%95%E4%B8%8E%E8%BE%93%E5%87%BA">调试与输出</a></li></ol></nav></aside><section class="main"><h1>你不知道的 Node.js Util</h1><div class="main_post_meta"><time dateTime="Mon Nov 15 2021 07:22:25 GMT+0000 (UTC)">2021-11-15</time> · <!-- -->Shenfq</div><article><h2 id="%E4%BB%8E%E7%B1%BB%E5%9E%8B%E5%88%A4%E6%96%AD%E8%AF%B4%E8%B5%B7">从类型判断说起<a class="anchor" href="#%E4%BB%8E%E7%B1%BB%E5%9E%8B%E5%88%A4%E6%96%AD%E8%AF%B4%E8%B5%B7">§</a></h2>
+<p>在 JavaScript 中，进行变量的类型校验是一个非常令人头疼的事，如果只是简单的使用 <code>typeof</code> 会到各种各样的问题。</p>
+<p>举几个简单的🌰：</p>
+<pre class="language-js"><code class="language-js"><span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token keyword">typeof</span> <span class="token keyword null nil">null</span><span class="token punctuation">)</span> <span class="token comment">// 'object'</span>
+<span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token keyword">typeof</span> <span class="token keyword">new</span> <span class="token class-name">Array</span><span class="token punctuation">)</span> <span class="token comment">// 'object'</span>
+<span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token keyword">typeof</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">)</span> <span class="token comment">// 'object'</span>
+</code></pre>
+<p>后来，大家发现可以使用 <code>Object.prototype.toString()</code> 方法来进行变量类型的判断。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> <span class="token function-variable function">getTypeString</span> <span class="token operator">=</span> <span class="token parameter">obj</span> <span class="token arrow operator">=></span> <span class="token class-name">Object</span><span class="token punctuation">.</span><span class="token property-access">prototype</span><span class="token punctuation">.</span><span class="token method function property-access">toString</span><span class="token punctuation">.</span><span class="token method function property-access">call</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span>
+
+<span class="token function">getTypeString</span><span class="token punctuation">(</span><span class="token keyword null nil">null</span><span class="token punctuation">)</span> <span class="token comment">// '[object Null]'</span>
+<span class="token function">getTypeString</span><span class="token punctuation">(</span><span class="token string">'string'</span><span class="token punctuation">)</span> <span class="token comment">//'[object String]'</span>
+<span class="token function">getTypeString</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">)</span> <span class="token comment">//'[object String]'</span>
+</code></pre>
+<p>对 <code>toString()</code> 方法进行代理，可以得到一个类型字符串，我们就可以在这个字符串上面搞事情。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> <span class="token function-variable function">getTypeString</span> <span class="token operator">=</span> <span class="token parameter">obj</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword control-flow">return</span> <span class="token class-name">Object</span><span class="token punctuation">.</span><span class="token property-access">prototype</span><span class="token punctuation">.</span><span class="token method function property-access">toString</span><span class="token punctuation">.</span><span class="token method function property-access">call</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">const</span> <span class="token function-variable function">isType</span> <span class="token operator">=</span> <span class="token parameter">type</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword control-flow">return</span> <span class="token parameter">obj</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword control-flow">return</span> <span class="token function">getTypeString</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span> <span class="token operator">===</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">[object </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>type<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">]</span><span class="token template-punctuation string">`</span></span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">const</span> isArray <span class="token operator">=</span> <span class="token function">isType</span><span class="token punctuation">(</span><span class="token string">'Array'</span><span class="token punctuation">)</span> <span class="token comment">// 该方法一般通过 Array.isArray 代替</span>
+
+<span class="token keyword">const</span> isNull <span class="token operator">=</span> <span class="token function">isType</span><span class="token punctuation">(</span><span class="token string">'Null'</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> isObject <span class="token operator">=</span> <span class="token function">isType</span><span class="token punctuation">(</span><span class="token string">'Object'</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> isRegExp <span class="token operator">=</span> <span class="token function">isType</span><span class="token punctuation">(</span><span class="token string">'RegExp'</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> isFunction <span class="token operator">=</span> <span class="token function">isType</span><span class="token punctuation">(</span><span class="token string">'Function'</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> isAsyncFunction <span class="token operator">=</span> <span class="token function">isType</span><span class="token punctuation">(</span><span class="token string">'AsyncFunction'</span><span class="token punctuation">)</span>
+</code></pre>
+<pre class="language-js"><code class="language-js"><span class="token function">isNull</span><span class="token punctuation">(</span><span class="token keyword null nil">null</span><span class="token punctuation">)</span> <span class="token comment">// true</span>
+<span class="token function">isObject</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token comment">// true</span>
+<span class="token function">isRegExp</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">\w</span><span class="token regex-delimiter">/</span></span><span class="token punctuation">)</span> <span class="token comment">// true</span>
+<span class="token function">isFunction</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token comment">// true</span>
+<span class="token function">isAsyncFunction</span><span class="token punctuation">(</span><span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token comment">// true</span>
+</code></pre>
+<p>But，在 Node.js 中，内部其实是有一组用来判断变量类型的 api 的。而且功能异常丰富，除了基础类型的判断，还支持判断 Promise 对象、Date 对象、各种ArrayBuffer。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> types <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'util/types'</span><span class="token punctuation">)</span>
+
+types<span class="token punctuation">.</span><span class="token method function property-access">isDate</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">)</span> <span class="token comment">// true</span>
+types<span class="token punctuation">.</span><span class="token method function property-access">isPromise</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// true</span>
+types<span class="token punctuation">.</span><span class="token method function property-access">isArrayBuffer</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ArrayBuffer</span><span class="token punctuation">(</span><span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// true</span>
+</code></pre>
+<h3 id="%E4%B8%A5%E6%A0%BC%E7%9B%B8%E7%AD%89">严格相等<a class="anchor" href="#%E4%B8%A5%E6%A0%BC%E7%9B%B8%E7%AD%89">§</a></h3>
+<p>我们知道，在 JavaScript 中，对象数组等变量在判断相等的过程中，如果用 <code>===</code> 通常只会判断这两个变量是否指向同一内存地址。如果想判断对象的键对应的所有值是否相等，需要对两个对象进行遍历。在 <code>util</code> 中，提供了一个方法可以用来判断两个对象是否严格相等：<code>util.isDeepStrictEqual(val1, val2)</code></p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> util <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'util'</span><span class="token punctuation">)</span>
+
+<span class="token keyword">const</span> val1 <span class="token operator">=</span> <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">'shenfq'</span> <span class="token punctuation">}</span>
+<span class="token keyword">const</span> val2 <span class="token operator">=</span> <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">'shenfq'</span> <span class="token punctuation">}</span>
+
+<span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token string">'val1 === val2'</span><span class="token punctuation">,</span> val1 <span class="token operator">===</span> val2<span class="token punctuation">)</span> <span class="token comment">// false</span>
+<span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token string">'isDeepStrictEqual'</span><span class="token punctuation">,</span> util<span class="token punctuation">.</span><span class="token method function property-access">isDeepStrictEqual</span><span class="token punctuation">(</span>val1<span class="token punctuation">,</span> val2<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// true</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/202111150955411.png" alt=""></p>
+<p>该方法同样可以用来判断数组，是否严格相等：</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> util <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'util'</span><span class="token punctuation">)</span>
+
+<span class="token keyword">const</span> arr1 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">]</span>
+<span class="token keyword">const</span> arr2 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">]</span>
+
+<span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token string">'arr1 === arr2'</span><span class="token punctuation">,</span> arr1 <span class="token operator">===</span> arr2<span class="token punctuation">)</span> <span class="token comment">// false</span>
+<span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token string">'isDeepStrictEqual'</span><span class="token punctuation">,</span> util<span class="token punctuation">.</span><span class="token method function property-access">isDeepStrictEqual</span><span class="token punctuation">(</span>arr1<span class="token punctuation">,</span> arr2<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// true</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/202111150957486.png" alt=""></p>
+<h2 id="error-first--promise">Error First &amp; Promise<a class="anchor" href="#error-first--promise">§</a></h2>
+<p>早期的 Node API 都是 <code>Error First</code> 风格的，也就是所有的异步函数都会接受一个回调函数，该回调的一个参数为 error 对象，如果正常返回 error 对象就为 <code>null</code>，第二个参数为成功响应的结果。</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// 下面是一个读取文件的示例</span>
+<span class="token keyword">const</span> fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'fs'</span><span class="token punctuation">)</span>
+fs<span class="token punctuation">.</span><span class="token method function property-access">readFile</span><span class="token punctuation">(</span><span class="token string">'nginx.log'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">error<span class="token punctuation">,</span> data</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 读取文件失败</span>
+    <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">error</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span>
+    <span class="token keyword control-flow">return</span>
+  <span class="token punctuation">}</span>
+  <span class="token comment">// 读取文件成功，打印结果</span>
+  <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>在 Node 8 发布的时候，新增了一个 <code>promisify</code> 接口，用于将 <code>Error First</code> 风格的 API 转为 Promise API。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'fs'</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> util <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'util'</span><span class="token punctuation">)</span>
+
+<span class="token keyword">const</span> readFile <span class="token operator">=</span> util<span class="token punctuation">.</span><span class="token method function property-access">promisify</span><span class="token punctuation">(</span>fs<span class="token punctuation">.</span><span class="token property-access">readFile</span><span class="token punctuation">)</span>
+<span class="token function">readFile</span><span class="token punctuation">(</span><span class="token string">'./2021-11-11.log'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> encoding<span class="token operator">:</span> <span class="token string">'utf-8'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token method function property-access">then</span><span class="token punctuation">(</span><span class="token parameter">text</span> <span class="token arrow operator">=></span> <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span>text<span class="token punctuation">)</span><span class="token punctuation">)</span> 
+	<span class="token punctuation">.</span><span class="token keyword control-flow">catch</span><span class="token punctuation">(</span><span class="token parameter">error</span> <span class="token arrow operator">=></span> <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">error</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/202111121513772.png" alt=""></p>
+<p>不过，后来也有很多人觉得这些原生 API 支持 Promise 的方式太过繁琐，每个 API 都需要单独的包装一层 <code>promisify</code> 方法。在 Node 10 发布的时候，原生模块都新增了一个 <code>.promises</code> 属性，其下的所有 API 都能支持 Promise。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'fs'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token property-access">promises</span>
+fs<span class="token punctuation">.</span><span class="token method function property-access">readFile</span><span class="token punctuation">(</span><span class="token string">'./2021-11-11.log'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> encoding<span class="token operator">:</span> <span class="token string">'utf-8'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token method function property-access">then</span><span class="token punctuation">(</span><span class="token parameter">text</span> <span class="token arrow operator">=></span> <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span>text<span class="token punctuation">)</span><span class="token punctuation">)</span> 
+	<span class="token punctuation">.</span><span class="token keyword control-flow">catch</span><span class="token punctuation">(</span><span class="token parameter">error</span> <span class="token arrow operator">=></span> <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">error</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/202111121529480.png" alt=""></p>
+<p><strong>注意</strong>：Node 14 后，<code>promises</code> API 又新增了一种引入方式，通过修改包名的方式引入。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'fs/promises'</span><span class="token punctuation">)</span>
+fs<span class="token punctuation">.</span><span class="token method function property-access">readFile</span><span class="token punctuation">(</span><span class="token string">'./2021-11-11.log'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> encoding<span class="token operator">:</span> <span class="token string">'utf-8'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token method function property-access">then</span><span class="token punctuation">(</span><span class="token parameter">text</span> <span class="token arrow operator">=></span> <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span>text<span class="token punctuation">)</span><span class="token punctuation">)</span> 
+	<span class="token punctuation">.</span><span class="token keyword control-flow">catch</span><span class="token punctuation">(</span><span class="token parameter">error</span> <span class="token arrow operator">=></span> <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">error</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/202111121538219.png" alt=""></p>
+<p>除了将 <code>Error First</code> 风格的 API 转为 Promise API，<code>util</code> 中还提供 <code>callbackify</code> 方法，用于将 <code>async</code> 函数转换为 <code>Error First</code> 风格的函数。</p>
+<p>下面通过 <code>callbackify</code> 将 promise 化的 <code>fs</code> 还原为 <code>Error First</code> 风格的函数。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'fs/promises'</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> util <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'util'</span><span class="token punctuation">)</span>
+
+<span class="token keyword">const</span> readFile <span class="token operator">=</span> util<span class="token punctuation">.</span><span class="token method function property-access">callbackify</span><span class="token punctuation">(</span>fs<span class="token punctuation">.</span><span class="token property-access">readFile</span><span class="token punctuation">)</span>
+<span class="token function">readFile</span><span class="token punctuation">(</span><span class="token string">'./2021-11-12.log'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> encoding<span class="token operator">:</span> <span class="token string">'utf-8'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">error<span class="token punctuation">,</span> text</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>error<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">error</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span>
+    <span class="token keyword control-flow">return</span>
+  <span class="token punctuation">}</span>
+  <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span>text<span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<h2 id="%E8%B0%83%E8%AF%95%E4%B8%8E%E8%BE%93%E5%87%BA">调试与输出<a class="anchor" href="#%E8%B0%83%E8%AF%95%E4%B8%8E%E8%BE%93%E5%87%BA">§</a></h2>
+<p>如果有开发过 Node 服务，应该都用过 <code>debug</code> 模块，通过该模块可以在控制台看到更加明晰的调试信息。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> debug <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'debug'</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> log <span class="token operator">=</span> <span class="token function">debug</span><span class="token punctuation">(</span><span class="token string">'app'</span><span class="token punctuation">)</span>
+
+<span class="token keyword">const</span> user <span class="token operator">=</span> <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">'shenfq'</span> <span class="token punctuation">}</span>
+
+<span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'当前用户: %o'</span><span class="token punctuation">,</span> user<span class="token punctuation">)</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/202111151432757.png" alt=""></p>
+<p>其实，通过 <code>util.debug</code> 也能实现类似的效果：</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> debug <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'debug'</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> log <span class="token operator">=</span> <span class="token function">debug</span><span class="token punctuation">(</span><span class="token string">'app'</span><span class="token punctuation">)</span>
+
+<span class="token keyword">const</span> user <span class="token operator">=</span> <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">'shenfq'</span> <span class="token punctuation">}</span>
+
+<span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'当前用户: %o'</span><span class="token punctuation">,</span> user<span class="token punctuation">)</span>
+</code></pre>
+<p>只是在启动时，需要将 <code>DEBUG</code> 环境变量替换为 <code>NODE_DEBUG</code>。</p>
+<p><img src="https://file.shenfq.com/pic/202111151431352.png" alt=""></p>
+<p>另外，如果你有认真看代码，应该会发现，在 <code>log('当前用户: %o', user)</code> 方法前面的字符串中，有一个 <code>%o</code> 占位符，表示这个地方将会填充一个对象。这个主要是用来进行字符串格式化的。与 C 语言或 python 中的，<code>printf</code> 类似。同样，在 <code>util</code> 模块中，直接提供了格式化的方法：<code>util.format</code>。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> <span class="token punctuation">{</span> format <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'util'</span><span class="token punctuation">)</span>
+
+<span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span>
+  <span class="token function">format</span><span class="token punctuation">(</span><span class="token string">'当前用户: %o'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    name<span class="token operator">:</span> <span class="token string">'shenfq'</span><span class="token punctuation">,</span> age<span class="token operator">:</span> <span class="token number">25</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/202111151441619.png" alt=""></p>
+<p>除了 <code>%o</code> 占位符，不同的数据类型应使用不同的占位符。</p>
+<div class="table_wrapper"><table>
+<thead>
+<tr>
+<th>占位符</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>%s</td>
+<td>字符串</td>
+</tr>
+<tr>
+<td>%d</td>
+<td>数字（包括整数和浮点数）</td>
+</tr>
+<tr>
+<td>%i</td>
+<td>整数</td>
+</tr>
+<tr>
+<td>%f</td>
+<td>浮点数</td>
+</tr>
+<tr>
+<td>%j</td>
+<td>JSON</td>
+</tr>
+<tr>
+<td>%o</td>
+<td>Object</td>
+</tr>
+</tbody>
+</table></div>
+<p>JavaScript 中的对象是一个很复杂的东西，除了直接使用 <code>util.format</code> 外加 <code>%o</code> 占位符的方式格式化对象，<code>util</code> 中还提供了一个叫做 <code>inspect</code> 方法来进行对象格式化。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> <span class="token punctuation">{</span> inspect <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'util'</span><span class="token punctuation">)</span>
+
+<span class="token keyword">const</span> user <span class="token operator">=</span> <span class="token punctuation">{</span>
+  age<span class="token operator">:</span> <span class="token number">25</span><span class="token punctuation">,</span>
+  name<span class="token operator">:</span> <span class="token string">'shenfq'</span><span class="token punctuation">,</span>
+  work<span class="token operator">:</span> <span class="token punctuation">{</span>
+    name<span class="token operator">:</span> <span class="token string">'coding'</span><span class="token punctuation">,</span>
+    seniority<span class="token operator">:</span> <span class="token number">5</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token function">inspect</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/202111151500094.png" alt=""></p>
+<p>这么看 <code>inspect</code> 好像什么都没做，但是 <code>inspect</code> 方法还有第二个参数，用来进行格式化时的一些个性化配置。</p>
+<ul>
+<li><code>depth: number</code>：控制显示层级；</li>
+<li><code>sorted: boolean|Function</code>: 是否按照key的编码值进行排序；</li>
+<li><code>compact: boolean</code>：是否进行单行显示；</li>
+</ul>
+<p>当然上面只是一部分配置，更详细的配置可查阅 node 文档，下面我们写几个案例：</p>
+<p>所有的属性都换行显示：</p>
+<pre class="language-js"><code class="language-js"><span class="token function">inspect</span><span class="token punctuation">(</span>user<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+	compact<span class="token operator">:</span> <span class="token boolean">false</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/202111151503766.png" alt=""></p>
+<p>只格式化对象第一层的值：</p>
+<pre class="language-js"><code class="language-js"><span class="token function">inspect</span><span class="token punctuation">(</span>user<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+  depth<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+	compact<span class="token operator">:</span> <span class="token boolean">false</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/202111151505583.png" alt=""></p>
+<p>按照key值的编码倒序输出：</p>
+<pre class="language-js"><code class="language-js"><span class="token function">inspect</span><span class="token punctuation">(</span>user<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+	compact<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">sorted</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> a <span class="token operator">&lt;</span> b <span class="token operator">?</span> <span class="token number">1</span> <span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/202111151511158.png" alt=""></p></article></section><footer>Powered by <a href="https://github.com/xcatliu/pagic" target="_blank">Pagic</a></footer><script src="https://cdn.pagic.org/react@16.13.1/umd/react.production.min.js"></script><script src="https://cdn.pagic.org/react-dom@16.13.1/umd/react-dom.production.min.js"></script><script type="module" src="/index.js"></script></body></html>

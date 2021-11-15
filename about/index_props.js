@@ -31,13 +31,26 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2021-10-20T02:13:46.000Z",
+    'date': "2021-11-15T07:22:25.000Z",
     'updated': null,
     'excerpt': "自我介绍 我是 shenfq ，微信名「自然醒」，互联网一线前端开发。博客除了会分享前端技术，偶尔也会分享我的生活以及读书清单。写博客也是为了强制自己有些输出，为了保证质量，更新不会特别频繁，期望能做到周更。 工作经历 -...",
     'cover': "https://file.shenfq.com/pic/20201209222204.png",
     'blog': {
         "isPost": false,
         "posts": [
+            {
+                "pagePath": "posts/2021/node-util.md",
+                "title": "你不知道的 Node.js Util",
+                "link": "posts/2021/node-util.html",
+                "date": "2021-11-15T07:22:25.000Z",
+                "updated": null,
+                "author": "Shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "excerpt": "从类型判断说起 在 JavaScript 中，进行变量的类型校验是一个非常令人头疼的事，如果只是简单的使用 typeof 会到各种各样的问题。 举几个简单的🌰： console.log(typeof null) // 'object' console.log(typeof new Array) //...",
+                "cover": "https://file.shenfq.com/pic/202111150955411.png"
+            },
             {
                 "pagePath": "posts/2021/Undici.md",
                 "title": "介绍一个请求库 — Undici",
