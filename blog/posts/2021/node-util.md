@@ -63,7 +63,7 @@ types.isArrayBuffer(new ArrayBuffer(16)) // true
 
 ### 严格相等
 
-我们知道，在 JavaScript 中，对象数组等变量在判断相等的过程中，如果用 `===` 通常只会判断这两个变量是否指向同一内存地址。如果想判断对象的键对应的所有值是否相等，需要对两个对象进行遍历。在 `util` 中，提供了一个方法可以用来判断两个对象是否严格相等：`util.isDeepStrictEqual(val1, val2)`
+在 JavaScript 中，对象、数组等变量在判断相等的过程中，如果用 `===` 通常只会判断这两个变量是否指向同一内存地址。如果想判断对象的键对应的所有值是否相等，需要对两个对象进行遍历。在 `util` 中，也提供了一个方法可以用来判断两个对象是否严格相等：`util.isDeepStrictEqual(val1, val2)`
 
 ```js
 const util = require('util')
@@ -93,7 +93,7 @@ console.log('isDeepStrictEqual', util.isDeepStrictEqual(arr1, arr2)) // true
 
 ## Error First & Promise
 
-早期的 Node API 都是 `Error First` 风格的，也就是所有的异步函数都会接受一个回调函数，该回调的一个参数为 error 对象，如果正常返回 error 对象就为 `null`，第二个参数为成功响应的结果。
+早期的 Node API 都是 `Error First` 风格的，也就是所有的异步函数都会接受一个回调函数，该回调的一个参数为 error 对象，如果正常返回 error 对象为 `null`，后面的参数为成功响应的结果。
 
 ```js
 // 下面是一个读取文件的示例
@@ -123,7 +123,7 @@ readFile('./2021-11-11.log', { encoding: 'utf-8' })
 
 ![](https://file.shenfq.com/pic/202111121513772.png)
 
-不过，后来也有很多人觉得这些原生 API 支持 Promise 的方式太过繁琐，每个 API 都需要单独的包装一层 `promisify` 方法。在 Node 10 发布的时候，原生模块都新增了一个 `.promises` 属性，其下的所有 API 都能支持 Promise。
+不过，后来也有很多人觉得这些原生 API 支持 Promise 的方式太过繁琐，每个 API 都需要单独的包装一层 `promisify` 方法。在 Node 10 发布的时候，原生模块都新增了一个 `.promises` 属性，该属性下的所有 API 都 Promise 风格的。
 
 ```js
 const fs = require('fs').promises
@@ -193,7 +193,7 @@ log('当前用户: %o', user)
 
 ![](https://file.shenfq.com/pic/202111151431352.png)
 
-另外，如果你有认真看代码，应该会发现，在 `log('当前用户: %o', user)` 方法前面的字符串中，有一个 `%o` 占位符，表示这个地方将会填充一个对象。这个主要是用来进行字符串格式化的。与 C 语言或 python 中的，`printf` 类似。同样，在 `util` 模块中，直接提供了格式化的方法：`util.format`。
+如果你有认真看上面的代码，应该会发现，在 `log('当前用户: %o', user)` 方法前面的字符串中，有一个 `%o` 占位符，表示这个地方将会填充一个对象（object）。这与 C 语言或 python 中的，`printf` 类似。同样，在 `util` 模块中，直接提供了格式化的方法：`util.format`。
 
 ```js
 const { format } = require('util')
@@ -276,3 +276,4 @@ inspect(user, {
 ```
 
 ![](https://file.shenfq.com/pic/202111151511158.png)
+
