@@ -245,7 +245,7 @@ http.createServer((req, res) => {
 
 ## 总结
 
-本文只是介绍了 `undici` 几个 api 的使用方式，看起来 `undici` 上手难道还是比较低的。但是兼容性还不太行，比如，`fetch` 只支持 `node@v16.5.0` 以上的版本。
+本文只是介绍了 `undici` 几个 api 的使用方式，看起来 `undici` 上手难度还是比较低的。但是兼容性还不太行，比如，`fetch` 只支持 `node@v16.5.0` 以上的版本。
 
-对于这种比较新的库，个人还是建议多观望一段时间，虽然 `request` 已经废弃了，我们还是使用一些经过较长时间考验过的库，比如，egg 框架中使用的 [urllib](https://www.npmjs.com/package/urllib)，还有一个 [node-fetch](https://www.npmjs.com/package/node-fetch)，上手难道也比较低，与浏览器中的 `fetch` api 使用方式一致。
+对于这种比较新的库，个人还是建议多观望一段时间，虽然 `request` 已经废弃了，我们还是使用一些经过较长时间考验过的库，比如，egg 框架中使用的 [urllib](https://www.npmjs.com/package/urllib)，还有一个 [node-fetch](https://www.npmjs.com/package/node-fetch)，上手难度也比较低，与浏览器中的 `fetch` api 使用方式一致。
 
