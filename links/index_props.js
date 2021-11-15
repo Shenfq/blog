@@ -24,7 +24,7 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2021-11-15T07:22:25.000Z",
+    'date': "2021-11-15T07:43:08.000Z",
     'updated': null,
     'excerpt': " - 童欧巴 —— 你远道而来这世间，想必也是因为热爱吧 - 悲伤日记 —— 一个有温度的野生前端猿人 - 少年民仔 —— 愿你出走半生，归来仍是少年",
     'cover': undefined,
@@ -35,7 +35,7 @@ export default {
                 "pagePath": "posts/2021/node-util.md",
                 "title": "你不知道的 Node.js Util",
                 "link": "posts/2021/node-util.html",
-                "date": "2021-11-15T07:22:25.000Z",
+                "date": "2021-11-15T07:43:08.000Z",
                 "updated": null,
                 "author": "Shenfq",
                 "contributors": [
