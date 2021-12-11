@@ -1,0 +1,151 @@
+<!doctype html><html class="" data-reactroot=""><head><script src="/assets/hm.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous"/>
+<meta data-react-helmet="true" charset="utf-8"/><meta data-react-helmet="true" http-equiv="x-ua-compatible" content="ie=edge"/><meta data-react-helmet="true" name="description" content="前端工程师，爱折腾，擅长 JavaScript，欢迎关注我的公众号「自然醒的笔记本」"/><meta data-react-helmet="true" name="viewport" content="width=device-width, initial-scale=1"/>
+<title data-react-helmet="true">自然醒的博客</title>
+<link data-react-helmet="true" rel="stylesheet" href="/assets/index.css"/><link data-react-helmet="true" id="prismTheme" rel="stylesheet" href="/assets/prism.css"/>
+<script data-react-helmet="true" >
+    const shouldSetIsDark = document.cookie.includes('is_dark=1') ? true : document.cookie.includes('is_dark=0') ? false : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (shouldSetIsDark) {
+      document.documentElement.classList.add('is_dark');
+      document.getElementById('prismTheme').href = "/assets/prism_tomorrow.css";
+    }
+  </script>
+</head><body><a class="czs-menu-l show_on_mobile aside_button_open" href="#" style="background-image:url(&quot;/assets/czs-menu-l.svg&quot;)"></a><a class="show_on_mobile aside_button_text" href="/">自然醒的博客</a><aside class="hide_on_mobile"><div class="aside_card"><a class="czs-menu-l show_on_mobile aside_button_close" href="#" style="background-image:url(&quot;/assets/czs-close-l.svg&quot;)"></a><h1><a href="/">自然醒的博客</a></h1><p class="description">前端工程师，爱折腾，擅长 JavaScript，欢迎关注我的公众号「自然醒的笔记本」</p><ul class="social list_style_none"><li class="flex_center"><a class="czs-github-logo" href="https://github.com/Shenfq" target="_blank" style="background-image:url(&quot;/assets/czs-github-logo.svg&quot;)"></a></li><li class="flex_center"><a class="czs-message-l" href="mailto:shenfq95@foxmail.com" target="_blank" style="background-image:url(&quot;/assets/czs-message-l.svg&quot;)"></a></li><li style="flex-grow:1"></li><li class="toggle_dark flex_center"><span class="czs-sun" style="background-image:url(&quot;/assets/czs-sun.svg&quot;)"></span><span class="czs-sun-l" style="background-image:url(&quot;/assets/czs-sun-l.svg&quot;)"></span><span class="czs-moon" style="background-image:url(&quot;/assets/czs-moon.svg&quot;)"></span><span class="czs-moon-l" style="background-image:url(&quot;/assets/czs-moon-l.svg&quot;)"></span></li></ul><nav><ul class="menu list_style_none"><li><a class="flex_center" href="/"><span class="czs-home-l" style="background-image:url(&quot;/assets/czs-home-l.svg&quot;)"></span>首页</a></li><li><a class="flex_center" href="/categories/"><span class="czs-category-l" style="background-image:url(&quot;/assets/czs-category-l.svg&quot;)"></span>分类</a></li><li><a class="flex_center" href="/tags/"><span class="czs-tag-l" style="background-image:url(&quot;/assets/czs-tag-l.svg&quot;)"></span>标签</a></li><li><a class="flex_center" href="/about/"><span class="czs-about-l" style="background-image:url(&quot;/assets/czs-about-l.svg&quot;)"></span>关于</a></li><li><a class="flex_center" href="/archives/"><span class="czs-box-l" style="background-image:url(&quot;/assets/czs-box-l.svg&quot;)"></span>归档</a></li><li><a class="flex_center" href="/links/index.html"><span class="czs-link-l" style="background-image:url(&quot;/assets/czs-link-l.svg&quot;)"></span>友情链接</a></li></ul></nav></div><nav class="toc"><ol><li><a href="#%E5%AE%89%E8%A3%85">安装</a></li><li><a href="#%E4%B8%8A%E6%89%8B">上手</a><ol><li><a href="#%E5%AE%9A%E4%B9%89-store">定义 Store</a></li><li><a href="#%E4%BD%BF%E7%94%A8-store">使用 Store</a><ol></ol></li><li><a href="#%E7%B1%BB%E5%9E%8B%E6%8F%90%E7%A4%BA">类型提示</a></li><li><a href="#%E4%BB%A3%E7%A0%81%E5%88%86%E5%89%B2">代码分割</a></li></ol></li></ol></nav></aside><section class="main"><div class="main_post_meta"><time dateTime="Sat Dec 11 2021 04:40:08 GMT+0000 (UTC)">2021-12-11</time> · <!-- -->Shenfq</div><article><p>Vue3 发布已经有一段时间了，它采用了新的响应式系统，而且构建了一套全新的 <code>Composition API</code>。Vue 的周边生态都在加紧适配这套新的系统，官方的状态管理库 Vuex 也在适配中，为此官方提出了一个 <a href="https://github.com/vuejs/rfcs/discussions/270">Vuex 5</a> 的全新提案。</p>
+<p><img src="https://file.shenfq.com/pic/202112031610480.png" alt=""></p>
+<ul>
+<li>支持两种语法创建 Store：<code>Options Api</code> 和 <code>Composition Api</code>；</li>
+<li>删除 <code>mutations</code>，只支持 <code>state</code>、<code>getters</code>、<code>actions</code>；</li>
+<li>模块化的设计，能很好支持代码分割；</li>
+<li>没有嵌套的模块，只有 Store 的概念；</li>
+<li>完整的 <code>TypeScript</code> 支持；</li>
+</ul>
+<p>在这个提案下方，有个评论很有意思。简单翻译一下：</p>
+<p><img src="https://file.shenfq.com/pic/202112031622705.png" alt=""></p>
+<p>好巧不巧，Vuex5 的提案，与 Pinia 实现的功能不能说毫无关系，只能说一模一样，今天的文章就来给大家介绍一下这个菠萝：</p>
+<p><img src="https://file.shenfq.com/pic/202111262211080.svg" alt="Logo"></p>
+<h2 id="%E5%AE%89%E8%A3%85">安装<a class="anchor" href="#%E5%AE%89%E8%A3%85">§</a></h2>
+<p>在现有项目中，用过如下命令进行 Pinia 模块的安装。</p>
+<pre class="language-bash"><code class="language-bash"><span class="token comment"># yarn</span>
+<span class="token function">yarn</span> <span class="token function">add</span> <a class="token email-link" href="mailto:pinia@next">pinia@next</a>
+<span class="token comment"># npm</span>
+<span class="token function">npm</span> i <a class="token email-link" href="mailto:pinia@next">pinia@next</a>
+</code></pre>
+<p>安装完成后，需要在 Vue3 项目的入口文件中，进行导入安装。</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// main.js</span>
+<span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> createApp <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'vue'</span>
+<span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> createPinia <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'pinia'</span>
+<span class="token keyword module">import</span> <span class="token imports"><span class="token maybe-class-name">App</span></span> <span class="token keyword module">from</span> <span class="token string">'./App.vue'</span>
+
+<span class="token comment">// 实例化 Vue</span>
+<span class="token keyword">const</span> app <span class="token operator">=</span> <span class="token function">createApp</span><span class="token punctuation">(</span><span class="token maybe-class-name">App</span><span class="token punctuation">)</span>
+<span class="token comment">// 安装 Pinia</span>
+app<span class="token punctuation">.</span><span class="token method function property-access">use</span><span class="token punctuation">(</span><span class="token function">createPinia</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment">// 挂载在真实 DOM</span>
+app<span class="token punctuation">.</span><span class="token method function property-access">mount</span><span class="token punctuation">(</span><span class="token string">'#app'</span><span class="token punctuation">)</span>
+</code></pre>
+<h2 id="%E4%B8%8A%E6%89%8B">上手<a class="anchor" href="#%E4%B8%8A%E6%89%8B">§</a></h2>
+<p>要使用 Pinia 的话，只需要定义一个 store，然后在用到该数据的地方进行导入。</p>
+<h3 id="%E5%AE%9A%E4%B9%89-store">定义 Store<a class="anchor" href="#%E5%AE%9A%E4%B9%89-store">§</a></h3>
+<pre class="language-js"><code class="language-js"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> defineStore <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">"pinia"</span>
+
+<span class="token comment">// 对外部暴露一个 use 方法，该方法会导出我们定义的 state</span>
+<span class="token keyword">const</span> useCounterStore <span class="token operator">=</span> <span class="token function">defineStore</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token comment">// 每个 store 的 id 必须唯一</span>
+  id<span class="token operator">:</span> <span class="token string">'counter'</span><span class="token punctuation">,</span>
+  <span class="token comment">// state 表示数据源</span>
+  <span class="token function-variable function">state</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">(</span><span class="token punctuation">{</span>
+    count<span class="token operator">:</span> <span class="token number">0</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  <span class="token comment">// getters 类似于 computed，可对 state 的值进行二次计算</span>
+  getters<span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token function">double</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    	<span class="token comment">// getter 中的 this 指向👉 state</span>
+    	<span class="token keyword control-flow">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">count</span> <span class="token operator">*</span> <span class="token number">2</span>
+  	<span class="token punctuation">}</span><span class="token punctuation">,</span>
+  	<span class="token comment">// 如果使用箭头函数会导致 this 指向有问题</span>
+  	<span class="token comment">// 可以在函数的第一个参数中拿到 state</span>
+    <span class="token function-variable function">double</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">state</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+    	<span class="token keyword control-flow">return</span> state<span class="token punctuation">.</span><span class="token property-access">count</span> <span class="token operator">*</span> <span class="token number">2</span>
+  	<span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token comment">// actions 用来修改 state</span>
+  actions<span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token function">increment</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// action 中的 this 指向👉 state</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">count</span><span class="token operator">++</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token keyword module">export</span> <span class="token keyword module">default</span> useCounterStore
+</code></pre>
+<p>除了使用上述类似 vuex 的方式来构建 state，还可以使用 <code>function</code> 的形式来创建 store，有点类似于 Vue3 中的 <code>setup()</code>。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> ref<span class="token punctuation">,</span> computed <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">"vue"</span>
+<span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> defineStore <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">"pinia"</span>
+
+<span class="token comment">// 对外部暴露一个 use 方法，该方法会导出我们定义的 state</span>
+<span class="token keyword">const</span> useCounterStore <span class="token operator">=</span> <span class="token function">defineStore</span><span class="token punctuation">(</span><span class="token string">'counter'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> count <span class="token operator">=</span> <span class="token function">ref</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+  <span class="token keyword">const</span> double <span class="token operator">=</span> <span class="token function">computed</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> count<span class="token punctuation">.</span><span class="token property-access">value</span> <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">)</span>
+  <span class="token keyword">function</span> <span class="token function">increment</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    count<span class="token punctuation">.</span><span class="token property-access">value</span><span class="token operator">++</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword control-flow">return</span> <span class="token punctuation">{</span>
+  	count<span class="token punctuation">,</span> double<span class="token punctuation">,</span> increment
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token keyword module">export</span> <span class="token keyword module">default</span> useCounterStore
+</code></pre>
+<h3 id="%E4%BD%BF%E7%94%A8-store">使用 Store<a class="anchor" href="#%E4%BD%BF%E7%94%A8-store">§</a></h3>
+<p>前面也介绍过，Pinia 提供了两种方式来使用 store，<code>Options Api</code> 和 <code>Composition Api</code> 中都完美支持。</p>
+<h4 id="options-api">Options Api<a class="anchor" href="#options-api">§</a></h4>
+<p>在 <code>Options Api</code> 中，可直接使用官方提供的 <code>mapActions</code> 和 <code>mapState</code> 方法，导出 store 中的 state、getter、action，其用法与 Vuex 基本一致，很容易上手。</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> mapActions<span class="token punctuation">,</span> mapState <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'pinia'</span>
+<span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> useCounterStore <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'../model/counter'</span>
+
+<span class="token keyword module">export</span> <span class="token keyword module">default</span> <span class="token punctuation">{</span>
+  name<span class="token operator">:</span> <span class="token string">'HelloWorld'</span><span class="token punctuation">,</span>
+  computed<span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token spread operator">...</span><span class="token method function property-access">mapState</span><span class="token punctuation">(</span>useCounterStore<span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">'count'</span><span class="token punctuation">,</span> <span class="token string">'double'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  methods<span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token spread operator">...</span><span class="token method function property-access">mapActions</span><span class="token punctuation">(</span>useCounterStore<span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">'increment'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h4 id="composition-api">Composition Api<a class="anchor" href="#composition-api">§</a></h4>
+<p><code>Composition Api</code> 中，不管是 state 还是 getter 都需要通过 <code>computed</code> 方法来监听变化，这和 <code>Options Api</code> 中，需要放到 <code>computed</code> 对象中的道理一样。另外， <code>Options Api</code>  中拿到的 state 值是可以直接进行修改操作的，当然还是建议写一个 action 来操作 state 值，方便后期维护。</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// Composition Api</span>
+<span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> computed <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'vue'</span>
+<span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> useCounterStore <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'../stores/counter'</span>
+<span class="token keyword module">export</span> <span class="token keyword module">default</span> <span class="token punctuation">{</span>
+  name<span class="token operator">:</span> <span class="token string">'HelloWorld'</span><span class="token punctuation">,</span>
+  <span class="token function">setup</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> counter <span class="token operator">=</span> <span class="token function">useCounterStore</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword control-flow">return</span> <span class="token punctuation">{</span>
+      <span class="token comment">// state 和 getter 都需要在使用 computed，这和 Options Api 一样</span>
+      count<span class="token operator">:</span> <span class="token function">computed</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> counter<span class="token punctuation">.</span><span class="token property-access">count</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      double<span class="token operator">:</span> <span class="token function">computed</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> counter<span class="token punctuation">.</span><span class="token property-access">double</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      <span class="token function-variable function">increment</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span> counter<span class="token punctuation">.</span><span class="token property-access">count</span><span class="token operator">++</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token comment">// 可以直接修改 state 的值</span>
+      increment<span class="token operator">:</span> counter<span class="token punctuation">.</span><span class="token property-access">increment</span><span class="token punctuation">,</span> <span class="token comment">// 可以引用 store 中定义的 action</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="%E7%B1%BB%E5%9E%8B%E6%8F%90%E7%A4%BA">类型提示<a class="anchor" href="#%E7%B1%BB%E5%9E%8B%E6%8F%90%E7%A4%BA">§</a></h3>
+<p>在 Vuex 中，TypeScript 的类型提示做得不是很好，在进行类型推导时，只能找到它的 state。特别是写代码的过程中，代码提示就很不智能。</p>
+<p><img src="https://file.shenfq.com/pic/202112101852547.png" alt=""></p>
+<p>而 pinia，就能推导出定义的所有 state、getter、action，这样在写代码的时候，就会方便很多。</p>
+<p><img src="https://file.shenfq.com/pic/202112101856700.png" alt=""></p>
+<p><img src="https://file.shenfq.com/pic/202112101858118.png" alt=""></p>
+<p>主要是 pinia 通过 TypeScript 进行了十分友好的类型定义，感兴趣的可以看看 pinia 的类型定义文件（<code>pinia.d.ts</code>）：</p>
+<p><img src="https://file.shenfq.com/pic/202112102101068.png" alt=""></p>
+<h3 id="%E4%BB%A3%E7%A0%81%E5%88%86%E5%89%B2">代码分割<a class="anchor" href="#%E4%BB%A3%E7%A0%81%E5%88%86%E5%89%B2">§</a></h3>
+<p>由于使用了模块化设计，所有的 store 都能够单独引入，而不是像 vuex 一样，通过 modules 的方式，将所有的 module 挂载到一个 store 上。</p>
+<p>假设，我们当前通过 Vuex 创建了一个 Store，这个 Store 下有两个 module，分别是用户模块（User）和商品模块（Goods）。即使当前首页只使用到了用户信息，但是整个 Store 都会被打包到首页的 js chunk 中。</p>
+<p><img src="https://file.shenfq.com/pic/202112102111064.png" alt=""></p>
+<p><img src="https://file.shenfq.com/pic/202112102114406.png" alt=""></p>
+<p>如果我们使用 pinia，我们会使用 <code>defineStore</code> 定义两个 完全是分离状态的 store，两个页面在引入时，也互不影响。最后打包的时候，首页的 js chunk 和商品页的 js chunk 会分别打包对应的 store。</p>
+<p><img src="https://file.shenfq.com/pic/202112102117471.png" alt=""></p>
+<hr>
+<p>Pinia 的介绍到这里就告一段落了，如果现在有新项目要使用 Vue3 进行开发，推荐无脑使用 Pinia，更加方便简介，而且大小仅 1KB。</p></article></section><footer>Powered by <a href="https://github.com/xcatliu/pagic" target="_blank">Pagic</a></footer><script src="https://cdn.pagic.org/react@16.13.1/umd/react.production.min.js"></script><script src="https://cdn.pagic.org/react-dom@16.13.1/umd/react-dom.production.min.js"></script><script type="module" src="/index.js"></script></body></html>
