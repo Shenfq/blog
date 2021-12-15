@@ -12,6 +12,8 @@ tags:
 
 # 全新的 Vue3 状态管理工具：Pinia
 
+![Logo](https://file.shenfq.com/pic/202112151708176.svg)
+
 Vue3 发布已经有一段时间了，它采用了新的响应式系统，而且构建了一套全新的 `Composition API`。Vue 的周边生态都在加紧适配这套新的系统，官方的状态管理库 Vuex 也在适配中，为此官方提出了一个 [Vuex 5](https://github.com/vuejs/rfcs/discussions/270) 的全新提案。
 
 ![](https://file.shenfq.com/pic/202112151621995.png)
@@ -28,9 +30,7 @@ Vue3 发布已经有一段时间了，它采用了新的响应式系统，而且
 
 
 
-好巧不巧，Vuex5 的提案，与 Pinia 实现的功能不能说毫无关系，只能说一模一样，今天的文章就来给大家介绍一下这个菠萝：
-
-![Logo](https://file.shenfq.com/pic/202112151708176.svg)
+好巧不巧，Vuex5 的提案，与 Pinia 实现的功能不能说毫无关系，只能说一模一样，今天的文章就来给大家介绍一下这个菠萝。
 
 ## 安装
 
