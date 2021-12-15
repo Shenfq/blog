@@ -39,7 +39,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 29
+                "count": 31
             },
             {
                 "name": "Go",
@@ -148,6 +148,10 @@ export default {
                 "count": 5
             },
             {
+                "name": "Promise",
+                "count": 3
+            },
+            {
                 "name": "webpack",
                 "count": 3
             },
@@ -185,10 +189,6 @@ export default {
             },
             {
                 "name": "Koa",
-                "count": 2
-            },
-            {
-                "name": "Promise",
                 "count": 2
             },
             {
@@ -233,6 +233,10 @@ export default {
             },
             {
                 "name": "模板",
+                "count": 2
+            },
+            {
+                "name": "状态管理",
                 "count": 2
             },
             {
@@ -328,11 +332,19 @@ export default {
                 "count": 1
             },
             {
+                "name": "Node.js",
+                "count": 1
+            },
+            {
                 "name": "npm",
                 "count": 1
             },
             {
                 "name": "offer",
+                "count": 1
+            },
+            {
+                "name": "Pinia",
                 "count": 1
             },
             {
@@ -384,11 +396,19 @@ export default {
                 "count": 1
             },
             {
+                "name": "Util",
+                "count": 1
+            },
+            {
                 "name": "virtual dom",
                 "count": 1
             },
             {
                 "name": "VSCode",
+                "count": 1
+            },
+            {
+                "name": "Vue3",
                 "count": 1
             },
             {
@@ -497,10 +517,6 @@ export default {
             },
             {
                 "name": "版本管理",
-                "count": 1
-            },
-            {
-                "name": "状态管理",
                 "count": 1
             },
             {

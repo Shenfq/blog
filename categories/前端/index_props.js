@@ -15,6 +15,48 @@ export default {
         "isPost": false,
         "posts": [
             {
+                "pagePath": "posts/2021/Pinia.md",
+                "title": "全新的 Vue3 状态管理工具：Pinia",
+                "link": "posts/2021/Pinia.html",
+                "date": "2021/12/15",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "前端"
+                ],
+                "tags": [
+                    "Vue3",
+                    "Pinia",
+                    "状态管理"
+                ],
+                "excerpt": "Vue3 发布已经有一段时间了，它采用了新的响应式系统，而且构建了一套全新的 Composition API。Vue 的周边生态都在加紧适配这套新的系统，官方的状态管理库 Vuex 也在适配中，为此官方提出了一个 Vuex 5 的全新提案。 - 支持两...",
+                "cover": "https://file.shenfq.com/pic/202112151621995.png"
+            },
+            {
+                "pagePath": "posts/2021/node-util.md",
+                "title": "你不知道的 Node.js Util",
+                "link": "posts/2021/node-util.html",
+                "date": "2021/11/15",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "前端"
+                ],
+                "tags": [
+                    "Util",
+                    "Node.js",
+                    "Promise"
+                ],
+                "excerpt": "从类型判断说起 在 JavaScript 中，进行变量的类型校验是一个非常令人头疼的事，如果只是简单的使用 typeof 会到各种各样的问题。 举几个简单的🌰： console.log(typeof null) // 'object' console.log(typeof new Array) //...",
+                "cover": "https://file.shenfq.com/pic/202111150955411.png"
+            },
+            {
                 "pagePath": "posts/2021/Undici.md",
                 "title": "介绍一个请求库 — Undici",
                 "link": "posts/2021/Undici.html",
@@ -637,7 +679,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 29
+                "count": 31
             },
             {
                 "name": "Go",
@@ -746,6 +788,10 @@ export default {
                 "count": 5
             },
             {
+                "name": "Promise",
+                "count": 3
+            },
+            {
                 "name": "webpack",
                 "count": 3
             },
@@ -783,10 +829,6 @@ export default {
             },
             {
                 "name": "Koa",
-                "count": 2
-            },
-            {
-                "name": "Promise",
                 "count": 2
             },
             {
@@ -831,6 +873,10 @@ export default {
             },
             {
                 "name": "模板",
+                "count": 2
+            },
+            {
+                "name": "状态管理",
                 "count": 2
             },
             {
@@ -926,11 +972,19 @@ export default {
                 "count": 1
             },
             {
+                "name": "Node.js",
+                "count": 1
+            },
+            {
                 "name": "npm",
                 "count": 1
             },
             {
                 "name": "offer",
+                "count": 1
+            },
+            {
+                "name": "Pinia",
                 "count": 1
             },
             {
@@ -982,11 +1036,19 @@ export default {
                 "count": 1
             },
             {
+                "name": "Util",
+                "count": 1
+            },
+            {
                 "name": "virtual dom",
                 "count": 1
             },
             {
                 "name": "VSCode",
+                "count": 1
+            },
+            {
+                "name": "Vue3",
                 "count": 1
             },
             {
@@ -1095,10 +1157,6 @@ export default {
             },
             {
                 "name": "版本管理",
-                "count": 1
-            },
-            {
-                "name": "状态管理",
                 "count": 1
             },
             {

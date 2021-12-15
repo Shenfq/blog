@@ -15,6 +15,27 @@ export default {
         "isPost": false,
         "posts": [
             {
+                "pagePath": "posts/2021/node-util.md",
+                "title": "你不知道的 Node.js Util",
+                "link": "posts/2021/node-util.html",
+                "date": "2021/11/15",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "前端"
+                ],
+                "tags": [
+                    "Util",
+                    "Node.js",
+                    "Promise"
+                ],
+                "excerpt": "从类型判断说起 在 JavaScript 中，进行变量的类型校验是一个非常令人头疼的事，如果只是简单的使用 typeof 会到各种各样的问题。 举几个简单的🌰： console.log(typeof null) // 'object' console.log(typeof new Array) //...",
+                "cover": "https://file.shenfq.com/pic/202111150955411.png"
+            },
+            {
                 "pagePath": "posts/2021/JavaScript 异步编程史.md",
                 "title": "JavaScript 异步编程史",
                 "link": "posts/2021/JavaScript 异步编程史.html",
@@ -61,7 +82,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 29
+                "count": 31
             },
             {
                 "name": "Go",
@@ -170,6 +191,10 @@ export default {
                 "count": 5
             },
             {
+                "name": "Promise",
+                "count": 3
+            },
+            {
                 "name": "webpack",
                 "count": 3
             },
@@ -207,10 +232,6 @@ export default {
             },
             {
                 "name": "Koa",
-                "count": 2
-            },
-            {
-                "name": "Promise",
                 "count": 2
             },
             {
@@ -255,6 +276,10 @@ export default {
             },
             {
                 "name": "模板",
+                "count": 2
+            },
+            {
+                "name": "状态管理",
                 "count": 2
             },
             {
@@ -350,11 +375,19 @@ export default {
                 "count": 1
             },
             {
+                "name": "Node.js",
+                "count": 1
+            },
+            {
                 "name": "npm",
                 "count": 1
             },
             {
                 "name": "offer",
+                "count": 1
+            },
+            {
+                "name": "Pinia",
                 "count": 1
             },
             {
@@ -406,11 +439,19 @@ export default {
                 "count": 1
             },
             {
+                "name": "Util",
+                "count": 1
+            },
+            {
                 "name": "virtual dom",
                 "count": 1
             },
             {
                 "name": "VSCode",
+                "count": 1
+            },
+            {
+                "name": "Vue3",
                 "count": 1
             },
             {
@@ -519,10 +560,6 @@ export default {
             },
             {
                 "name": "版本管理",
-                "count": 1
-            },
-            {
-                "name": "状态管理",
                 "count": 1
             },
             {
