@@ -33,7 +33,7 @@ export default {
                     "状态管理"
                 ],
                 "excerpt": "Vue3 发布已经有一段时间了，它采用了新的响应式系统，而且构建了一套全新的 Composition API。Vue 的周边生态都在加紧适配这套新的系统，官方的状态管理库 Vuex 也在适配中，为此官方提出了一个 Vuex 5 的全新提案。 - 支持两...",
-                "cover": "https://file.shenfq.com/pic/202112151621995.png"
+                "cover": "https://file.shenfq.com/pic/202112151708176.svg"
             },
             {
                 "pagePath": "posts/2021/MobX 上手指南.md",

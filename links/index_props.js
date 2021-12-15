@@ -24,7 +24,7 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2021-12-15T09:13:27.000Z",
+    'date': "2021-12-15T09:45:32.000Z",
     'updated': null,
     'excerpt': " - 童欧巴 —— 你远道而来这世间，想必也是因为热爱吧 - 悲伤日记 —— 一个有温度的野生前端猿人 - 少年民仔 —— 愿你出走半生，归来仍是少年",
     'cover': undefined,
@@ -50,7 +50,7 @@ export default {
                     "状态管理"
                 ],
                 "excerpt": "Vue3 发布已经有一段时间了，它采用了新的响应式系统，而且构建了一套全新的 Composition API。Vue 的周边生态都在加紧适配这套新的系统，官方的状态管理库 Vuex 也在适配中，为此官方提出了一个 Vuex 5 的全新提案。 - 支持两...",
-                "cover": "https://file.shenfq.com/pic/202112151621995.png"
+                "cover": "https://file.shenfq.com/pic/202112151708176.svg"
             },
             {
                 "pagePath": "posts/2021/node-util.md",
