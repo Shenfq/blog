@@ -1,3 +1,15 @@
+---
+title: 你不知道的 Node.js Util
+author: shenfq
+date: 2021/11/15
+categories:
+- 前端
+tags:
+- Util
+- Node.js
+- Promise
+---
+
 # 你不知道的 Node.js Util
 
 ## 从类型判断说起

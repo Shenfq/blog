@@ -1,6 +1,20 @@
+---
+title: 全新的 Vue3 状态管理工具：Pinia
+author: shenfq
+date: 2021/12/15
+categories:
+- 前端
+tags:
+- Vue3
+- Pinia
+- 状态管理
+---
+
+# 全新的 Vue3 状态管理工具：Pinia
+
 Vue3 发布已经有一段时间了，它采用了新的响应式系统，而且构建了一套全新的 `Composition API`。Vue 的周边生态都在加紧适配这套新的系统，官方的状态管理库 Vuex 也在适配中，为此官方提出了一个 [Vuex 5](https://github.com/vuejs/rfcs/discussions/270) 的全新提案。
 
-![](https://file.shenfq.com/pic/202112031610480.png)
+![](https://file.shenfq.com/pic/202112151621995.png)
 
 - 支持两种语法创建 Store：`Options Api` 和 `Composition Api`；
 - 删除 `mutations`，只支持 `state`、`getters`、`actions`；
@@ -10,13 +24,13 @@ Vue3 发布已经有一段时间了，它采用了新的响应式系统，而且
 
 在这个提案下方，有个评论很有意思。简单翻译一下：
 
-![](https://file.shenfq.com/pic/202112031622705.png)
+![](https://file.shenfq.com/pic/202112151708483.png)
 
 
 
 好巧不巧，Vuex5 的提案，与 Pinia 实现的功能不能说毫无关系，只能说一模一样，今天的文章就来给大家介绍一下这个菠萝：
 
-![Logo](https://file.shenfq.com/pic/202111262211080.svg)
+![Logo](https://file.shenfq.com/pic/202112151708176.svg)
 
 ## 安装
 
@@ -157,17 +171,17 @@ export default {
 
 在 Vuex 中，TypeScript 的类型提示做得不是很好，在进行类型推导时，只能找到它的 state。特别是写代码的过程中，代码提示就很不智能。
 
-![](https://file.shenfq.com/pic/202112101852547.png)
+![](https://file.shenfq.com/pic/202112151709157.png)
 
 而 pinia，就能推导出定义的所有 state、getter、action，这样在写代码的时候，就会方便很多。
 
-![](https://file.shenfq.com/pic/202112101856700.png)
+![](https://file.shenfq.com/pic/202112151709804.png)
 
-![](https://file.shenfq.com/pic/202112101858118.png)
+![](https://file.shenfq.com/pic/202112151709469.png)
 
 主要是 pinia 通过 TypeScript 进行了十分友好的类型定义，感兴趣的可以看看 pinia 的类型定义文件（`pinia.d.ts`）：
 
-![](https://file.shenfq.com/pic/202112102101068.png)
+![](https://file.shenfq.com/pic/202112151709919.png)
 
 ### 代码分割
 
@@ -175,13 +189,13 @@ export default {
 
 假设，我们当前通过 Vuex 创建了一个 Store，这个 Store 下有两个 module，分别是用户模块（User）和商品模块（Goods）。即使当前首页只使用到了用户信息，但是整个 Store 都会被打包到首页的 js chunk 中。
 
-![](https://file.shenfq.com/pic/202112102111064.png)
+![](https://file.shenfq.com/pic/202112151709033.png)
 
-![](https://file.shenfq.com/pic/202112102114406.png)
+![](https://file.shenfq.com/pic/202112151709945.png)
 
 如果我们使用 pinia，我们会使用 `defineStore` 定义两个 完全是分离状态的 store，两个页面在引入时，也互不影响。最后打包的时候，首页的 js chunk 和商品页的 js chunk 会分别打包对应的 store。
 
-![](https://file.shenfq.com/pic/202112102117471.png)
+![](https://file.shenfq.com/pic/202112151709926.png)
 
 ---
 
