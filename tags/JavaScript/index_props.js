@@ -15,6 +15,28 @@ export default {
         "isPost": false,
         "posts": [
             {
+                "pagePath": "posts/2022/swc.md",
+                "title": "新一代的编译工具 SWC",
+                "link": "posts/2022/swc.html",
+                "date": "2022/01/13",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "前端"
+                ],
+                "tags": [
+                    "JavaScript",
+                    "Rust",
+                    "Babel",
+                    "编译"
+                ],
+                "excerpt": "最近前端圈掀起了一阵 rust 风，凡是能用 rust 重写的前端工具就用 rust 重写，今天介绍的工具就是通过 rust 实现的 bable：swc，一个将 ES6 转化为 ES5 的工具。 而且在 swc 的官网，很直白说自己和 babel 对标，swc 和 babel...",
+                "cover": "https://file.shenfq.com/pic/202201050924805.png"
+            },
+            {
                 "pagePath": "posts/2021/sudoku.md",
                 "title": "用 JavaScript 做数独",
                 "link": "posts/2021/sudoku.html",
@@ -255,7 +277,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 31
+                "count": 32
             },
             {
                 "name": "Go",
@@ -321,7 +343,7 @@ export default {
             },
             {
                 "name": "JavaScript",
-                "count": 11
+                "count": 12
             },
             {
                 "name": "前端工程化",
@@ -377,6 +399,10 @@ export default {
             },
             {
                 "name": "组件化",
+                "count": 3
+            },
+            {
+                "name": "编译",
                 "count": 3
             },
             {
@@ -460,10 +486,6 @@ export default {
                 "count": 2
             },
             {
-                "name": "编译",
-                "count": 2
-            },
-            {
                 "name": "路由",
                 "count": 2
             },
@@ -485,6 +507,10 @@ export default {
             },
             {
                 "name": "babel",
+                "count": 1
+            },
+            {
+                "name": "Babel",
                 "count": 1
             },
             {
@@ -577,6 +603,10 @@ export default {
             },
             {
                 "name": "request",
+                "count": 1
+            },
+            {
+                "name": "Rust",
                 "count": 1
             },
             {

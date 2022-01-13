@@ -38,7 +38,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 31
+                "count": 32
             },
             {
                 "name": "Go",
@@ -104,7 +104,7 @@ export default {
             },
             {
                 "name": "JavaScript",
-                "count": 11
+                "count": 12
             },
             {
                 "name": "前端工程化",
@@ -160,6 +160,10 @@ export default {
             },
             {
                 "name": "组件化",
+                "count": 3
+            },
+            {
+                "name": "编译",
                 "count": 3
             },
             {
@@ -243,10 +247,6 @@ export default {
                 "count": 2
             },
             {
-                "name": "编译",
-                "count": 2
-            },
-            {
                 "name": "路由",
                 "count": 2
             },
@@ -268,6 +268,10 @@ export default {
             },
             {
                 "name": "babel",
+                "count": 1
+            },
+            {
+                "name": "Babel",
                 "count": 1
             },
             {
@@ -360,6 +364,10 @@ export default {
             },
             {
                 "name": "request",
+                "count": 1
+            },
+            {
+                "name": "Rust",
                 "count": 1
             },
             {

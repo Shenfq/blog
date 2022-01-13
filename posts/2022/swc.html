@@ -1,0 +1,138 @@
+<!doctype html><html class="" data-reactroot=""><head><script src="/assets/hm.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous"/>
+<meta data-react-helmet="true" charset="utf-8"/><meta data-react-helmet="true" http-equiv="x-ua-compatible" content="ie=edge"/><meta data-react-helmet="true" name="description" content="前端工程师，爱折腾，擅长 JavaScript，欢迎关注我的公众号「自然醒的笔记本」"/><meta data-react-helmet="true" name="viewport" content="width=device-width, initial-scale=1"/>
+<title data-react-helmet="true">新一代的编译工具 SWC · 自然醒的博客</title>
+<link data-react-helmet="true" rel="stylesheet" href="/assets/index.css"/><link data-react-helmet="true" id="prismTheme" rel="stylesheet" href="/assets/prism.css"/>
+<script data-react-helmet="true" >
+    const shouldSetIsDark = document.cookie.includes('is_dark=1') ? true : document.cookie.includes('is_dark=0') ? false : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (shouldSetIsDark) {
+      document.documentElement.classList.add('is_dark');
+      document.getElementById('prismTheme').href = "/assets/prism_tomorrow.css";
+    }
+  </script>
+</head><body><a class="czs-menu-l show_on_mobile aside_button_open" href="#" style="background-image:url(&quot;/assets/czs-menu-l.svg&quot;)"></a><a class="show_on_mobile aside_button_text" href="/">自然醒的博客</a><aside class="hide_on_mobile"><div class="aside_card"><a class="czs-menu-l show_on_mobile aside_button_close" href="#" style="background-image:url(&quot;/assets/czs-close-l.svg&quot;)"></a><h1><a href="/">自然醒的博客</a></h1><p class="description">前端工程师，爱折腾，擅长 JavaScript，欢迎关注我的公众号「自然醒的笔记本」</p><ul class="social list_style_none"><li class="flex_center"><a class="czs-github-logo" href="https://github.com/Shenfq" target="_blank" style="background-image:url(&quot;/assets/czs-github-logo.svg&quot;)"></a></li><li class="flex_center"><a class="czs-message-l" href="mailto:shenfq95@foxmail.com" target="_blank" style="background-image:url(&quot;/assets/czs-message-l.svg&quot;)"></a></li><li style="flex-grow:1"></li><li class="toggle_dark flex_center"><span class="czs-sun" style="background-image:url(&quot;/assets/czs-sun.svg&quot;)"></span><span class="czs-sun-l" style="background-image:url(&quot;/assets/czs-sun-l.svg&quot;)"></span><span class="czs-moon" style="background-image:url(&quot;/assets/czs-moon.svg&quot;)"></span><span class="czs-moon-l" style="background-image:url(&quot;/assets/czs-moon-l.svg&quot;)"></span></li></ul><nav><ul class="menu list_style_none"><li><a class="flex_center" href="/"><span class="czs-home-l" style="background-image:url(&quot;/assets/czs-home-l.svg&quot;)"></span>首页</a></li><li><a class="flex_center" href="/categories/"><span class="czs-category-l" style="background-image:url(&quot;/assets/czs-category-l.svg&quot;)"></span>分类</a></li><li><a class="flex_center" href="/tags/"><span class="czs-tag-l" style="background-image:url(&quot;/assets/czs-tag-l.svg&quot;)"></span>标签</a></li><li><a class="flex_center" href="/about/"><span class="czs-about-l" style="background-image:url(&quot;/assets/czs-about-l.svg&quot;)"></span>关于</a></li><li><a class="flex_center" href="/archives/"><span class="czs-box-l" style="background-image:url(&quot;/assets/czs-box-l.svg&quot;)"></span>归档</a></li><li><a class="flex_center" href="/links/index.html"><span class="czs-link-l" style="background-image:url(&quot;/assets/czs-link-l.svg&quot;)"></span>友情链接</a></li></ul></nav></div><nav class="toc"><ol><li><a href="#%E4%B8%8A%E6%89%8B">上手</a><ol><li><a href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">配置文件</a></li><li><a href="#node-apis">Node APIs</a></li><li><a href="#%E6%89%93%E5%8C%85%E4%BB%A3%E7%A0%81">打包代码</a></li></ol></li><li><a href="#%E8%83%BD%E4%B8%8D%E8%83%BD%E7%94%A8">能不能用？</a></li></ol></nav></aside><section class="main"><h1>新一代的编译工具 SWC</h1><div class="main_post_meta"><time dateTime="2022/01/13">2022-01-13</time> · <!-- -->shenfq</div><article><p>最近前端圈掀起了一阵 rust 风，凡是能用 rust 重写的前端工具就用 rust 重写，今天介绍的工具就是通过 rust 实现的 bable：swc，一个将 ES6 转化为 ES5 的工具。</p>
+<p>而且在 swc 的官网，很直白说自己和 babel 对标，<code>swc</code> 和 <code>babel</code> 命令可以相互替换，并且大部分的 babel 插件也已经实现。</p>
+<p><img src="https://file.shenfq.com/pic/202201050924805.png" alt=""></p>
+<p>使用 rust 的一个优势就是快，比如我们之前的一个项目，将 babel 替换成 swc 后，编译速度从原来的 7 秒提升到了 1 秒，效率直接爆炸。</p>
+<p><img src="https://file.shenfq.com/pic/202201042122421.png" alt=""></p>
+<h2 id="%E4%B8%8A%E6%89%8B">上手<a class="anchor" href="#%E4%B8%8A%E6%89%8B">§</a></h2>
+<p>swc 与 babel 一样，将命令行工具、编译核心模块分化为两个包。</p>
+<ul>
+<li><code>@swc/cli</code> 类似于 <code>@babel/cli</code>;</li>
+<li><code>@swc/core</code> 类似于 <code>@babel/core</code>;</li>
+</ul>
+<pre class="language-bash"><code class="language-bash"><span class="token function">npm</span> i -D @swc/cli @swc/core
+</code></pre>
+<p>通过如下命令，可以将一个 ES6 的 JS 文件转化为 ES5。</p>
+<pre class="language-bash"><code class="language-bash">npx swc source.js -o dist.js
+</code></pre>
+<p>下面是 <code>source.js</code> 的代码：</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> <span class="token function-variable function">start</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+  <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token string">'app started'</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>代码中囊括了 ES6 的两个特性，<code>const 声明</code> 和 <code>箭头函数</code>。经过 swc 转化后，这两个特性分别被转化成了 <code>var 声明</code> 和 <code>function 匿名函数</code>。</p>
+<p><img src="https://file.shenfq.com/pic/202201101704871.png" alt=""></p>
+<h3 id="%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">配置文件<a class="anchor" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6">§</a></h3>
+<p>swc 与 babel 一样，支持类似于 <code>.babelrc</code> 的配置文件：<code>.swcrc</code>，配置的格式为 JSON。</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"jsc"</span><span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token comment">// 编译规则</span>
+    <span class="token property">"target"</span><span class="token operator">:</span> <span class="token string">"es5"</span><span class="token punctuation">,</span> <span class="token comment">// 输出js的规范</span>
+    <span class="token property">"parser"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 除了 ecmascript，还支持 typescript</span>
+      <span class="token property">"syntax"</span><span class="token operator">:</span> <span class="token string">"ecmascript"</span><span class="token punctuation">,</span>
+      <span class="token comment">// 是否解析jsx，对应插件 @babel/plugin-transform-react-jsx</span>
+      <span class="token property">"jsx"</span><span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+      <span class="token comment">// 是否支持装饰器，对应插件 @babel/plugin-syntax-decorators</span>
+      <span class="token property">"decorators"</span><span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+      <span class="token comment">// 是否支持动态导入，对应插件 @babel/plugin-syntax-dynamic-import</span>
+      <span class="token property">"dynamicImport"</span><span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+      <span class="token comment">// ……</span>
+      <span class="token comment">// babel 的大部分插件都能在这里找到对应配置</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"minify"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token comment">// 压缩相关配置，需要先开启压缩</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token property">"env"</span><span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token comment">// 编译结果相关配置</span>
+    <span class="token property">"targets"</span><span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token comment">// 编译结果需要适配的浏览器</span>
+      <span class="token property">"ie"</span><span class="token operator">:</span> <span class="token string">"11"</span> <span class="token comment">// 只兼容到 ie 11</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token property">"corejs"</span><span class="token operator">:</span> <span class="token string">"3"</span> <span class="token comment">// corejs 的版本</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token property">"minify"</span><span class="token operator">:</span> <span class="token boolean">true</span> <span class="token comment">// 是否开启压缩</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>babel 的插件系统被 swc 整合成了 <code>jsc.parser</code> 内的配置，基本上大部分插件都能照顾到。而且，swc 还继承了压缩的能力，通过 <code>minify</code> 属性开启，<code>jsc.minify</code> 用于配置压缩相关的规则，更详细的配置可查看<a href="https://swc.rs/docs/configuration/minification">文档</a>。</p>
+<h3 id="node-apis">Node APIs<a class="anchor" href="#node-apis">§</a></h3>
+<p>通过在 node.js 代码中，导入 <code>@swc/core</code> 模块，可以在 node.js 中调用 api 直接进行代码的编译，这对 CLI 工具的开发来说是常规操作。</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// swc.mjs</span>
+<span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> readFileSync <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'fs'</span>
+<span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> transform <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'@swc/core'</span>
+
+<span class="token keyword">const</span> <span class="token function-variable function">run</span> <span class="token operator">=</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> code <span class="token operator">=</span> <span class="token function">readFileSync</span><span class="token punctuation">(</span><span class="token string">'./source.js'</span><span class="token punctuation">,</span> <span class="token string">'utf-8'</span><span class="token punctuation">)</span>
+	<span class="token keyword">const</span> result <span class="token operator">=</span> <span class="token keyword control-flow">await</span> <span class="token function">transform</span><span class="token punctuation">(</span>code<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    filename<span class="token operator">:</span> <span class="token string">"source.js"</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token comment">// 输出编译后代码</span>
+  <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span>result<span class="token punctuation">.</span><span class="token property-access">code</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+<span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/202201131446362.png" alt=""></p>
+<h3 id="%E6%89%93%E5%8C%85%E4%BB%A3%E7%A0%81">打包代码<a class="anchor" href="#%E6%89%93%E5%8C%85%E4%BB%A3%E7%A0%81">§</a></h3>
+<p>除了将代码转义，swc 还提供了一个简易的打包能力。我们新建一个 <code>src</code> 文件夹，在里面新建两个文件：<code>index.js</code>、<code>utils.js</code>。</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// src/index.js</span>
+<span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> log <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'./utils.js'</span>
+<span class="token keyword">const</span> <span class="token function-variable function">start</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'app started'</span><span class="token punctuation">)</span>
+<span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<pre class="language-autoit"><code class="language-autoit"><span class="token operator">/</span><span class="token operator">/</span> src<span class="token operator">/</span>utils<span class="token punctuation">.</span>js
+export <span class="token keyword">const</span> log <span class="token operator">=</span> function <span class="token punctuation">(</span><span class="token punctuation">)</span> {
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>arguments<span class="token punctuation">)</span>
+}
+export <span class="token keyword">const</span> errorLog <span class="token operator">=</span> function <span class="token punctuation">(</span><span class="token punctuation">)</span> {
+  console<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>arguments<span class="token punctuation">)</span>
+}
+</code></pre>
+<p>可以看到 <code>index.js</code> 导入了 <code>utils.js</code> 中的一个方法，然后我们新建一个 <code>spack.config.js</code> 文件，该文件是 swc 打包的配置文件。</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// spack.config.js</span>
+module<span class="token punctuation">.</span><span class="token property-access">exports</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+  entry<span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 打包的入口</span>
+    web<span class="token operator">:</span> __dirname <span class="token operator">+</span> <span class="token string">"/src/index.js"</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  output<span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 打包后输出的文件夹</span>
+    path<span class="token operator">:</span> __dirname <span class="token operator">+</span> <span class="token string">"/dist"</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>然后在命令行运行：</p>
+<pre class="language-bash"><code class="language-bash">$ npx spack
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/202201131533361.png" alt=""></p>
+<p>打包成功后，会在 <code>dist</code> 目录输出一个 <code>web.js</code> 文件。</p>
+<p><img src="https://file.shenfq.com/pic/202201131534524.png" alt=""></p>
+<p>可以看到，不仅将 <code>index.js</code>、<code>utils.js</code> 打包成了一个文件，还进行了 <code>tree shaking</code>，将 <code>utils.js</code> 中没有使用的 <code>errorLog</code> 方法删掉了。</p>
+<h2 id="%E8%83%BD%E4%B8%8D%E8%83%BD%E7%94%A8">能不能用？<a class="anchor" href="#%E8%83%BD%E4%B8%8D%E8%83%BD%E7%94%A8">§</a></h2>
+<p>babel 毕竟经过了这么多年的发展，不管是 bug 输了，还是社区活跃度都远远优于 swc。所以，如果是小产品试水还是可以试一下 swc 的，旧项目如果已经使用了 babel 还是不建议进行迁移。</p>
+<p>在使用的过程，还是发现了一些小问题。比如，如果我使用了 <code>async function</code>，swc 会自动导入 <code>regenerator-runtime</code> 模块。</p>
+<pre class="language-js"><code class="language-js"><span class="token comment">// 编译前，有个 async 方法</span>
+<span class="token keyword">const</span> <span class="token function-variable function">start</span> <span class="token operator">=</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+  <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token string">'app started'</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>调用 swc 编译后，代码如下：</p>
+<p><img src="https://file.shenfq.com/pic/202201131824854.png" alt=""></p>
+<p>这个结果看起来是没问题的，但是 swc 与 babel 类似，也有 helpers（@swc/helpers），同时提供了 <code>externalHelpers</code> 开关， 如果把 <code>externalHelpers</code> 设置为 <code>true</code>，swc 会将一些工具类，通过模块的形式导入。</p>
+<pre class="language-json"><code class="language-json"><span class="token comment">// .swcrc</span>
+<span class="token punctuation">{</span>
+  <span class="token property">"jsc"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"externalHelpers"</span><span class="token operator">:</span> <span class="token boolean">true</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/202201131834021.png" alt=""></p>
+<p>而 <code>externalHelpers</code> 的默认值是 <code>false</code>，那这个时候，<code>regenerator-runtime</code> ，到底是通过模块的形式导入，还是把整个代码写入到文件？</p>
+<p>swc 正好有个 <a href="https://github.com/swc-project/swc/issues/1461">issue [https://github.com/swc-project/swc/issues/1461]</a> 在讨论这个问题。</p>
+<p>除了上面说的这个问题，其实还有一点，就是作者觉得之前的架构有问题，正在加紧重写 2.0 版本，感觉可以期待一下，另外提一句，swc 的作者是一个 97 年的韩国小哥，目前大学都还没毕业，最后我也只能说一句：牛逼！</p></article></section><footer>Powered by <a href="https://github.com/xcatliu/pagic" target="_blank">Pagic</a></footer><script src="https://cdn.pagic.org/react@16.13.1/umd/react.production.min.js"></script><script src="https://cdn.pagic.org/react-dom@16.13.1/umd/react-dom.production.min.js"></script><script type="module" src="/index.js"></script></body></html>
