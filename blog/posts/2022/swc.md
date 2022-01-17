@@ -13,7 +13,7 @@ tags:
 
 # 新一代的编译工具 SWC
 
-最近前端圈掀起了一阵 rust 风，凡是能用 rust 重写的前端工具就用 rust 重写，今天介绍的工具就是通过 rust 实现的 bable：swc，一个将 ES6 转化为 ES5 的工具。
+最近前端圈掀起了一阵 rust 风，凡是能用 rust 重写的前端工具就用 rust 重写，今天介绍的工具就是通过 rust 实现的 babel：swc，一个将 ES6 转化为 ES5 的工具。
 
 而且在 swc 的官网，很直白说自己和 babel 对标，`swc` 和 `babel` 命令可以相互替换，并且大部分的 babel 插件也已经实现。
 
