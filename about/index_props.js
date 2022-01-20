@@ -31,13 +31,33 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2022-01-17T02:15:40.000Z",
+    'date': "2022-01-20T03:43:42.000Z",
     'updated': null,
     'excerpt': "自我介绍 我是 shenfq ，微信名「自然醒」，互联网一线前端开发。博客除了会分享前端技术，偶尔也会分享我的生活以及读书清单。写博客也是为了强制自己有些输出，为了保证质量，更新不会特别频繁，期望能做到周更。 工作经历 -...",
     'cover': "https://file.shenfq.com/pic/20201209222204.png",
     'blog': {
         "isPost": false,
         "posts": [
+            {
+                "pagePath": "posts/2022/promise.then.md",
+                "title": "关于 Promise 的执行顺序",
+                "link": "posts/2022/promise.then.html",
+                "date": "2022/01/20",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "前端"
+                ],
+                "tags": [
+                    "JavaScript",
+                    "Promise"
+                ],
+                "excerpt": "最近看到一个 Promise 相关的很有意思的代码： new Promise((resolve) => { console.log(1) resolve() }).then(() => { new Promise((resolve) => { console.log(2) resolve() }).then(() => { console.log(4) }) }).then(() =...",
+                "cover": "https://file.shenfq.com/pic/202201201133648.png"
+            },
             {
                 "pagePath": "posts/2022/swc.md",
                 "title": "新一代的编译工具 SWC",
@@ -1743,7 +1763,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 32
+                "count": 33
             },
             {
                 "name": "Go",
@@ -1804,12 +1824,12 @@ export default {
                 "count": 26
             },
             {
-                "name": "前端框架",
+                "name": "JavaScript",
                 "count": 13
             },
             {
-                "name": "JavaScript",
-                "count": 12
+                "name": "前端框架",
+                "count": 13
             },
             {
                 "name": "前端工程化",
@@ -1853,7 +1873,7 @@ export default {
             },
             {
                 "name": "Promise",
-                "count": 3
+                "count": 4
             },
             {
                 "name": "webpack",

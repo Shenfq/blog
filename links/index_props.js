@@ -24,13 +24,33 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2022-01-17T02:15:40.000Z",
+    'date': "2022-01-20T03:43:42.000Z",
     'updated': null,
     'excerpt': " - 童欧巴 —— 你远道而来这世间，想必也是因为热爱吧 - 悲伤日记 —— 一个有温度的野生前端猿人 - 少年民仔 —— 愿你出走半生，归来仍是少年",
     'cover': undefined,
     'blog': {
         "isPost": false,
         "posts": [
+            {
+                "pagePath": "posts/2022/promise.then.md",
+                "title": "关于 Promise 的执行顺序",
+                "link": "posts/2022/promise.then.html",
+                "date": "2022/01/20",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "前端"
+                ],
+                "tags": [
+                    "JavaScript",
+                    "Promise"
+                ],
+                "excerpt": "最近看到一个 Promise 相关的很有意思的代码： new Promise((resolve) => { console.log(1) resolve() }).then(() => { new Promise((resolve) => { console.log(2) resolve() }).then(() => { console.log(4) }) }).then(() =...",
+                "cover": "https://file.shenfq.com/pic/202201201133648.png"
+            },
             {
                 "pagePath": "posts/2022/swc.md",
                 "title": "新一代的编译工具 SWC",
@@ -1736,7 +1756,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 32
+                "count": 33
             },
             {
                 "name": "Go",
@@ -1797,12 +1817,12 @@ export default {
                 "count": 26
             },
             {
-                "name": "前端框架",
+                "name": "JavaScript",
                 "count": 13
             },
             {
-                "name": "JavaScript",
-                "count": 12
+                "name": "前端框架",
+                "count": 13
             },
             {
                 "name": "前端工程化",
@@ -1846,7 +1866,7 @@ export default {
             },
             {
                 "name": "Promise",
-                "count": 3
+                "count": 4
             },
             {
                 "name": "webpack",

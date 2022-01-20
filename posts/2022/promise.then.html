@@ -1,0 +1,121 @@
+<!doctype html><html class="" data-reactroot=""><head><script src="/assets/hm.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous"/>
+<meta data-react-helmet="true" charset="utf-8"/><meta data-react-helmet="true" http-equiv="x-ua-compatible" content="ie=edge"/><meta data-react-helmet="true" name="description" content="前端工程师，爱折腾，擅长 JavaScript，欢迎关注我的公众号「自然醒的笔记本」"/><meta data-react-helmet="true" name="viewport" content="width=device-width, initial-scale=1"/>
+<title data-react-helmet="true">关于 Promise 的执行顺序 · 自然醒的博客</title>
+<link data-react-helmet="true" rel="stylesheet" href="/assets/index.css"/><link data-react-helmet="true" id="prismTheme" rel="stylesheet" href="/assets/prism.css"/>
+<script data-react-helmet="true" >
+    const shouldSetIsDark = document.cookie.includes('is_dark=1') ? true : document.cookie.includes('is_dark=0') ? false : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (shouldSetIsDark) {
+      document.documentElement.classList.add('is_dark');
+      document.getElementById('prismTheme').href = "/assets/prism_tomorrow.css";
+    }
+  </script>
+</head><body><a class="czs-menu-l show_on_mobile aside_button_open" href="#" style="background-image:url(&quot;/assets/czs-menu-l.svg&quot;)"></a><a class="show_on_mobile aside_button_text" href="/">自然醒的博客</a><aside class="hide_on_mobile"><div class="aside_card"><a class="czs-menu-l show_on_mobile aside_button_close" href="#" style="background-image:url(&quot;/assets/czs-close-l.svg&quot;)"></a><h1><a href="/">自然醒的博客</a></h1><p class="description">前端工程师，爱折腾，擅长 JavaScript，欢迎关注我的公众号「自然醒的笔记本」</p><ul class="social list_style_none"><li class="flex_center"><a class="czs-github-logo" href="https://github.com/Shenfq" target="_blank" style="background-image:url(&quot;/assets/czs-github-logo.svg&quot;)"></a></li><li class="flex_center"><a class="czs-message-l" href="mailto:shenfq95@foxmail.com" target="_blank" style="background-image:url(&quot;/assets/czs-message-l.svg&quot;)"></a></li><li style="flex-grow:1"></li><li class="toggle_dark flex_center"><span class="czs-sun" style="background-image:url(&quot;/assets/czs-sun.svg&quot;)"></span><span class="czs-sun-l" style="background-image:url(&quot;/assets/czs-sun-l.svg&quot;)"></span><span class="czs-moon" style="background-image:url(&quot;/assets/czs-moon.svg&quot;)"></span><span class="czs-moon-l" style="background-image:url(&quot;/assets/czs-moon-l.svg&quot;)"></span></li></ul><nav><ul class="menu list_style_none"><li><a class="flex_center" href="/"><span class="czs-home-l" style="background-image:url(&quot;/assets/czs-home-l.svg&quot;)"></span>首页</a></li><li><a class="flex_center" href="/categories/"><span class="czs-category-l" style="background-image:url(&quot;/assets/czs-category-l.svg&quot;)"></span>分类</a></li><li><a class="flex_center" href="/tags/"><span class="czs-tag-l" style="background-image:url(&quot;/assets/czs-tag-l.svg&quot;)"></span>标签</a></li><li><a class="flex_center" href="/about/"><span class="czs-about-l" style="background-image:url(&quot;/assets/czs-about-l.svg&quot;)"></span>关于</a></li><li><a class="flex_center" href="/archives/"><span class="czs-box-l" style="background-image:url(&quot;/assets/czs-box-l.svg&quot;)"></span>归档</a></li><li><a class="flex_center" href="/links/index.html"><span class="czs-link-l" style="background-image:url(&quot;/assets/czs-link-l.svg&quot;)"></span>友情链接</a></li></ul></nav></div><nav class="toc"><ol><li><a href="#%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90">代码分析</a></li><li><a href="#then-%E6%96%B9%E6%B3%95%E4%BD%95%E6%97%B6%E8%B0%83%E7%94%A8">then 方法何时调用？</a></li></ol></nav></aside><section class="main"><h1>关于 Promise 的执行顺序</h1><div class="main_post_meta"><time dateTime="2022/01/20">2022-01-20</time> · <!-- -->shenfq</div><article><p>最近看到一个 Promise 相关的很有意思的代码：</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">resolve</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+  <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+  <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">resolve</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+    <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span>
+    <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+    <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+  <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>第一次看到这个代码的时候，以为的输出结果会是：<code>1,2,3,4</code>，但是被实际的输出结果打脸 。</p>
+<p><img src="https://file.shenfq.com/pic/202201201133648.png" alt=""></p>
+<p>如图所示，实际的输出结果为：<code>1,2,4,3</code>。</p>
+<h3 id="%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90">代码分析<a class="anchor" href="#%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90">§</a></h3>
+<p>为了搞清楚实际的输出结果为什么是：<code>1,2,4,3</code>，我们来一步步分析代码的执行。</p>
+<p>我们知道，Promise 实例化时，传入的回调会立即执行，而Promise 的 then 回调会被放到微任务队列中，等待执行。队列就是一个先进先出的列表，先被放到队列的回调，会被优先执行。前面的代码中，一共有 5 个回调函数。</p>
+<p><img src="https://file.shenfq.com/pic/202201181756302.png" alt=""></p>
+<p><code>回调1</code> 是 Promise 实例化时的回调，所以会立即执行，此时控制台打印出数字 <code>1</code>，然后 <code>resolve()</code> 方法被调用，此时的 Promise 状态被修改成了 <code>fulfilled</code>（如果没有调用 <code>resolve()</code> 方法，Promise 的状态为 <code>pending</code>）。</p>
+<p><img src="https://file.shenfq.com/pic/202201191739509.png" alt=""></p>
+<p>Promise 实例化完成后，第一个 <code>then()</code> 方法被调用， <code>回调2</code> 会被放入了微任务队列中，等待执行。</p>
+<h3 id="then-%E6%96%B9%E6%B3%95%E4%BD%95%E6%97%B6%E8%B0%83%E7%94%A8">then 方法何时调用？<a class="anchor" href="#then-%E6%96%B9%E6%B3%95%E4%BD%95%E6%97%B6%E8%B0%83%E7%94%A8">§</a></h3>
+<p>这个时候疑问点来了，第一个 <code>then()</code> 方法被调用后，第二个 <code>then</code> 方法会不会马上被调用，如果会，那输出的结果就应该是 ：<code>1,2,3,4</code>。显然，此时不会马上调用第二个 <code>then()</code> 方法，也就是不会马上将 <code>回调5</code> 放入微任务队列。那如果不会，那何时才会被调用？</p>
+<p>这个时候，需要看一下 <a href="https://github.com/lingirlsea/promisesaplus">Promise/A+ 规范</a>。重点是下面几条：</p>
+<blockquote>
+<p><strong>2.2 <code>then</code> 方法</strong>
+promise 的 then 方法接受两个参数：</p>
+<pre class="language-js"><code class="language-js">promise<span class="token punctuation">.</span><span class="token method function property-access">then</span><span class="token punctuation">(</span>onFulfilled<span class="token punctuation">,</span> onRejected<span class="token punctuation">)</span>
+</code></pre>
+</blockquote>
+<blockquote>
+<p>2.2.2 如果 onFulfilled 是函数：</p>
+<ul>
+<li>2.2.2.1 当 promise 处于已处理状态时，该函数必须被调用并将 promise 的值作为第一个参数。</li>
+<li>2.2.2.2 该函数一定不能在 promise 处于已处理状态之前调用。</li>
+<li>2.2.2.3 该函数被调用次数不超过一次。</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>2.2.6 <code>then</code> 可以在同一个 promise 上多次调用。</p>
+<ul>
+<li>2.2.6.1 如果 <code>promise</code> 处于已处理状态时，所有相应的 <code>onFulfilled</code> 回调必须按照它们对 <code>then</code> 的组织顺序依次调用。</li>
+<li>2.2.6.2 如果 <code>promise</code> 处于已拒绝状态时，所有相应的 <code>onRejected</code> 回调必须按照它们对 <code>then</code> 的组织顺序依次调用。</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>2.2.7 <code>then</code> 必须返回一个 promise。</p>
+</blockquote>
+<pre class="language-js"><code class="language-js">promise1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token parameter">resolve</span> <span class="token arrow operator">=></span> <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment">// promise1 可以多次调用 then</span>
+<span class="token comment">// 且 onFulfilled 回调的执行顺序，按照 .then 的调用顺序执行</span>
+promise1<span class="token punctuation">.</span><span class="token method function property-access">then</span><span class="token punctuation">(</span>onFulfilled1<span class="token punctuation">)</span> <span class="token comment">// 1</span>
+promise1<span class="token punctuation">.</span><span class="token method function property-access">then</span><span class="token punctuation">(</span>onFulfilled2<span class="token punctuation">)</span> <span class="token comment">// 2</span>
+promise1<span class="token punctuation">.</span><span class="token method function property-access">then</span><span class="token punctuation">(</span>onFulfilled3<span class="token punctuation">)</span> <span class="token comment">// 3</span>
+<span class="token comment">// 上面 3 个 onFulfilled，按照 1、2、3 的顺序执行</span>
+</code></pre>
+<pre class="language-js"><code class="language-js"><span class="token comment">// 调用 .then 方法后，返回一个新的 promise</span>
+promise2 <span class="token operator">=</span> promise1<span class="token punctuation">.</span><span class="token method function property-access">then</span><span class="token punctuation">(</span>onFulfilled<span class="token punctuation">,</span> onRejected<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>综上，第一个 <code>then()</code> 方法调用后，会返回一个新的 Promise。这样做的目的就是为了保持链式调用，而且 <code>then()</code> 方法内的 <code>onFulfilled</code> 回调会等待 Promise 状态修改之后才会调用。</p>
+<p>我们稍微修改一下前面代码的调用形式，如下：</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> p1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">resolve</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+  <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+  <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token keyword">const</span> p2 <span class="token operator">=</span> p1<span class="token punctuation">.</span><span class="token method function property-access">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">resolve</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+    <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span>
+    <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+    <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token keyword">const</span> p3 <span class="token operator">=</span> p2<span class="token punctuation">.</span><span class="token method function property-access">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+  <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p><code>p1.then()</code> 会返回一个新的 Promise 命名为 <code>p2</code>，后面的 <code>p2.then()</code> 的回调会在 <code>p1.then()</code> 内的回调函数执行完之后，才会调用，也就是 <code>p2</code> 这个 Promise 状态发生改变之后。</p>
+<p>所以，只有 <code>回调2</code> 执行完成后，才会执行 <code>p2.then()</code>。我们再看 <code>回调2</code> 的内容。</p>
+<p><img src="https://file.shenfq.com/pic/202201201100397.png" alt=""></p>
+<p><code>回调2</code> 先是对一个 Promise 进行了实例化操作，实例化的回调为 <code>回调3</code> ，该回调会立即执行，此时控制台打印出数字 <code>2</code>，然后 <code>resolve()</code> 方法被调用，此时的 Promise 状态被修改成了 <code>fulfilled</code>，后面的 <code>回调4</code> 会放入微任务队列。<code>回调2</code> 执行完毕后，执行 <code>p2.then()</code>，<code>回调5</code> 被放入微任务队列。</p>
+<p>按照队列先进先出的执行顺序，先执行 <code>回调4</code>，然后执行 <code>回调5</code>。所以，在控制台会先输出数字 <code>4</code>，然后输出数字 <code>3</code>。</p>
+<p>如果想要输出的结果为：<code>1,2,3,4</code>，可以将代码改成如下形式：</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> p1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">resolve</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+  <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+  <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+p1<span class="token punctuation">.</span><span class="token method function property-access">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">resolve</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+    <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span>
+    <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+    <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+p1<span class="token punctuation">.</span><span class="token method function property-access">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> <span class="token punctuation">{</span>
+  <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p><img src="https://file.shenfq.com/pic/202201201134890.png" alt=""></p>
+<p>根据前面的 <code>2.2.6</code> 规则，<code>then</code> 可以在同一个 promise 上多次调用，且 p1 后面的 then 会按照他们的调用顺序直接放入微任务队列中。</p></article></section><footer>Powered by <a href="https://github.com/xcatliu/pagic" target="_blank">Pagic</a></footer><script src="https://cdn.pagic.org/react@16.13.1/umd/react.production.min.js"></script><script src="https://cdn.pagic.org/react-dom@16.13.1/umd/react-dom.production.min.js"></script><script type="module" src="/index.js"></script></body></html>

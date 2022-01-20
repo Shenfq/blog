@@ -65,6 +65,26 @@ export default {
         "isPost": true,
         "posts": [
             {
+                "pagePath": "posts/2022/promise.then.md",
+                "title": "关于 Promise 的执行顺序",
+                "link": "posts/2022/promise.then.html",
+                "date": "2022/01/20",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "前端"
+                ],
+                "tags": [
+                    "JavaScript",
+                    "Promise"
+                ],
+                "excerpt": "最近看到一个 Promise 相关的很有意思的代码： new Promise((resolve) => { console.log(1) resolve() }).then(() => { new Promise((resolve) => { console.log(2) resolve() }).then(() => { console.log(4) }) }).then(() =...",
+                "cover": "https://file.shenfq.com/pic/202201201133648.png"
+            },
+            {
                 "pagePath": "posts/2022/swc.md",
                 "title": "新一代的编译工具 SWC",
                 "link": "posts/2022/swc.html",
@@ -1769,7 +1789,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 32
+                "count": 33
             },
             {
                 "name": "Go",
@@ -1830,12 +1850,12 @@ export default {
                 "count": 26
             },
             {
-                "name": "前端框架",
+                "name": "JavaScript",
                 "count": 13
             },
             {
-                "name": "JavaScript",
-                "count": 12
+                "name": "前端框架",
+                "count": 13
             },
             {
                 "name": "前端工程化",
@@ -1879,7 +1899,7 @@ export default {
             },
             {
                 "name": "Promise",
-                "count": 3
+                "count": 4
             },
             {
                 "name": "webpack",

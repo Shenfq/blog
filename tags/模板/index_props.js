@@ -62,7 +62,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 32
+                "count": 33
             },
             {
                 "name": "Go",
@@ -123,12 +123,12 @@ export default {
                 "count": 26
             },
             {
-                "name": "前端框架",
+                "name": "JavaScript",
                 "count": 13
             },
             {
-                "name": "JavaScript",
-                "count": 12
+                "name": "前端框架",
+                "count": 13
             },
             {
                 "name": "前端工程化",
@@ -172,7 +172,7 @@ export default {
             },
             {
                 "name": "Promise",
-                "count": 3
+                "count": 4
             },
             {
                 "name": "webpack",
