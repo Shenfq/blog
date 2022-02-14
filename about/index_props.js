@@ -31,13 +31,34 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2022-01-20T03:43:42.000Z",
+    'date': "2022-02-14T07:37:29.000Z",
     'updated': null,
     'excerpt': "自我介绍 我是 shenfq ，微信名「自然醒」，互联网一线前端开发。博客除了会分享前端技术，偶尔也会分享我的生活以及读书清单。写博客也是为了强制自己有些输出，为了保证质量，更新不会特别频繁，期望能做到周更。 工作经历 -...",
     'cover': "https://file.shenfq.com/pic/20201209222204.png",
     'blog': {
         "isPost": false,
         "posts": [
+            {
+                "pagePath": "posts/2022/2021总结.md",
+                "title": "2021年终总结",
+                "link": "posts/2022/2021总结.html",
+                "date": "2022/02/14",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "年终总结"
+                ],
+                "tags": [
+                    "工作",
+                    "感悟",
+                    "总结"
+                ],
+                "excerpt": "从参加工作开始，基本每年都会写年终总结，2021年的年终总结写得格外的晚，甚至2022年都已经过去了一个多月。 2021年新冠疫情依旧没有消失，当然疫情带给我们的影响，相比于2020年已经小了很多，打了疫苗，做核酸出结果的速度也...",
+                "cover": "https://file.shenfq.com/pic/202202102257314.png"
+            },
             {
                 "pagePath": "posts/2022/promise.then.md",
                 "title": "关于 Promise 的执行顺序",
@@ -1783,7 +1804,7 @@ export default {
             },
             {
                 "name": "年终总结",
-                "count": 4
+                "count": 5
             },
             {
                 "name": "随便写写",
@@ -1848,6 +1869,14 @@ export default {
                 "count": 8
             },
             {
+                "name": "工作",
+                "count": 8
+            },
+            {
+                "name": "感悟",
+                "count": 8
+            },
+            {
                 "name": "Node",
                 "count": 7
             },
@@ -1856,16 +1885,8 @@ export default {
                 "count": 7
             },
             {
-                "name": "工作",
-                "count": 7
-            },
-            {
-                "name": "感悟",
-                "count": 7
-            },
-            {
                 "name": "总结",
-                "count": 6
+                "count": 7
             },
             {
                 "name": "翻译",

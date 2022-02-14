@@ -61,7 +61,7 @@ export default {
             },
             {
                 "name": "年终总结",
-                "count": 4
+                "count": 5
             },
             {
                 "name": "随便写写",
@@ -126,6 +126,14 @@ export default {
                 "count": 8
             },
             {
+                "name": "工作",
+                "count": 8
+            },
+            {
+                "name": "感悟",
+                "count": 8
+            },
+            {
                 "name": "Node",
                 "count": 7
             },
@@ -134,16 +142,8 @@ export default {
                 "count": 7
             },
             {
-                "name": "工作",
-                "count": 7
-            },
-            {
-                "name": "感悟",
-                "count": 7
-            },
-            {
                 "name": "总结",
-                "count": 6
+                "count": 7
             },
             {
                 "name": "翻译",
