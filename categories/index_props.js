@@ -24,13 +24,35 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2022-02-14T07:37:29.000Z",
+    'date': "2022-03-12T09:26:22.000Z",
     'updated': null,
     'excerpt': "",
     'cover': undefined,
     'blog': {
         "isPost": false,
         "posts": [
+            {
+                "pagePath": "posts/2022/LRU.md",
+                "title": "什么是 LRU 算法？",
+                "link": "posts/2022/LRU.html",
+                "date": "2022/03/12",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "前端"
+                ],
+                "tags": [
+                    "缓存",
+                    "LRU",
+                    "LFU",
+                    "JavaScript"
+                ],
+                "excerpt": "缓存 是我们写代码过程中常用的一种手段，是一种空间换时间的做法。就拿我经常使用的 HTTP 协议中，也存在强缓存和协商缓存两种做法。当我们打开一个网站的时候，浏览器会查询该请求之前的响应头，是否有 Cache-Control、Last-...",
+                "cover": "https://file.shenfq.com/pic/202203121421464.png"
+            },
             {
                 "pagePath": "posts/2022/2021总结.md",
                 "title": "2021年终总结",
@@ -1777,7 +1799,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 33
+                "count": 34
             },
             {
                 "name": "Go",
@@ -1839,7 +1861,7 @@ export default {
             },
             {
                 "name": "JavaScript",
-                "count": 13
+                "count": 14
             },
             {
                 "name": "前端框架",
@@ -2062,7 +2084,15 @@ export default {
                 "count": 1
             },
             {
+                "name": "LFU",
+                "count": 1
+            },
+            {
                 "name": "linux",
+                "count": 1
+            },
+            {
+                "name": "LRU",
                 "count": 1
             },
             {
@@ -2287,6 +2317,10 @@ export default {
             },
             {
                 "name": "结构体",
+                "count": 1
+            },
+            {
+                "name": "缓存",
                 "count": 1
             },
             {

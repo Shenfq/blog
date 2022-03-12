@@ -84,7 +84,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 33
+                "count": 34
             },
             {
                 "name": "Go",
@@ -146,7 +146,7 @@ export default {
             },
             {
                 "name": "JavaScript",
-                "count": 13
+                "count": 14
             },
             {
                 "name": "前端框架",
@@ -369,7 +369,15 @@ export default {
                 "count": 1
             },
             {
+                "name": "LFU",
+                "count": 1
+            },
+            {
                 "name": "linux",
+                "count": 1
+            },
+            {
+                "name": "LRU",
                 "count": 1
             },
             {
@@ -594,6 +602,10 @@ export default {
             },
             {
                 "name": "结构体",
+                "count": 1
+            },
+            {
+                "name": "缓存",
                 "count": 1
             },
             {
