@@ -24,7 +24,7 @@ export default {
     'contributors': [
         "Shenfq"
     ],
-    'date': "2022-03-12T09:26:22.000Z",
+    'date': "2022-03-12T09:34:54.000Z",
     'updated': null,
     'excerpt': " - 童欧巴 —— 你远道而来这世间，想必也是因为热爱吧 - 悲伤日记 —— 一个有温度的野生前端猿人 - 少年民仔 —— 愿你出走半生，归来仍是少年",
     'cover': undefined,
