@@ -58,7 +58,8 @@ export default {
                     "LFU",
                     "JavaScript"
                 ],
-                "excerpt": "上次的文章介绍了 LRU 算法，今天打算来介绍一下 LFU 算法。在上篇文章中有提到， LFU（Least frequently used：最少使用）算法与 LRU 算法只是在淘汰策略上有所不同，LRU 倾向于保留最近有使用的数据，而 LFU 倾向于保留使用频..."
+                "excerpt": "上次的文章介绍了 LRU 算法，今天打算来介绍一下 LFU 算法。在上篇文章中有提到， LFU（Least frequently used：最少使用）算法与 LRU 算法只是在淘汰策略上有所不同，LRU 倾向于保留最近有使用的数据，而 LFU 倾向于保留使用频...",
+                "cover": "https://file.shenfq.com/pic/202203221024302.jpg"
             },
             {
                 "pagePath": "posts/2022/LRU.md",
