@@ -53,6 +53,27 @@ export default {
         "isPost": true,
         "posts": [
             {
+                "pagePath": "posts/2022/LFU.md",
+                "title": "什么是 LFU 算法？",
+                "link": "posts/2022/LFU.html",
+                "date": "2022/03/22",
+                "updated": null,
+                "author": "shenfq",
+                "contributors": [
+                    "Shenfq"
+                ],
+                "categories": [
+                    "前端"
+                ],
+                "tags": [
+                    "缓存",
+                    "LRU",
+                    "LFU",
+                    "JavaScript"
+                ],
+                "excerpt": "上次的文章介绍了 LRU 算法，今天打算来介绍一下 LFU 算法。在上篇文章中有提到， LFU（Least frequently used：最少使用）算法与 LRU 算法只是在淘汰策略上有所不同，LRU 倾向于保留最近有使用的数据，而 LFU 倾向于保留使用频..."
+            },
+            {
                 "pagePath": "posts/2022/LRU.md",
                 "title": "什么是 LRU 算法？",
                 "link": "posts/2022/LRU.html",
@@ -1820,7 +1841,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 34
+                "count": 35
             },
             {
                 "name": "Go",
@@ -1882,7 +1903,7 @@ export default {
             },
             {
                 "name": "JavaScript",
-                "count": 14
+                "count": 15
             },
             {
                 "name": "前端框架",
@@ -1977,6 +1998,14 @@ export default {
                 "count": 2
             },
             {
+                "name": "LFU",
+                "count": 2
+            },
+            {
+                "name": "LRU",
+                "count": 2
+            },
+            {
                 "name": "react",
                 "count": 2
             },
@@ -2026,6 +2055,10 @@ export default {
             },
             {
                 "name": "算法",
+                "count": 2
+            },
+            {
+                "name": "缓存",
                 "count": 2
             },
             {
@@ -2105,15 +2138,7 @@ export default {
                 "count": 1
             },
             {
-                "name": "LFU",
-                "count": 1
-            },
-            {
                 "name": "linux",
-                "count": 1
-            },
-            {
-                "name": "LRU",
                 "count": 1
             },
             {
@@ -2338,10 +2363,6 @@ export default {
             },
             {
                 "name": "结构体",
-                "count": 1
-            },
-            {
-                "name": "缓存",
                 "count": 1
             },
             {

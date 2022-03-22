@@ -300,7 +300,7 @@ export default {
         "categories": [
             {
                 "name": "前端",
-                "count": 34
+                "count": 35
             },
             {
                 "name": "Go",
@@ -362,7 +362,7 @@ export default {
             },
             {
                 "name": "JavaScript",
-                "count": 14
+                "count": 15
             },
             {
                 "name": "前端框架",
@@ -457,6 +457,14 @@ export default {
                 "count": 2
             },
             {
+                "name": "LFU",
+                "count": 2
+            },
+            {
+                "name": "LRU",
+                "count": 2
+            },
+            {
                 "name": "react",
                 "count": 2
             },
@@ -506,6 +514,10 @@ export default {
             },
             {
                 "name": "算法",
+                "count": 2
+            },
+            {
+                "name": "缓存",
                 "count": 2
             },
             {
@@ -585,15 +597,7 @@ export default {
                 "count": 1
             },
             {
-                "name": "LFU",
-                "count": 1
-            },
-            {
                 "name": "linux",
-                "count": 1
-            },
-            {
-                "name": "LRU",
                 "count": 1
             },
             {
@@ -818,10 +822,6 @@ export default {
             },
             {
                 "name": "结构体",
-                "count": 1
-            },
-            {
-                "name": "缓存",
                 "count": 1
             },
             {
