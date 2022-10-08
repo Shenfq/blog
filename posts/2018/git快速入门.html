@@ -1,84 +1,76 @@
-<!doctype html><html class="" data-reactroot=""><head><script src="/assets/hm.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous"/>
-<meta data-react-helmet="true" charset="utf-8"/><meta data-react-helmet="true" http-equiv="x-ua-compatible" content="ie=edge"/><meta data-react-helmet="true" name="description" content="前端工程师，爱折腾，擅长 JavaScript，欢迎关注我的公众号「自然醒的笔记本」"/><meta data-react-helmet="true" name="viewport" content="width=device-width, initial-scale=1"/>
-<title data-react-helmet="true">git快速入门 · 自然醒的博客</title>
-<link data-react-helmet="true" rel="stylesheet" href="/assets/index.css"/><link data-react-helmet="true" id="prismTheme" rel="stylesheet" href="/assets/prism.css"/>
-<script data-react-helmet="true" >
-    const shouldSetIsDark = document.cookie.includes('is_dark=1') ? true : document.cookie.includes('is_dark=0') ? false : window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if (shouldSetIsDark) {
-      document.documentElement.classList.add('is_dark');
-      document.getElementById('prismTheme').href = "/assets/prism_tomorrow.css";
-    }
-  </script>
-</head><body><a class="czs-menu-l show_on_mobile aside_button_open" href="#" style="background-image:url(&quot;/assets/czs-menu-l.svg&quot;)"></a><a class="show_on_mobile aside_button_text" href="/">自然醒的博客</a><aside class="hide_on_mobile"><div class="aside_card"><a class="czs-menu-l show_on_mobile aside_button_close" href="#" style="background-image:url(&quot;/assets/czs-close-l.svg&quot;)"></a><h1><a href="/">自然醒的博客</a></h1><p class="description">前端工程师，爱折腾，擅长 JavaScript，欢迎关注我的公众号「自然醒的笔记本」</p><ul class="social list_style_none"><li class="flex_center"><a class="czs-github-logo" href="https://github.com/Shenfq" target="_blank" style="background-image:url(&quot;/assets/czs-github-logo.svg&quot;)"></a></li><li class="flex_center"><a class="czs-message-l" href="mailto:shenfq95@foxmail.com" target="_blank" style="background-image:url(&quot;/assets/czs-message-l.svg&quot;)"></a></li><li style="flex-grow:1"></li><li class="toggle_dark flex_center"><span class="czs-sun" style="background-image:url(&quot;/assets/czs-sun.svg&quot;)"></span><span class="czs-sun-l" style="background-image:url(&quot;/assets/czs-sun-l.svg&quot;)"></span><span class="czs-moon" style="background-image:url(&quot;/assets/czs-moon.svg&quot;)"></span><span class="czs-moon-l" style="background-image:url(&quot;/assets/czs-moon-l.svg&quot;)"></span></li></ul><nav><ul class="menu list_style_none"><li><a class="flex_center" href="/"><span class="czs-home-l" style="background-image:url(&quot;/assets/czs-home-l.svg&quot;)"></span>首页</a></li><li><a class="flex_center" href="/categories/"><span class="czs-category-l" style="background-image:url(&quot;/assets/czs-category-l.svg&quot;)"></span>分类</a></li><li><a class="flex_center" href="/tags/"><span class="czs-tag-l" style="background-image:url(&quot;/assets/czs-tag-l.svg&quot;)"></span>标签</a></li><li><a class="flex_center" href="/about/"><span class="czs-about-l" style="background-image:url(&quot;/assets/czs-about-l.svg&quot;)"></span>关于</a></li><li><a class="flex_center" href="/archives/"><span class="czs-box-l" style="background-image:url(&quot;/assets/czs-box-l.svg&quot;)"></span>归档</a></li><li><a class="flex_center" href="/links/index.html"><span class="czs-link-l" style="background-image:url(&quot;/assets/czs-link-l.svg&quot;)"></span>友情链接</a></li></ul></nav></div><nav class="toc"><ol><li><a href="#%E8%83%8C%E6%99%AF">背景</a></li><li><a href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%9A%84%E7%89%88%E6%9C%AC%E5%BA%93">分布式的版本库</a><ol><li><a href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5">基本概念</a></li><li><a href="#git%E5%91%BD%E4%BB%A4%E7%AE%80%E4%BB%8B">git命令简介</a><ol></ol></li></ol></li><li><a href="#git%E5%88%86%E6%94%AF">git分支</a><ol><li><a href="#%E4%BD%95%E4%B8%BA%E5%88%86%E6%94%AF">何为分支</a></li><li><a href="#%E5%90%88%E5%B9%B6%E5%88%86%E6%94%AF">合并分支</a><ol></ol></li></ol></li><li><a href="#%E5%8F%82%E8%80%83">参考</a></li></ol></nav></aside><section class="main"><h1>git快速入门</h1><div class="main_post_meta"><time dateTime="2018/04/17">2018-04-17</time> · <!-- -->shenfq</div><article><h2 id="%E8%83%8C%E6%99%AF">背景<a class="anchor" href="#%E8%83%8C%E6%99%AF">§</a></h2>
-<p>git作为现在最为流行的版本管理系统，大部分公司都使用git进行版本控制，
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>git快速入门 | 自然醒的博客</title>
+    <meta name="generator" content="VuePress 1.9.7">
+    <link rel="icon" href="/favicon.ico">
+    <script>
+      var _hmt = _hmt || [];
+      (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?681a9f14f2db8e622747ef03c33bb367";
+        var s = document.getElementsByTagName("script")[0]; 
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+    <meta name="description" content=" ">
+    
+    <link rel="preload" href="/assets/css/0.styles.a1257572.css" as="style"><link rel="preload" href="/assets/js/app.318ac574.js" as="script"><link rel="preload" href="/assets/js/3.38c624e7.js" as="script"><link rel="preload" href="/assets/js/1.a547ec77.js" as="script"><link rel="preload" href="/assets/js/22.b094a8de.js" as="script"><link rel="prefetch" href="/assets/js/10.6013c20b.js"><link rel="prefetch" href="/assets/js/11.3d8fc37f.js"><link rel="prefetch" href="/assets/js/12.d356848f.js"><link rel="prefetch" href="/assets/js/13.503aa3ef.js"><link rel="prefetch" href="/assets/js/14.0cc170d7.js"><link rel="prefetch" href="/assets/js/15.80a29d65.js"><link rel="prefetch" href="/assets/js/16.eeef94d5.js"><link rel="prefetch" href="/assets/js/17.473fd739.js"><link rel="prefetch" href="/assets/js/18.7a94ffa7.js"><link rel="prefetch" href="/assets/js/19.1049cfdf.js"><link rel="prefetch" href="/assets/js/20.928b8fee.js"><link rel="prefetch" href="/assets/js/21.8fa143ce.js"><link rel="prefetch" href="/assets/js/23.9897185b.js"><link rel="prefetch" href="/assets/js/24.12f7413e.js"><link rel="prefetch" href="/assets/js/25.251a0dbc.js"><link rel="prefetch" href="/assets/js/26.bf0e0cf4.js"><link rel="prefetch" href="/assets/js/27.d4dc9aa5.js"><link rel="prefetch" href="/assets/js/28.b67394ce.js"><link rel="prefetch" href="/assets/js/29.2c093fe1.js"><link rel="prefetch" href="/assets/js/30.88baa945.js"><link rel="prefetch" href="/assets/js/31.db871da7.js"><link rel="prefetch" href="/assets/js/32.aca26529.js"><link rel="prefetch" href="/assets/js/33.4355b0d1.js"><link rel="prefetch" href="/assets/js/34.1e25eec3.js"><link rel="prefetch" href="/assets/js/35.33b6be8f.js"><link rel="prefetch" href="/assets/js/36.af8dc1b5.js"><link rel="prefetch" href="/assets/js/37.0a442b7d.js"><link rel="prefetch" href="/assets/js/38.b8932c36.js"><link rel="prefetch" href="/assets/js/39.873ac12b.js"><link rel="prefetch" href="/assets/js/4.22f3476d.js"><link rel="prefetch" href="/assets/js/40.902ba1b5.js"><link rel="prefetch" href="/assets/js/41.b3a01dd9.js"><link rel="prefetch" href="/assets/js/42.e124f445.js"><link rel="prefetch" href="/assets/js/43.a3cd5e06.js"><link rel="prefetch" href="/assets/js/44.77a9226e.js"><link rel="prefetch" href="/assets/js/45.0c563d44.js"><link rel="prefetch" href="/assets/js/46.abecd608.js"><link rel="prefetch" href="/assets/js/47.945d2559.js"><link rel="prefetch" href="/assets/js/48.96121d35.js"><link rel="prefetch" href="/assets/js/49.b6e988b3.js"><link rel="prefetch" href="/assets/js/5.eb73409d.js"><link rel="prefetch" href="/assets/js/50.51197aa2.js"><link rel="prefetch" href="/assets/js/51.cba93298.js"><link rel="prefetch" href="/assets/js/52.5845bf72.js"><link rel="prefetch" href="/assets/js/53.05e334fd.js"><link rel="prefetch" href="/assets/js/54.730245bb.js"><link rel="prefetch" href="/assets/js/55.fe4f1899.js"><link rel="prefetch" href="/assets/js/56.9fc2cca2.js"><link rel="prefetch" href="/assets/js/57.ba509f83.js"><link rel="prefetch" href="/assets/js/58.e2c3009c.js"><link rel="prefetch" href="/assets/js/59.45cf1f42.js"><link rel="prefetch" href="/assets/js/6.c75b1c30.js"><link rel="prefetch" href="/assets/js/60.cb622813.js"><link rel="prefetch" href="/assets/js/61.77d4b62e.js"><link rel="prefetch" href="/assets/js/62.7acffff4.js"><link rel="prefetch" href="/assets/js/63.a9a1e121.js"><link rel="prefetch" href="/assets/js/64.2952287b.js"><link rel="prefetch" href="/assets/js/65.e46eb76e.js"><link rel="prefetch" href="/assets/js/66.d6579358.js"><link rel="prefetch" href="/assets/js/67.263c1a64.js"><link rel="prefetch" href="/assets/js/68.167b338f.js"><link rel="prefetch" href="/assets/js/69.7cc7de17.js"><link rel="prefetch" href="/assets/js/7.7e6be3ad.js"><link rel="prefetch" href="/assets/js/70.4cd87fd5.js"><link rel="prefetch" href="/assets/js/71.03d8452b.js"><link rel="prefetch" href="/assets/js/72.ed53a810.js"><link rel="prefetch" href="/assets/js/73.9a316584.js"><link rel="prefetch" href="/assets/js/74.fabacaa2.js"><link rel="prefetch" href="/assets/js/75.8d7e3516.js"><link rel="prefetch" href="/assets/js/76.ffbb5827.js"><link rel="prefetch" href="/assets/js/77.a54abacd.js"><link rel="prefetch" href="/assets/js/78.387b274e.js"><link rel="prefetch" href="/assets/js/79.4245741e.js"><link rel="prefetch" href="/assets/js/8.089b1e80.js"><link rel="prefetch" href="/assets/js/80.e7c18fed.js"><link rel="prefetch" href="/assets/js/81.c6465575.js"><link rel="prefetch" href="/assets/js/82.4e0588dd.js"><link rel="prefetch" href="/assets/js/83.846e3dd3.js"><link rel="prefetch" href="/assets/js/84.42030c5b.js"><link rel="prefetch" href="/assets/js/85.eb6c0afb.js"><link rel="prefetch" href="/assets/js/86.b1e4b9b2.js"><link rel="prefetch" href="/assets/js/87.f48ae41b.js"><link rel="prefetch" href="/assets/js/88.84bcc4c7.js"><link rel="prefetch" href="/assets/js/89.c36e2e4e.js"><link rel="prefetch" href="/assets/js/9.a15a624d.js"><link rel="prefetch" href="/assets/js/90.1b535ac6.js"><link rel="prefetch" href="/assets/js/91.643af168.js"><link rel="prefetch" href="/assets/js/92.56bcb90f.js"><link rel="prefetch" href="/assets/js/93.2c179837.js"><link rel="prefetch" href="/assets/js/94.5e1d5354.js"><link rel="prefetch" href="/assets/js/95.1591a73b.js"><link rel="prefetch" href="/assets/js/96.07185bc3.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.a1257572.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container no-sidebar" data-v-5bb33761><div data-v-5bb33761><div class="password-shadow password-wrapper-out" style="display:none;" data-v-59e6cb88 data-v-5bb33761 data-v-5bb33761><h3 class="title" data-v-59e6cb88>自然醒的博客</h3> <p class="description" data-v-59e6cb88> </p> <label id="box" class="inputBox" data-v-59e6cb88><input type="password" value="" data-v-59e6cb88> <span data-v-59e6cb88>Konck! Knock!</span> <button data-v-59e6cb88>OK</button></label> <div class="footer" data-v-59e6cb88><span data-v-59e6cb88><i class="iconfont reco-theme" data-v-59e6cb88></i> <a target="blank" href="https://vuepress-theme-reco.recoluan.com" data-v-59e6cb88>vuePress-theme-reco</a></span> <span data-v-59e6cb88><i class="iconfont reco-copyright" data-v-59e6cb88></i> <a data-v-59e6cb88><!---->
+          
+        <!---->
+        2022
+      </a></span></div></div> <div class="hide" data-v-5bb33761><header class="navbar" data-v-5bb33761><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">自然醒的博客</span></a> <div class="links"><div class="color-picker"><a class="color-button"><i class="iconfont reco-color"></i></a> <div class="color-picker-menu" style="display:none;"><div class="mode-options"><h4 class="title">Choose mode</h4> <ul class="color-mode-options"><li class="dark">dark</li><li class="auto active">auto</li><li class="light">light</li></ul></div></div></div> <div class="search-box"><i class="iconfont reco-search"></i> <input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/" class="nav-link"><i class="iconfont reco-home"></i>
+  首页
+</a></div><div class="nav-item"><a href="/timeline/" class="nav-link"><i class="iconfont reco-date"></i>
+  时间轴
+</a></div><div class="nav-item"><a href="/about/" class="nav-link"><i class="iconfont reco-account"></i>
+  自我介绍
+</a></div> <!----></nav></div></header> <div class="sidebar-mask" data-v-5bb33761></div> <aside class="sidebar" data-v-5bb33761><div class="personal-info-wrapper" data-v-1fad0c41 data-v-5bb33761><!----> <!----> <div class="num" data-v-1fad0c41><div data-v-1fad0c41><h3 data-v-1fad0c41>85</h3> <h6 data-v-1fad0c41>Articles</h6></div> <div data-v-1fad0c41><h3 data-v-1fad0c41>127</h3> <h6 data-v-1fad0c41>Tags</h6></div></div> <ul class="social-links" data-v-1fad0c41></ul> <hr data-v-1fad0c41></div> <nav class="nav-links"><div class="nav-item"><a href="/" class="nav-link"><i class="iconfont reco-home"></i>
+  首页
+</a></div><div class="nav-item"><a href="/timeline/" class="nav-link"><i class="iconfont reco-date"></i>
+  时间轴
+</a></div><div class="nav-item"><a href="/about/" class="nav-link"><i class="iconfont reco-account"></i>
+  自我介绍
+</a></div> <!----></nav> <!----> </aside> <div class="password-shadow password-wrapper-in" style="display:none;" data-v-59e6cb88 data-v-5bb33761><h3 class="title" data-v-59e6cb88>git快速入门</h3> <!----> <label id="box" class="inputBox" data-v-59e6cb88><input type="password" value="" data-v-59e6cb88> <span data-v-59e6cb88>Konck! Knock!</span> <button data-v-59e6cb88>OK</button></label> <div class="footer" data-v-59e6cb88><span data-v-59e6cb88><i class="iconfont reco-theme" data-v-59e6cb88></i> <a target="blank" href="https://vuepress-theme-reco.recoluan.com" data-v-59e6cb88>vuePress-theme-reco</a></span> <span data-v-59e6cb88><i class="iconfont reco-copyright" data-v-59e6cb88></i> <a data-v-59e6cb88><!---->
+          
+        <!---->
+        2022
+      </a></span></div></div> <div data-v-5bb33761><div data-v-5bb33761><main class="page"><section style="display:;"><div class="page-title"><h1 class="title">git快速入门</h1> <div data-v-8a445198><i class="iconfont reco-account" data-v-8a445198><span data-v-8a445198>shenfq</span></i> <i class="iconfont reco-date" data-v-8a445198><span data-v-8a445198>4/17/2018</span></i> <!----> <i class="tags iconfont reco-tag" data-v-8a445198><span class="tag-item" data-v-8a445198>git</span><span class="tag-item" data-v-8a445198>版本管理</span></i></div></div> <div class="theme-reco-content content__default"><h2 id="背景"><a href="#背景" class="header-anchor">#</a> 背景</h2> <p>git作为现在最为流行的版本管理系统，大部分公司都使用git进行版本控制，
 并且最大同性交友网站github也是在git的基础上建立的。
 很多人认为git难，在于它的一些概念与之前流行的集中化的版本管理系统有所出入，
-只要通过熟悉git的基本概念，以及git分支切换的流程，想要上手还是很容易的。</p>
-<p>这篇文章将介绍git的一些基本概念以及git常用的一些命令。github官方提供了一套git学习教程，感兴趣可以<a href="https://try.github.io/">去看看</a>。</p>
-<!-- more -->
-<h2 id="%E5%88%86%E5%B8%83%E5%BC%8F%E7%9A%84%E7%89%88%E6%9C%AC%E5%BA%93">分布式的版本库<a class="anchor" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%9A%84%E7%89%88%E6%9C%AC%E5%BA%93">§</a></h2>
-<h3 id="%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5">基本概念<a class="anchor" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5">§</a></h3>
-<p>首先，看看官网是怎么介绍git的。</p>
-<blockquote>
-<p>Git is a free and open source distributed version control system.<br>
-Git是一个免费并且开源的分布式版本管理工具。</p>
-</blockquote>
-<p>重点就在于git的分布式，只需要在项目根目录执行<code>git init</code>你就拥有了一个git版本库，
+只要通过熟悉git的基本概念，以及git分支切换的流程，想要上手还是很容易的。</p> <p>这篇文章将介绍git的一些基本概念以及git常用的一些命令。github官方提供了一套git学习教程，感兴趣可以<a href="https://try.github.io/" target="_blank" rel="noopener noreferrer">去看看<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>。</p> <h2 id="分布式的版本库"><a href="#分布式的版本库" class="header-anchor">#</a> 分布式的版本库</h2> <h3 id="基本概念"><a href="#基本概念" class="header-anchor">#</a> 基本概念</h3> <p>首先，看看官网是怎么介绍git的。</p> <blockquote><p>Git is a free and open source distributed version control system.<br>
+Git是一个免费并且开源的分布式版本管理工具。</p></blockquote> <p>重点就在于git的分布式，只需要在项目根目录执行<code>git init</code>你就拥有了一个git版本库，
 同时在该目录下会生成一个<code>.git</code>文件夹，该文件夹用来记录你所有的提交信息，类似与<code>.svn</code>文件夹。
 该文件夹会存储你每次提交的文件的全部信息，只是会经过压缩，具体内容这里不做深入展开。
 如果你对git的内部原理感兴趣可以看
-<a href="https://bingohuang.gitbooks.io/progit2/content/10-git-internals/sections/objects.html">这里</a>。</p>
-<p>与集中式的版本管理工具不同，git的commit之后提交到本地的版本库，
+<a href="https://bingohuang.gitbooks.io/progit2/content/10-git-internals/sections/objects.html" target="_blank" rel="noopener noreferrer">这里<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>。</p> <p>与集中式的版本管理工具不同，git的commit之后提交到本地的版本库，
 像svn的commit则是直接提交到服务器的中央版本库。
-这就意味这我们都在本地具有一个版本库，那么多人开发时，我们需要如何管理我们的版本库呢？</p>
-<p>这里git就引入了一个远程版本库的概念，远程版本库并不会记录我们的代码文件，
+这就意味这我们都在本地具有一个版本库，那么多人开发时，我们需要如何管理我们的版本库呢？</p> <p>这里git就引入了一个远程版本库的概念，远程版本库并不会记录我们的代码文件，
 只是一个裸仓库，也就是说远程版本库只会保存<code>.git</code>目录下的东西，这也相当于间接的记录我们的代码文件。
 每个人都能让远程版本库同步你本地的commit信息，但是同步之前会检查你本地的版本库是否与远程版本库的提交信息一致，
-如果不一致会提醒你先从远程版本库进行更新。唉，千言万语不如一张图。</p>
-<p><img src="//file.shenfq.com/18-4-14/34749597.jpg" alt="同步到远程版本库"></p>
-<ol>
-<li>当我们告诉远程版本库，我有一个新的提交需要你同步，它会拒绝你。</li>
-<li>因为在你之前有一个人先同步了提交到远程分支，你必须更新他的提交到你本地，你才能继续同步你的提交。</li>
-</ol>
-<p>git在提交到版本库之前，还有一个步骤，那就是添加到暂存区，至于git为什么会存在暂存区，知乎上有个回答我觉得说得挺好的（<a href="https://www.zhihu.com/question/19946553/answer/29033220">传送门</a>）。</p>
-<p>大致意思是说，早期的版本管理工具有成熟的gui，比如用svn，每一次提交都能让你自由选择需要提交哪些文件的修改。</p>
-<p><img src="//file.shenfq.com/18-4-15/73819602.jpg" alt="小乌龟"></p>
-<p>而在命令行下面，这些操作比较麻烦，为了解决这个问题，于是在commit之前增加了一个暂存区，用来存放我们需要提交的文件。好了，我们再回过头来看看git在版本管理上分了哪些部分。</p>
-<p><img src="//file.shenfq.com/18-4-14/41364002.jpg" alt=""></p>
-<h3 id="git%E5%91%BD%E4%BB%A4%E7%AE%80%E4%BB%8B">git命令简介<a class="anchor" href="#git%E5%91%BD%E4%BB%A4%E7%AE%80%E4%BB%8B">§</a></h3>
-<p>了解了这些概念，我们再来看看，如何初始化一个git仓库，并且在修改代码后将提交同步给远程版本库。</p>
-<h4 id="%E5%88%9D%E5%A7%8B%E5%8C%96git%E9%85%8D%E7%BD%AE">初始化git配置<a class="anchor" href="#%E5%88%9D%E5%A7%8B%E5%8C%96git%E9%85%8D%E7%BD%AE">§</a></h4>
-<p>该配置是用来告诉版本库是谁提交代码。</p>
-<pre class="language-bash"><code class="language-bash"><span class="token comment">#全局设置用户名</span>
-<span class="token function">git</span> config --global user.name <span class="token string">"your name"</span>
+如果不一致会提醒你先从远程版本库进行更新。唉，千言万语不如一张图。</p> <p><img src="//file.shenfq.com/18-4-14/34749597.jpg" alt="同步到远程版本库"></p> <ol><li>当我们告诉远程版本库，我有一个新的提交需要你同步，它会拒绝你。</li> <li>因为在你之前有一个人先同步了提交到远程分支，你必须更新他的提交到你本地，你才能继续同步你的提交。</li></ol> <p>git在提交到版本库之前，还有一个步骤，那就是添加到暂存区，至于git为什么会存在暂存区，知乎上有个回答我觉得说得挺好的（<a href="https://www.zhihu.com/question/19946553/answer/29033220" target="_blank" rel="noopener noreferrer">传送门<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>）。</p> <p>大致意思是说，早期的版本管理工具有成熟的gui，比如用svn，每一次提交都能让你自由选择需要提交哪些文件的修改。</p> <p><img src="//file.shenfq.com/18-4-15/73819602.jpg" alt="小乌龟"></p> <p>而在命令行下面，这些操作比较麻烦，为了解决这个问题，于是在commit之前增加了一个暂存区，用来存放我们需要提交的文件。好了，我们再回过头来看看git在版本管理上分了哪些部分。</p> <p><img src="//file.shenfq.com/18-4-14/41364002.jpg" alt=""></p> <h3 id="git命令简介"><a href="#git命令简介" class="header-anchor">#</a> git命令简介</h3> <p>了解了这些概念，我们再来看看，如何初始化一个git仓库，并且在修改代码后将提交同步给远程版本库。</p> <h4 id="初始化git配置"><a href="#初始化git配置" class="header-anchor">#</a> 初始化git配置</h4> <p>该配置是用来告诉版本库是谁提交代码。</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment">#全局设置用户名</span>
+<span class="token function">git</span> config <span class="token parameter variable">--global</span> user.name <span class="token string">&quot;your name&quot;</span>
 
 <span class="token comment">#全局设置邮箱</span>
-<span class="token function">git</span> config --global user.email <span class="token string">"<a class="token email-link" href="mailto:xxxxxxxxx@qq.com">xxxxxxxxx@qq.com</a>"</span>
+<span class="token function">git</span> config <span class="token parameter variable">--global</span> user.email <span class="token string">&quot;xxxxxxxxx@qq.com&quot;</span>
 
-</code></pre>
-<h4 id="%E5%88%9D%E5%A7%8B%E5%8C%96git%E4%BB%93%E5%BA%93">初始化git仓库<a class="anchor" href="#%E5%88%9D%E5%A7%8B%E5%8C%96git%E4%BB%93%E5%BA%93">§</a></h4>
-<p>这里有两种方式，一种是新建一个本地版本库，然后手动连接远程版本库，还一种是直接获取远程版本到本地。</p>
-<ol>
-<li>新建本地仓库，并与远程版本库进行连接</li>
-</ol>
-<pre class="language-bash"><code class="language-bash"><span class="token function">mkdir</span> hub <span class="token operator">&amp;&amp;</span> <span class="token builtin class-name">cd</span> hub
+</code></pre></div><h4 id="初始化git仓库"><a href="#初始化git仓库" class="header-anchor">#</a> 初始化git仓库</h4> <p>这里有两种方式，一种是新建一个本地版本库，然后手动连接远程版本库，还一种是直接获取远程版本到本地。</p> <ol><li>新建本地仓库，并与远程版本库进行连接</li></ol> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token function">mkdir</span> hub <span class="token operator">&amp;&amp;</span> <span class="token builtin class-name">cd</span> hub
 
 <span class="token function">git</span> init  <span class="token comment">#初始化git仓库</span>
 
-<span class="token function">git</span> remote <span class="token function">add</span> origin <a class="token email-link" href="mailto:git@github.com">git@github.com</a>:github/hub.git  <span class="token comment">#关联远程版本库，并取名为origin</span>
+<span class="token function">git</span> remote <span class="token function">add</span> origin git@github.com:github/hub.git  <span class="token comment">#关联远程版本库，并取名为origin</span>
 
 <span class="token function">git</span> pull origin master  <span class="token comment">#获取名为origin的远程版本库的提交信息到本地版本库</span>
-</code></pre>
-<ol start="2">
-<li>获取远程的版本库到本地</li>
-</ol>
-<pre class="language-bash"><code class="language-bash">
-<span class="token function">git</span> clone <a class="token email-link" href="mailto:git@github.com">git@github.com</a>:github/hub.git  <span class="token comment">#该命令相当于上面三步的缩写</span>
+</code></pre></div><ol start="2"><li>获取远程的版本库到本地</li></ol> <div class="language-bash extra-class"><pre class="language-bash"><code>
+<span class="token function">git</span> clone git@github.com:github/hub.git  <span class="token comment">#该命令相当于上面三步的缩写</span>
 
-</code></pre>
-<h4 id="%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6%E5%B9%B6%E6%8F%90%E4%BA%A4%E5%88%B0%E6%9A%82%E5%AD%98%E5%8C%BA">修改文件并提交到暂存区<a class="anchor" href="#%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6%E5%B9%B6%E6%8F%90%E4%BA%A4%E5%88%B0%E6%9A%82%E5%AD%98%E5%8C%BA">§</a></h4>
-<p>我们可以新建一个文件（eg. <code>reamde.md</code>），然后通过add命令，将该文件添加到暂存区，表示该文件是我们要提交到版本库的文件。</p>
-<pre class="language-bash"><code class="language-bash"><span class="token comment"># 将一个修改后的文件添加到暂存区</span>
+</code></pre></div><h4 id="修改文件并提交到暂存区"><a href="#修改文件并提交到暂存区" class="header-anchor">#</a> 修改文件并提交到暂存区</h4> <p>我们可以新建一个文件（eg. <code>reamde.md</code>），然后通过add命令，将该文件添加到暂存区，表示该文件是我们要提交到版本库的文件。</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># 将一个修改后的文件添加到暂存区</span>
 <span class="token function">git</span> <span class="token function">add</span> readme.md
 
 
@@ -93,133 +85,80 @@ Git是一个免费并且开源的分布式版本管理工具。</p>
 <span class="token function">git</span> <span class="token function">add</span> *
 <span class="token comment"># git add --update 的缩写</span>
 <span class="token comment"># 如果再次修改了在暂存区中的文件，可以通过该命令进行更新</span>
-<span class="token function">git</span> <span class="token function">add</span> -u
+<span class="token function">git</span> <span class="token function">add</span> <span class="token parameter variable">-u</span>
 <span class="token comment"># 作用与git add . 相同</span>
-<span class="token function">git</span> <span class="token function">add</span> -A
+<span class="token function">git</span> <span class="token function">add</span> <span class="token parameter variable">-A</span>
 
-</code></pre>
-<h4 id="%E6%8F%90%E4%BA%A4%E4%BB%A3%E7%A0%81%E5%88%B0%E7%89%88%E6%9C%AC%E5%BA%93">提交代码到版本库<a class="anchor" href="#%E6%8F%90%E4%BA%A4%E4%BB%A3%E7%A0%81%E5%88%B0%E7%89%88%E6%9C%AC%E5%BA%93">§</a></h4>
-<p>我们现在已经把代码添加到了暂存区，接下来就需要把暂存区的代码提交到版本库。</p>
-<pre class="language-bash"><code class="language-bash"><span class="token comment"># 提交暂存区的代码到版本库</span>
-<span class="token function">git</span> commit -m <span class="token string">'commit message'</span>
+</code></pre></div><h4 id="提交代码到版本库"><a href="#提交代码到版本库" class="header-anchor">#</a> 提交代码到版本库</h4> <p>我们现在已经把代码添加到了暂存区，接下来就需要把暂存区的代码提交到版本库。</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># 提交暂存区的代码到版本库</span>
+<span class="token function">git</span> commit <span class="token parameter variable">-m</span> <span class="token string">'commit message'</span>
 
 <span class="token comment"># 如果你重新编辑了一些文件，添加到暂存区，想把这些修改合并到上一次提交</span>
 <span class="token comment"># 然后会出现一个编辑框，让你修改上次的提交信息</span>
-<span class="token function">git</span> commit --amend
+<span class="token function">git</span> commit <span class="token parameter variable">--amend</span>
 <span class="token comment"># 如果不想修改上次的提交信息</span>
-<span class="token function">git</span> commit --amend --no-edit
-</code></pre>
-<h4 id="%E5%90%8C%E6%AD%A5%E8%BF%9C%E7%A8%8B%E7%89%88%E6%9C%AC%E5%BA%93%E5%88%B0%E6%9C%AC%E5%9C%B0%E7%89%88%E6%9C%AC%E5%BA%93">同步远程版本库到本地版本库<a class="anchor" href="#%E5%90%8C%E6%AD%A5%E8%BF%9C%E7%A8%8B%E7%89%88%E6%9C%AC%E5%BA%93%E5%88%B0%E6%9C%AC%E5%9C%B0%E7%89%88%E6%9C%AC%E5%BA%93">§</a></h4>
-<p>最好每次把自己的提交信息同步给远程版本库之前，先把远程版本库同步到本地。
+<span class="token function">git</span> commit <span class="token parameter variable">--amend</span> --no-edit
+</code></pre></div><h4 id="同步远程版本库到本地版本库"><a href="#同步远程版本库到本地版本库" class="header-anchor">#</a> 同步远程版本库到本地版本库</h4> <p>最好每次把自己的提交信息同步给远程版本库之前，先把远程版本库同步到本地。
 这里会涉及到分支的概念，我们先放到一边，本地版本库默认默认为master分支
-（ps. 也就是我们常说的主干）。</p>
-<pre class="language-bash"><code class="language-bash"><span class="token comment"># 将名为origin的远程版本库的master分支同步到本地的当前分支</span>
+（ps. 也就是我们常说的主干）。</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># 将名为origin的远程版本库的master分支同步到本地的当前分支</span>
 <span class="token function">git</span> pull origin master
 
 <span class="token comment"># git pull命令其实是如下两个命令的简写</span>
 <span class="token function">git</span> fetch origin master
 <span class="token function">git</span> merge origin/master
-</code></pre>
-<h4 id="%E5%90%8C%E6%AD%A5%E6%9C%AC%E5%9C%B0%E7%89%88%E6%9C%AC%E5%BA%93%E5%88%B0%E8%BF%9C%E7%A8%8B%E7%89%88%E6%9C%AC%E5%BA%93">同步本地版本库到远程版本库<a class="anchor" href="#%E5%90%8C%E6%AD%A5%E6%9C%AC%E5%9C%B0%E7%89%88%E6%9C%AC%E5%BA%93%E5%88%B0%E8%BF%9C%E7%A8%8B%E7%89%88%E6%9C%AC%E5%BA%93">§</a></h4>
-<p>git将本地版本库同步到远程版本库使用push命令，但是每次都需要指定同步给哪个版本库的哪一个分支，
-这时，你可以使用<code>-u</code>参数将本地版本库与远程版本库绑定，以后提交就不需要指定，默认提交到那个版本库。</p>
-<pre class="language-bash"><code class="language-bash"><span class="token comment"># 将本地的提交同步给远程版本库</span>
+</code></pre></div><h4 id="同步本地版本库到远程版本库"><a href="#同步本地版本库到远程版本库" class="header-anchor">#</a> 同步本地版本库到远程版本库</h4> <p>git将本地版本库同步到远程版本库使用push命令，但是每次都需要指定同步给哪个版本库的哪一个分支，
+这时，你可以使用<code>-u</code>参数将本地版本库与远程版本库绑定，以后提交就不需要指定，默认提交到那个版本库。</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># 将本地的提交同步给远程版本库</span>
 <span class="token function">git</span> push origin master
 
 <span class="token comment"># 绑定默认提交的远程版本库</span>
-<span class="token function">git</span> push -u origin master
+<span class="token function">git</span> push <span class="token parameter variable">-u</span> origin master
 <span class="token comment"># 下次提交只需要使用git push就可以了</span>
 <span class="token function">git</span> push
-</code></pre>
-<h2 id="git%E5%88%86%E6%94%AF">git分支<a class="anchor" href="#git%E5%88%86%E6%94%AF">§</a></h2>
-<p>git的分支是git版本管理的重点，git的分支对比svn十分轻量级。</p>
-<p>注意，前方高能！！！</p>
-<p>为了讲清楚这些概念得画一些图，没办法美术功底太好，话又不会说，只好画图写教程了。</p>
-<h3 id="%E4%BD%95%E4%B8%BA%E5%88%86%E6%94%AF">何为分支<a class="anchor" href="#%E4%BD%95%E4%B8%BA%E5%88%86%E6%94%AF">§</a></h3>
-<p>要搞清楚git的分支概念，首先需要知道git是如何区分不同的分支的。
+</code></pre></div><h2 id="git分支"><a href="#git分支" class="header-anchor">#</a> git分支</h2> <p>git的分支是git版本管理的重点，git的分支对比svn十分轻量级。</p> <p>注意，前方高能！！！</p> <p>为了讲清楚这些概念得画一些图，没办法美术功底太好，话又不会说，只好画图写教程了。</p> <h3 id="何为分支"><a href="#何为分支" class="header-anchor">#</a> 何为分支</h3> <p>要搞清楚git的分支概念，首先需要知道git是如何区分不同的分支的。
 在git中，一个分支就会存在有一个指针，该指针指向一个commit。
-每次拉分支就会在当前commit上创建一个新的指针，而且分支的指针每次都会跟随commit前移。</p>
-<pre class="language-bash"><code class="language-bash"><span class="token comment"># 查看当前分支</span>
+每次拉分支就会在当前commit上创建一个新的指针，而且分支的指针每次都会跟随commit前移。</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># 查看当前分支</span>
 <span class="token function">git</span> branch <span class="token comment">#刚刚初始化的版本库默认在master分支上</span>
 <span class="token comment"># 新建分支</span>
 <span class="token function">git</span> branch branch <span class="token comment">#新建一个名为branch的分支</span>
-</code></pre>
-<p><img src="//file.shenfq.com/18-4-17/92923237.jpg" alt="新建分支"></p>
-<p>那么现在有个问题，在新建一个分支之后，两个分支指向同一个commit，到底怎么区分现在哪个分支上呢？
-这里就要引入一个新的指针<code>HEAD</code>，用来指向当前所处的分支。</p>
-<pre class="language-bash"><code class="language-bash"><span class="token comment"># 切换分支</span>
+</code></pre></div><p><img src="//file.shenfq.com/18-4-17/92923237.jpg" alt="新建分支"></p> <p>那么现在有个问题，在新建一个分支之后，两个分支指向同一个commit，到底怎么区分现在哪个分支上呢？
+这里就要引入一个新的指针<code>HEAD</code>，用来指向当前所处的分支。</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment"># 切换分支</span>
 <span class="token function">git</span> checkout branch <span class="token comment">#切换到branch分支</span>
 
 <span class="token comment"># 创建分支与切换分支可以简写为一个命令</span>
-gti checkout -b branch
-</code></pre>
-<p><img src="//file.shenfq.com/18-4-17/94032614.jpg" alt="HEAD指向当前分支"></p>
-<p>现在在branch分支上进行了一次commit，然后branch指针就像向前移动。</p>
-<pre class="language-bash"><code class="language-bash"><span class="token function">vim</span> xxx.txt
+gti checkout <span class="token parameter variable">-b</span> branch
+</code></pre></div><p><img src="//file.shenfq.com/18-4-17/94032614.jpg" alt="HEAD指向当前分支"></p> <p>现在在branch分支上进行了一次commit，然后branch指针就像向前移动。</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token function">vim</span> xxx.txt
 <span class="token function">git</span> add.
-<span class="token function">git</span> commit -m <span class="token string">'modify xxx.txt'</span>
-</code></pre>
-<p><img src="//file.shenfq.com/18-4-17/27007514.jpg" alt="branch分支前移"></p>
-<p>然后再切换到master分支，进行一次提交，看下图就会发现，这里会出现分支。
+<span class="token function">git</span> commit <span class="token parameter variable">-m</span> <span class="token string">'modify xxx.txt'</span>
+</code></pre></div><p><img src="//file.shenfq.com/18-4-17/27007514.jpg" alt="branch分支前移"></p> <p>然后再切换到master分支，进行一次提交，看下图就会发现，这里会出现分支。
 <code>master</code>分支表示的是commit1、2、3、5，而<code>branch</code>分支commit1、2、3、4。
 到这里就很容易理解为什么说git的分支很轻量级，因为对git来说一个分支只是会新建一个指针，
-并指向一个提交，而不是拷贝所有的代码文件到另一个目录。</p>
-<pre class="language-bash"><code class="language-bash"><span class="token function">git</span> checkout master <span class="token comment">#切换到master分支</span>
+并指向一个提交，而不是拷贝所有的代码文件到另一个目录。</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token function">git</span> checkout master <span class="token comment">#切换到master分支</span>
 <span class="token function">vim</span> yyy.txt
 <span class="token function">git</span> add.
-<span class="token function">git</span> commit -m <span class="token string">'modify yyy.txt'</span>
-</code></pre>
-<p><img src="//file.shenfq.com/18-4-17/94198720.jpg" alt="不同分支的提交不会相互影响"></p>
-<h3 id="%E5%90%88%E5%B9%B6%E5%88%86%E6%94%AF">合并分支<a class="anchor" href="#%E5%90%88%E5%B9%B6%E5%88%86%E6%94%AF">§</a></h3>
-<p>天下三分，分久必合，合久必分。
-有分支就会有合并，举个例子，项目中突然来了个bug，但是手头的代码还没写完，不可能直接提交。所以你要先从<code>master</code>分支拉出一个<code>Fix-Bug</code>分支，在分支上修改好之后再进行提交。最后这个提交需要merge回<code>master</code>分支。</p>
-<pre class="language-bash"><code class="language-bash"><span class="token comment">#1. 先创建feature分支，将手头的代码提交到feature分支上</span>
-<span class="token function">git</span> checkout -b feature
+<span class="token function">git</span> commit <span class="token parameter variable">-m</span> <span class="token string">'modify yyy.txt'</span>
+</code></pre></div><p><img src="//file.shenfq.com/18-4-17/94198720.jpg" alt="不同分支的提交不会相互影响"></p> <h3 id="合并分支"><a href="#合并分支" class="header-anchor">#</a> 合并分支</h3> <p>天下三分，分久必合，合久必分。
+有分支就会有合并，举个例子，项目中突然来了个bug，但是手头的代码还没写完，不可能直接提交。所以你要先从<code>master</code>分支拉出一个<code>Fix-Bug</code>分支，在分支上修改好之后再进行提交。最后这个提交需要merge回<code>master</code>分支。</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token comment">#1. 先创建feature分支，将手头的代码提交到feature分支上</span>
+<span class="token function">git</span> checkout <span class="token parameter variable">-b</span> feature
 <span class="token function">git</span> <span class="token function">add</span> <span class="token builtin class-name">.</span>
-<span class="token function">git</span> commit -m <span class="token string">'feature branch commit'</span>
+<span class="token function">git</span> commit <span class="token parameter variable">-m</span> <span class="token string">'feature branch commit'</span>
 
 <span class="token comment">#2. 切换回master分支，从master拉一个新的分支</span>
 <span class="token function">git</span> checkout master
-<span class="token function">git</span> checkout -b Fix-Bug
+<span class="token function">git</span> checkout <span class="token parameter variable">-b</span> Fix-Bug
 
 <span class="token comment">#3. bug修改完毕后，提交代码到Fix-Bug分支</span>
 <span class="token function">git</span> <span class="token function">add</span> <span class="token builtin class-name">.</span>
-<span class="token function">git</span> commit -m <span class="token string">'fixed bug'</span>
+<span class="token function">git</span> commit <span class="token parameter variable">-m</span> <span class="token string">'fixed bug'</span>
 
 <span class="token comment">#4. 把修复了bug的代码merge到master分支</span>
 <span class="token function">git</span> checkout master <span class="token comment">#重新切换回master分支</span>
 <span class="token function">git</span> pull origin master <span class="token comment">#把同事提交的代码先更新到本地</span>
 <span class="token function">git</span> merge Fix-Bug
 <span class="token function">git</span> push origin master <span class="token comment">#将merge的代码同步到线上，进行bug修复</span>
-<span class="token function">git</span> branch -d Fix-Bug <span class="token comment">#bug修复后将Fix-Bug分支删除</span>
-</code></pre>
-<p><img src="//file.shenfq.com/18-4-17/17626900.jpg" alt="merge"></p>
-<p>上面只是进行了简单的演示，真实情况比这更加复杂。</p>
-<p>观察上图，可以发现在<code>merge</code>操作后，自动会生成一个新的commit。如果你不想生成这个commit，
-merge之后还有其他修改，或者想要自己写commit的message，也可以使用如下命令来取消自动commit。</p>
-<pre class="language-bash"><code class="language-bash"><span class="token function">git</span> merge --no-commit branch
-</code></pre>
-<h4 id="merge%E7%9A%84%E7%89%B9%E6%AE%8A%E6%83%85%E5%86%B5%E5%86%B2%E7%AA%81">merge的特殊情况：冲突<a class="anchor" href="#merge%E7%9A%84%E7%89%B9%E6%AE%8A%E6%83%85%E5%86%B5%E5%86%B2%E7%AA%81">§</a></h4>
-<p>有时候远程版本库和本地版本库进行merge的时候，你和你的同事可能同事修改了同一个文件的同一个位置，这就会出现冲突。
-出现冲突怎么办，当然是解决冲突。解决冲突你可以自己一个个手动去解决，当然你也可以使用一些工具，比如下图使用vscode来解决冲突。</p>
-<p><img src="//file.shenfq.com/18-4-17/65016361.jpg" alt="vscode解决冲突"></p>
-<p>可以通过<code>git status</code>查看哪些文件出现了冲突，通过编辑器将所有冲突解决后就可以进行提交了。</p>
-<p><img src="//file.shenfq.com/18-4-17/23041771.jpg" alt="发生冲突的文件"></p>
-<h4 id="%E5%B8%B8%E8%A7%81%E7%9A%84git%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86%E6%A8%A1%E5%BC%8Fgitflow">常见的git分支管理模式：gitflow<a class="anchor" href="#%E5%B8%B8%E8%A7%81%E7%9A%84git%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86%E6%A8%A1%E5%BC%8Fgitflow">§</a></h4>
-<p><img src="//file.shenfq.com/18-4-17/29960391.jpg" alt=""></p>
-<p>这里主要涉及常用的分支的命名规范：</p>
-<ol>
-<li>master主干，用来存放最稳定的代码</li>
-<li>hotfix，用来紧急修改bug的分支</li>
-<li>release，用来发布上线的分支</li>
-<li>feature，特性分支，每一个新功能都应该有一个特性分支</li>
-<li>develop，开发分支，当特性开发完毕后，将特性分支合并到develop分支</li>
-</ol>
-<h2 id="%E5%8F%82%E8%80%83">参考<a class="anchor" href="#%E5%8F%82%E8%80%83">§</a></h2>
-<p>这里只是介绍了git中最基本的一些概念，git还有很多高级命令待大家去发现，比如rebase、reset、stash。</p>
-<p>最后给大家推荐一些git的好教程。</p>
-<ol>
-<li><a href="https://git-scm.com/book/zh/v2">pro git</a></li>
-<li><a href="https://mp.weixin.qq.com/s/hYjGyIdLK3UCEVF0lRYRCg">git常用命令汇总</a></li>
-<li><a href="https://segmentfault.com/a/1190000002783245">git push与pull的默认行为</a></li>
-</ol></article></section><footer>Powered by <a href="https://github.com/xcatliu/pagic" target="_blank">Pagic</a></footer><script src="https://cdn.pagic.org/react@16.13.1/umd/react.production.min.js"></script><script src="https://cdn.pagic.org/react-dom@16.13.1/umd/react-dom.production.min.js"></script><script type="module" src="/index.js"></script></body></html>
+<span class="token function">git</span> branch <span class="token parameter variable">-d</span> Fix-Bug <span class="token comment">#bug修复后将Fix-Bug分支删除</span>
+</code></pre></div><p><img src="//file.shenfq.com/18-4-17/17626900.jpg" alt="merge"></p> <p>上面只是进行了简单的演示，真实情况比这更加复杂。</p> <p>观察上图，可以发现在<code>merge</code>操作后，自动会生成一个新的commit。如果你不想生成这个commit，
+merge之后还有其他修改，或者想要自己写commit的message，也可以使用如下命令来取消自动commit。</p> <div class="language-bash extra-class"><pre class="language-bash"><code><span class="token function">git</span> merge --no-commit branch
+</code></pre></div><h4 id="merge的特殊情况-冲突"><a href="#merge的特殊情况-冲突" class="header-anchor">#</a> merge的特殊情况：冲突</h4> <p>有时候远程版本库和本地版本库进行merge的时候，你和你的同事可能同事修改了同一个文件的同一个位置，这就会出现冲突。
+出现冲突怎么办，当然是解决冲突。解决冲突你可以自己一个个手动去解决，当然你也可以使用一些工具，比如下图使用vscode来解决冲突。</p> <p><img src="//file.shenfq.com/18-4-17/65016361.jpg" alt="vscode解决冲突"></p> <p>可以通过<code>git status</code>查看哪些文件出现了冲突，通过编辑器将所有冲突解决后就可以进行提交了。</p> <p><img src="//file.shenfq.com/18-4-17/23041771.jpg" alt="发生冲突的文件"></p> <h4 id="常见的git分支管理模式-gitflow"><a href="#常见的git分支管理模式-gitflow" class="header-anchor">#</a> 常见的git分支管理模式：gitflow</h4> <p><img src="//file.shenfq.com/18-4-17/29960391.jpg" alt=""></p> <p>这里主要涉及常用的分支的命名规范：</p> <ol><li>master主干，用来存放最稳定的代码</li> <li>hotfix，用来紧急修改bug的分支</li> <li>release，用来发布上线的分支</li> <li>feature，特性分支，每一个新功能都应该有一个特性分支</li> <li>develop，开发分支，当特性开发完毕后，将特性分支合并到develop分支</li></ol> <h2 id="参考"><a href="#参考" class="header-anchor">#</a> 参考</h2> <p>这里只是介绍了git中最基本的一些概念，git还有很多高级命令待大家去发现，比如rebase、reset、stash。</p> <p>最后给大家推荐一些git的好教程。</p> <ol><li><a href="https://git-scm.com/book/zh/v2" target="_blank" rel="noopener noreferrer">pro git<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li> <li><a href="https://mp.weixin.qq.com/s/hYjGyIdLK3UCEVF0lRYRCg" target="_blank" rel="noopener noreferrer">git常用命令汇总<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li> <li><a href="https://segmentfault.com/a/1190000002783245" target="_blank" rel="noopener noreferrer">git push与pull的默认行为<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ol></div></section> <footer class="page-edit"><!----> <div class="last-updated"><span class="prefix">更新时间: </span> <span class="time">10/8/2022, 8:09:00 AM</span></div></footer> <!----> <div class="comments-wrapper"><!----></div> <ul class="side-bar sub-sidebar-wrapper" style="width:12rem;" data-v-ac050c62><li class="level-2" data-v-ac050c62><a href="/posts/2018/git%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.html#背景" class="sidebar-link reco-side-背景" data-v-ac050c62>背景</a></li><li class="level-2" data-v-ac050c62><a href="/posts/2018/git%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.html#分布式的版本库" class="sidebar-link reco-side-分布式的版本库" data-v-ac050c62>分布式的版本库</a></li><li class="level-3" data-v-ac050c62><a href="/posts/2018/git%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.html#基本概念" class="sidebar-link reco-side-基本概念" data-v-ac050c62>基本概念</a></li><li class="level-3" data-v-ac050c62><a href="/posts/2018/git%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.html#git命令简介" class="sidebar-link reco-side-git命令简介" data-v-ac050c62>git命令简介</a></li><li class="level-2" data-v-ac050c62><a href="/posts/2018/git%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.html#git分支" class="sidebar-link reco-side-git分支" data-v-ac050c62>git分支</a></li><li class="level-3" data-v-ac050c62><a href="/posts/2018/git%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.html#何为分支" class="sidebar-link reco-side-何为分支" data-v-ac050c62>何为分支</a></li><li class="level-3" data-v-ac050c62><a href="/posts/2018/git%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.html#合并分支" class="sidebar-link reco-side-合并分支" data-v-ac050c62>合并分支</a></li><li class="level-2" data-v-ac050c62><a href="/posts/2018/git%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8.html#参考" class="sidebar-link reco-side-参考" data-v-ac050c62>参考</a></li></ul></main></div> <!----></div></div></div></div><div class="global-ui"><div class="back-to-ceiling" style="right:1rem;bottom:6rem;width:2.5rem;height:2.5rem;border-radius:.25rem;line-height:2.5rem;display:none;" data-v-c6073ba8 data-v-c6073ba8><svg t="1574745035067" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5404" class="icon" data-v-c6073ba8><path d="M526.60727968 10.90185116a27.675 27.675 0 0 0-29.21455937 0c-131.36607665 82.28402758-218.69155461 228.01873535-218.69155402 394.07834331a462.20625001 462.20625001 0 0 0 5.36959153 69.94390903c1.00431239 6.55289093-0.34802892 13.13561351-3.76865779 18.80351572-32.63518765 54.11355614-51.75690182 118.55860487-51.7569018 187.94566865a371.06718723 371.06718723 0 0 0 11.50484808 91.98906777c6.53300375 25.50556257 41.68394495 28.14064038 52.69160883 4.22606766 17.37162448-37.73630017 42.14135425-72.50938081 72.80769204-103.21549295 2.18761121 3.04276886 4.15646224 6.24463696 6.40373557 9.22774369a1871.4375 1871.4375 0 0 0 140.04691725 5.34970492 1866.36093723 1866.36093723 0 0 0 140.04691723-5.34970492c2.24727335-2.98310674 4.21612437-6.18497483 6.3937923-9.2178004 30.66633723 30.70611158 55.4360664 65.4791928 72.80769147 103.21549355 11.00766384 23.91457269 46.15860503 21.27949489 52.69160879-4.22606768a371.15156223 371.15156223 0 0 0 11.514792-91.99901164c0-69.36717486-19.13165746-133.82216804-51.75690182-187.92578088-3.42062944-5.66790279-4.76302748-12.26056868-3.76865837-18.80351632a462.20625001 462.20625001 0 0 0 5.36959269-69.943909c-0.00994388-166.08943902-87.32547796-311.81420293-218.6915546-394.09823051zM605.93803103 357.87693858a93.93749974 93.93749974 0 1 1-187.89594924 6.1e-7 93.93749974 93.93749974 0 0 1 187.89594924-6.1e-7z" p-id="5405" data-v-c6073ba8></path><path d="M429.50777625 765.63860547C429.50777625 803.39355007 466.44236686 1000.39046097 512.00932183 1000.39046097c45.56695499 0 82.4922232-197.00623328 82.5015456-234.7518555 0-37.75494459-36.9345906-68.35043303-82.4922232-68.34111062-45.57627738-0.00932239-82.52019037 30.59548842-82.51086798 68.34111062z" p-id="5406" data-v-c6073ba8></path></svg></div></div></div>
+    <script src="/assets/js/app.318ac574.js" defer></script><script src="/assets/js/3.38c624e7.js" defer></script><script src="/assets/js/1.a547ec77.js" defer></script><script src="/assets/js/22.b094a8de.js" defer></script>
+  </body>
+</html>
