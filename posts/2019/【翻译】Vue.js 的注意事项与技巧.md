@@ -10,7 +10,6 @@ tags:
 - 翻译
 ---
 
-# 【翻译】Vue.js 的注意事项与技巧
 
 原文链接：[Vue.js — Considerations and Tricks](https://blog.webf.zone/vue-js-considerations-and-tricks-fa7e0e4bb7bb)
 

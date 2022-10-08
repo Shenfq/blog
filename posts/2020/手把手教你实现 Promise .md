@@ -10,7 +10,6 @@ tags:
 - JavaScript
 ---
 
-# 手把手教你实现 Promise 
 
 ## 前言
 

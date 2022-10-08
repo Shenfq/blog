@@ -10,7 +10,6 @@ tags:
 - Web Components
 ---
 
-# 下一代的模板引擎：lit-html
 [前面的文章](https://mp.weixin.qq.com/s/dfPBhp8atU5QSCv55QJQfA)介绍了 Web Components 的基本用法，今天来看看基于这个原生技术，Google 二次封存的框架 lit-html。
 
 其实早在 Google 提出 Web Components 的时候，就在此基础上发布了 [Polymer](https://github.com/Polymer/polymer) 框架。只是这个框架一直雷声大雨点小，内部似乎也对这个项目不太满意，然后他们团队又开发了两个更加现代化的框架（或者说是库？）： lit-html、lit-element，今天的文章会重点介绍  lit-html 的用法以及优势。

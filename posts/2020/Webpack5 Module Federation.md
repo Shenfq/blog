@@ -11,7 +11,6 @@ tags:
 - webpack
 ---
 
-# Webpack5 跨应用代码共享-Module Federation
 
 Webpack 5 的消息尽管已经出来了许久，但是正式版一直还未发布。Webpack 5 的 ChangeLog 中，除了常规的性能优化、编译提速之外，有一个比较让人期待的功能就是 `Module Federation`。有些文件将 `Module Federation` 强行翻译成「模块联邦」，听起来很是怪异，我在某个前端群也抛出了这个问题，没想到大家的回复也是五花八门。所以，本文就直接用 `Module Federation` 了，不进行翻译听起来好像更舒服一点。
 

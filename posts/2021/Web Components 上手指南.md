@@ -9,7 +9,6 @@ tags:
 - Web Components
 ---
 
-# Web Components 上手指南
 
 ![Web Components](https://file.shenfq.com/pic/20210223154148.png)
 

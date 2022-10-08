@@ -9,8 +9,6 @@ tags:
 - Promise
 ---
 
-# 关于 Promise 的执行顺序
-
 最近看到一个 Promise 相关的很有意思的代码：
 
 ```js

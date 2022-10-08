@@ -17,6 +17,7 @@ module.exports = {
   themeConfig: {
     search: true,
     type: 'blog',
+    subSidebar: 'auto',
     lastUpdated: '更新时间',
     nav: [
       {

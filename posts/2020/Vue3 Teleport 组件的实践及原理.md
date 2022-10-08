@@ -10,7 +10,6 @@ tags:
 - 组件
 ---
 
-# Vue3 Teleport 组件的实践及原理
 
 Vue3 的组合式 API 以及基于 Proxy 响应式原理已经有很多文章介绍过了，除了这些比较亮眼的更新，Vue3 还新增了一个内置组件：[Teleport](https://vue3js.cn/docs/zh/guide/teleport.html)。这个组件的作用主要用来将模板内的 DOM 元素移动到其他位置。
 

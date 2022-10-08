@@ -11,7 +11,6 @@ tags:
 - 泛型
 ---
 
-# 你不知道的 TypeScript 高级类型
 ## 前言
 
 对于有 JavaScript 基础的同学来说，入门 TypeScript 其实很容易，只需要简单掌握其基础的类型系统就可以逐步将 JS 应用过渡到 TS 应用。

@@ -12,7 +12,6 @@ tags:
 - Webpack
 ---
 
-# 【翻译】CommonJS 是如何导致打包后体积增大的？
 
 > 原文：[How CommonJS is making your bundles larger](https://web.dev/commonjs-larger-bundles)
 

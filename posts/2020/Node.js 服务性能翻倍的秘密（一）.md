@@ -11,7 +11,6 @@ tags:
 - fastify
 ---
 
-# Node.js 服务性能翻倍的秘密（一）
 
 ## 前言
 

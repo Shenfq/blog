@@ -12,7 +12,6 @@ tags:
 - 翻译
 ---
 
-# 【翻译】在 React Hooks 中如何请求数据？
 
 
 ![image](https://file.shenfq.com/Fp4SkemaUMnmloPIN3eWDZ9o6qZd.png)

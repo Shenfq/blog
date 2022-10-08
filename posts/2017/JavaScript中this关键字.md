@@ -10,8 +10,6 @@ tags:
 - 前端
 ---
 
-# JavaScript中this关键字
-
 this一直是js中一个老生常谈的东西，但是我们究竟该如何来理解它呢？       
 在《JavaScript高级程序设计》中，对this的解释是：
 > this对象是在运行时基于函数的执行环境绑定的。

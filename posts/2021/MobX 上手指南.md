@@ -9,7 +9,6 @@ tags:
 - 状态管理
 ---
 
-# MobX 上手指南
 
 之前用 Redux 比较多，一直听说 Mobx 能让你体验到在 React 里面写 Vue 的感觉，今天打算尝试下 Mobx 是不是真的有写 Vue 的感觉。
 

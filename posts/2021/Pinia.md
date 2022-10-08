@@ -10,7 +10,6 @@ tags:
 - 状态管理
 ---
 
-# 全新的 Vue3 状态管理工具：Pinia
 
 ![Logo](https://file.shenfq.com/pic/202112151708176.svg)
 

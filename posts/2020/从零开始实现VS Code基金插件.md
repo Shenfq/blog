@@ -8,7 +8,6 @@ tags:
 - VSCode
 ---
 
-# 从零开始实现 VS Code 基金插件
 
 ## 写在前面
 

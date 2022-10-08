@@ -10,7 +10,6 @@ tags:
 - Node
 ---
 
-# 【翻译】Node.js CLI 工具最佳实践
 
 > [原文链接](https://github.com/lirantal/nodejs-cli-apps-best-practices/blob/3afe1ab0a5b506ef8c32903c4bf253a4cdb4bddd/README.md#shell-interpreters-vary)
 
