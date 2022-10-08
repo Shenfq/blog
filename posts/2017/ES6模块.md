@@ -2,9 +2,8 @@
 title: 【翻译】深入ES6模块
 author: shenfq
 date: 2017/11/13
-thumbnail: //file.shenfq.com/17-11-13/72514253.jpg
 categories:
-- 模块化
+- 前端工程
 tags:
 - es6
 - 模块化

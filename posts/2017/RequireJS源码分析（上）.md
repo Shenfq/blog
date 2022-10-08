@@ -2,9 +2,8 @@
 title: RequireJS源码分析（上）
 author: shenfq
 date: 2017/12/23
-thumbnail: //file.shenfq.com/17-12-23/37840070.jpg
 categories:
-- 模块化
+- 前端工程
 tags:
 - 模块化
 - 前端

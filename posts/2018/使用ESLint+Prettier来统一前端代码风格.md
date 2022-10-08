@@ -2,7 +2,6 @@
 title: 使用ESLint+Prettier来统一前端代码风格
 author: shenfq
 date: 2018/06/18
-thumbnail: //file.shenfq.com/18-8-16/16853165.jpg
 categories:
 - 前端
 tags:

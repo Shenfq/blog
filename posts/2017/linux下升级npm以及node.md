@@ -2,7 +2,6 @@
 title: linux下升级npm以及node
 author: shenfq
 date: 2017/06/12
-thumbnail: //file.shenfq.com/17-8-28/30649857.jpg
 categories:
 - Node.js
 tags:

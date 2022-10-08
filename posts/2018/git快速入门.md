@@ -2,7 +2,6 @@
 title: git快速入门
 author: shenfq
 date: 2018/04/17
-thumbnail: //file.shenfq.com/18-4-17/53844391.jpg
 categories:
 - Git
 tags:

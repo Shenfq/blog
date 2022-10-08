@@ -1,0 +1,21 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "自然醒的播客",
+  "main": "",
+  "scripts": {
+    "dev": "vuepress dev",
+    "build": "vuepress build"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shenfq/notes.git"
+  },
+  "homepage": "https://shenfq.github.io/notes/",
+  "dependencies": {
+    "vuepress": "^1.0.2",
+    "vuepress-plugin-image-viewer": "^1.1.7",
+    "vuepress-theme-reco": "^1.6.14"
+  }
+}

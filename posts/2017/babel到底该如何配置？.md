@@ -2,7 +2,6 @@
 title: babel到底该如何配置？
 author: shenfq
 date: 2017/10/22
-thumbnail: //file.shenfq.com/17-10-22/2398050.jpg
 categories:
 - 前端工程
 tags:
