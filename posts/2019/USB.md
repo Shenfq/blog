@@ -3,7 +3,7 @@ title: USB 科普
 author: shenfq
 date: 2019/06/28
 categories:
-- 其他
+- 随便写写
 tags:
 - USB
 ---
