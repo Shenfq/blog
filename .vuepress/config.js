@@ -19,6 +19,10 @@ module.exports = {
     type: 'blog',
     subSidebar: 'auto',
     lastUpdated: '更新时间',
+    // 备案
+    record: '湘ICP备2021020907号-1',
+    recordLink: 'https://beian.miit.gov.cn/',
+    // 顶部导航
     nav: [
       {
         text: '首页',
